@@ -7,11 +7,10 @@ s.connect((socket.gethostname(), 4444))
 
 full_msg = ''
 while True:
-    msg = s.recv(8) # receive data from server with 1024 byte buffer
-    if msg.decode("utf-8"):
+    msg = s.recv(1) # receive data from server with 1 byte buffer
+    if len(msg) <= 0:
         break
-    else:
-        full_msg += msg.decode("utf-8")
+    full_msg += msg.decode("utf-8") # try concat all buffer data
 
 print(full_msg)
 
