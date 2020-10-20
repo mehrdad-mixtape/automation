@@ -10,4 +10,4 @@ while True: # each client want to connect to the server, this part catch request
     print(f"Connection from {address} has been established :D")
     # print("Connection form ",address," has been established :D")
     client_socket.send(bytes("Welcome to the automation_server :)", "utf-8")) # server said to client welcome.
-    
+    client_socket.close() # when I send data to client I close this socket
