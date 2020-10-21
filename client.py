@@ -1,6 +1,4 @@
 import socket
-import select
-import errno
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((socket.gethostname(), 4444))

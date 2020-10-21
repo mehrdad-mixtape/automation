@@ -1,5 +1,4 @@
 import socket
-#import
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # socket.AF_INET = create a ipv4 socket |||| socket.SOCK_STREAM = this socket work with TCP-IP
 s.bind((socket.gethostname(), 4444)) # socket.gethostname() = get hostname from client on port number
