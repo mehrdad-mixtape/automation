@@ -21,7 +21,7 @@ def receive_message(client_socket):
         if not len(message_header): # if message_header was empty we can close the connection.
             return False
 
-        message_length = int(message_header.decode('utf-8').strip()) # yes my message received XD, I should decode received message to utf-8 and calculate length.
+        message_length = int(message_header.decode("utf-8").strip()) # yes my message received XD, I should decode received message to utf-8 and calculate length.
         return {"header": message_header, "data": client_socket.recv(message_length)} # we can receive message from each client with new header_length size.
 
     except:
@@ -39,7 +39,6 @@ while True:
 
             client_socket, client_address = server_socket.accept() # when client connect to my server I accept it and get IP:PORT from it. I get client_socket and client address=[IP, PORT]
             user = receive_message(client_socket) # I call my def to receive message from client. this def return a dictionary that contain message_header and data, data for first time is username of client.
-
             if user is False: # if user don't send message I continue other lines(disconnect client) :).
                continue
             # else:
@@ -50,7 +49,7 @@ while True:
 
         ################################ for second time we check client that send message.################################
         else:
-            message = receive_message(notified_socket) # my notify socket is
+            message = receive_message(notified_socket) # my notify socket is client_socket.
 
             if message is False:
                 print(f"Closed connection from {clients[notified_socket]['data'].decode('utf-8')}") # clients={client_socket:{"header": message_header, "data": client_socket.recv(message_length)}, ...}
@@ -64,6 +63,7 @@ while True:
             for client_socket in clients:
                 if client_socket != notified_socket:
                     client_socket.send(user['header'] + user['data'] + message['header'] + message['data'])
+                    print(user['header'] + user['data'] + message['header'] + message['data'])
 
     for notified_socket in exception_sockets:
         sockets_list.remove(notified_socket)
