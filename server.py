@@ -59,11 +59,12 @@ while True:
 
             user = clients[notified_socket] # I access to {"header": message_header, "data": client_socket.recv(message_length)}
             print(f"message from >>> {user['data'].decode('utf-8')} <<<: {message['data'].decode('utf-8')}")
+            print(len(message['data'].decode('utf-8')))
 
-            for client_socket in clients:
-                if client_socket != notified_socket:
-                    client_socket.send(user['header'] + user['data'] + message['header'] + message['data'])
-                    print(user['header'] + user['data'] + message['header'] + message['data'])
+            if (message['data'].decode('utf-8') == "exit"):
+                sockets_list.remove(notified_socket)
+                del clients[notified_socket]
+                continue
 
     for notified_socket in exception_sockets:
         sockets_list.remove(notified_socket)
