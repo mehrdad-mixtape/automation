@@ -1,11 +1,12 @@
 import socket
+import sys
 
 HEADER_LENGTH = 10
 
 IP = "127.0.0.1"
 PORT = 4444
 
-def Connect_to(ip, port):
+def Connect_to_Server(ip, port):
     try:
         my_username = input("Username: ")
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # socket.AF_INET = create a ipv4 socket |||| socket.SOCK_STREAM = this socket work with TCP-IP.
@@ -21,15 +22,18 @@ def Connect_to(ip, port):
 
             if (message == "exit"):
                 print(f"Connection Closed Dear user: {my_username}")
-                break
+                sys.exit()
 
             if message:
                 message = message.encode("utf-8") # encode message to utf-8.
                 message_header = f"{len(message):<{HEADER_LENGTH}}".encode("utf-8") # calculate message_length for header and send it to server for check my header.
                 client_socket.send(message_header + message)
-    except
 
-def start_connection():
-    Connect_to(IP,PORT)
+    except Exception:
+        print(" Sorry server is down :( ",'\n'," Connection refused, please try again")
+        sys.exit()
 
-start_connection()
+def Start_Client():
+    Connect_to_Server(IP,PORT)
+#---------------------------------------------------------------------------------------------------------------------#
+Start_Client()
