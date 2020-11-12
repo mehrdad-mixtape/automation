@@ -1,5 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
+import client
 
 class Ui_Login_Window(object):
 
@@ -24,8 +25,7 @@ class Ui_Login_Window(object):
         self.automation_label.setObjectName("automation_label")
 
         self.log_label = QtWidgets.QLabel(self.centralwidget)
-        self.log_label.setGeometry(QtCore.QRect(90, 310, 311, 51))
-        self.log_label.setFrameShape(QtWidgets.QFrame.HLine)
+        self.log_label.setGeometry(QtCore.QRect(167, 310, 311, 51))
         self.log_label.setText("")
         self.log_label.setObjectName("log_label")
 
@@ -43,9 +43,9 @@ class Ui_Login_Window(object):
         self.username_lineEdit.setFrame(True)
         self.username_lineEdit.setObjectName("username_lineEdit")
 
-        self.Password = QtWidgets.QLabel(self.centralwidget)
-        self.Password.setGeometry(QtCore.QRect(80, 160, 81, 22))
-        self.Password.setObjectName("Password")
+        self.password = QtWidgets.QLabel(self.centralwidget)
+        self.password.setGeometry(QtCore.QRect(80, 160, 81, 22))
+        self.password.setObjectName("Password")
 
         self.password_lineEdit = QtWidgets.QLineEdit(self.centralwidget)
         self.password_lineEdit.setGeometry(QtCore.QRect(190, 150, 221, 36))
@@ -63,7 +63,7 @@ class Ui_Login_Window(object):
         self.login_Button.setToolTip(_translate("Login_Window", "login button"))
         self.login_Button.setText(_translate("Login_Window", "Login"))
         self.username.setText(_translate("Login_Window", "Username:"))
-        self.Password.setText(_translate("Login_Window", "Password:"))
+        self.password.setText(_translate("Login_Window", "Password:"))
         self.password_lineEdit.setToolTip(_translate("Login_Window", "Enter your password"))
         self.username_lineEdit.setToolTip(_translate("Login_Window", "Enter your username"))
         self.automation_label.setText(_translate("Login_Window", "Automation Welcome!"))
@@ -74,6 +74,10 @@ class Ui_Login_Window(object):
     def Login_Button(self):
         self.log_label.setText("Login was Successful")
         self.Update_Label_Size(self.log_label)
+        Login_Window.close()
+
+        Client=client.Client(10,"127.0.0.1",4444)
+        Client.Connect_to_Server("mehrdad")
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
