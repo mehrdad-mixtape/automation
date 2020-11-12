@@ -1,10 +1,11 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QMessageBox
 import sys
 import client
 
 class Ui_Login_Window(object):
 
-    def setupUi(self, Login_Window):
+    def SetupUi(self, Login_Window):
         Login_Window.setObjectName("Login_Window")
         Login_Window.setEnabled(True)
         Login_Window.setGeometry(730, 300, 490, 370)
@@ -32,6 +33,7 @@ class Ui_Login_Window(object):
         self.login_Button = QtWidgets.QPushButton(self.centralwidget)
         self.login_Button.setGeometry(QtCore.QRect(180, 270, 131, 38))
         self.login_Button.setObjectName("login_Button")
+        ################### login_Button Signal #####################
         self.login_Button.clicked.connect(lambda: self.Login_Button())
 
         self.username = QtWidgets.QLabel(self.centralwidget)
@@ -52,12 +54,30 @@ class Ui_Login_Window(object):
         self.password_lineEdit.setFrame(True)
         self.password_lineEdit.setObjectName("password_lineEdit")
 
+        self.server_address_lineEdit = QtWidgets.QLineEdit(self.centralwidget)
+        self.server_address_lineEdit.setGeometry(QtCore.QRect(190, 190, 130, 36))
+        self.server_address_lineEdit.setFrame(True)
+        self.server_address_lineEdit.setObjectName("server_address_lineEdit")
+
+        self.server_port_lineEdit = QtWidgets.QLineEdit(self.centralwidget)
+        self.server_port_lineEdit.setGeometry(QtCore.QRect(330, 190, 81, 36))
+        self.server_port_lineEdit.setFrame(True)
+        self.server_port_lineEdit.setObjectName("server_port_lineEdit")
+
+        self.server_port_ip1 = QtWidgets.QLabel(self.centralwidget)
+        self.server_port_ip1.setGeometry(QtCore.QRect(85, 200, 81, 22))
+        self.server_port_ip1.setObjectName("server_port_ip1")
+
+        self.server_port_ip2 = QtWidgets.QLabel(self.centralwidget)
+        self.server_port_ip2.setGeometry(QtCore.QRect(323, 196, 81, 22))
+        self.server_port_ip2.setObjectName("server_port_ip2")
+
         Login_Window.setCentralWidget(self.centralwidget)
 
-        self.retranslateUi(Login_Window)
+        self.RetranslateUi(Login_Window)
         QtCore.QMetaObject.connectSlotsByName(Login_Window)
 
-    def retranslateUi(self, Login_Window):
+    def RetranslateUi(self, Login_Window):
         _translate = QtCore.QCoreApplication.translate
         Login_Window.setWindowTitle(_translate("Login_Window", "Login page"))
         self.login_Button.setToolTip(_translate("Login_Window", "login button"))
@@ -66,23 +86,40 @@ class Ui_Login_Window(object):
         self.password.setText(_translate("Login_Window", "Password:"))
         self.password_lineEdit.setToolTip(_translate("Login_Window", "Enter your password"))
         self.username_lineEdit.setToolTip(_translate("Login_Window", "Enter your username"))
+        self.server_address_lineEdit.setToolTip(_translate("Login_Window","Enter IP Address of server"))
+        self.server_port_lineEdit.setToolTip(_translate("Login_Window", "Enter Port of server"))
         self.automation_label.setText(_translate("Login_Window", "Automation Welcome!"))
+        self.server_port_ip1.setText(_translate("Login_Window", "Ip : Port"))
+        self.server_port_ip2.setText(_translate("Login_Window", ":"))
 
-    def Update_Label_Size(self, label):
-        label.adjustSize()
+    # def Update_Label_Size(self, label):
+    #     label.adjustSize()
 
     def Login_Button(self):
-        self.log_label.setText("Login was Successful")
-        self.Update_Label_Size(self.log_label)
         Login_Window.close()
-
-        Client=client.Client(10,"127.0.0.1",4444)
+        Client = client.Client(10, "127.0.0.1", 4444)
         Client.Connect_to_Server("mehrdad")
+        report = Client.Report
+        if report == False:
+            self.Show_notify_fail_login()
+
+    def Show_notify_fail_login(self):
+        msg = QMessageBox()
+        msg.setText("Login was Failed")
+        msg.setIcon(QMessageBox.Warning)
+        msg.setStandardButtons(QMessageBox.Retry)
+        msg.setDefaultButton(QMessageBox.Retry)
+        msg.setDetailedText("Sorry server is down :( Connection refused, please try again")
+        msg.buttonClicked.connect(self.Show_again_login_window)
+        msg.exec_()
+
+    def Show_again_login_window(self):
+        Login_Window.show()
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     Login_Window = QtWidgets.QMainWindow()
     ui = Ui_Login_Window()
-    ui.setupUi(Login_Window)
+    ui.SetupUi(Login_Window)
     Login_Window.show()
     sys.exit(app.exec_())
