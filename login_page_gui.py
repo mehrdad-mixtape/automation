@@ -20,7 +20,7 @@ class Login_Window(QMainWindow): # I inherit from QMainWindow
         self.submit_button = QtWidgets.QPushButton(self)
         self.submit_button.setText("Submit")
         self.submit_button.move(202, 350)
-        self.submit_button.clicked.connect(self.Submit_Button)
+        self.submit_button.clicked.connect(lambda: self.Submit_Button())
 
     def Submit_Button(self):
         self.message_label.setText("Login was Successful")
@@ -28,7 +28,7 @@ class Login_Window(QMainWindow): # I inherit from QMainWindow
 
     def Update_Label_Size(self, label):
         label.adjustSize()
-    
+
 def Show_Login_Window():
     app = QApplication(sys.argv)
     log_win = Login_Window()
