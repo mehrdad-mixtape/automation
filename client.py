@@ -6,6 +6,7 @@ class Client():
         self.HEADER_LENGTH = HEADER_LENGTH
         self.IP = IP
         self.PORT = PORT
+        self.Report = True
 
     def Connect_to_Server(self, username):
         try:
@@ -31,5 +32,6 @@ class Client():
                     client_socket.send(message_header + message)
 
         except Exception:
-            print(" Sorry server is down :( ",'\n'," Connection refused, please try again")
-            sys.exit()
+            #print("Sorry server is down :(",'\n',"Connection refused, please try again")
+            self.Report = False
+            #sys.exit()
