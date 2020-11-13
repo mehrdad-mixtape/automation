@@ -124,7 +124,7 @@ class Ui_Login_Window(object):
         msg.setDetailedText("Sorry server is down :( Connection refused, please try again")
         msg.buttonClicked.connect(lambda: Login_Window.show())
         msg.exec_()
-        
+
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     Login_Window = QtWidgets.QMainWindow()
