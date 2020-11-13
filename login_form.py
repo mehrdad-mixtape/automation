@@ -1,5 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QMessageBox, QLineEdit
 import sys
 import client
 
@@ -44,6 +44,7 @@ class Ui_Login_Window(object):
         self.username_lineEdit.setGeometry(QtCore.QRect(190, 110, 221, 36))
         self.username_lineEdit.setFrame(True)
         self.username_lineEdit.setObjectName("username_lineEdit")
+        self.username_lineEdit.setPlaceholderText("Enter your username")
 
         self.password = QtWidgets.QLabel(self.centralwidget)
         self.password.setGeometry(QtCore.QRect(80, 160, 81, 22))
@@ -53,16 +54,20 @@ class Ui_Login_Window(object):
         self.password_lineEdit.setGeometry(QtCore.QRect(190, 150, 221, 36))
         self.password_lineEdit.setFrame(True)
         self.password_lineEdit.setObjectName("password_lineEdit")
+        self.password_lineEdit.setPlaceholderText("Enter your password")
+        self.password_lineEdit.setEchoMode(QLineEdit.Password)
 
         self.server_address_lineEdit = QtWidgets.QLineEdit(self.centralwidget)
         self.server_address_lineEdit.setGeometry(QtCore.QRect(190, 190, 130, 36))
         self.server_address_lineEdit.setFrame(True)
         self.server_address_lineEdit.setObjectName("server_address_lineEdit")
+        self.server_address_lineEdit.setPlaceholderText("Ip Address")
 
         self.server_port_lineEdit = QtWidgets.QLineEdit(self.centralwidget)
         self.server_port_lineEdit.setGeometry(QtCore.QRect(330, 190, 81, 36))
         self.server_port_lineEdit.setFrame(True)
         self.server_port_lineEdit.setObjectName("server_port_lineEdit")
+        self.server_port_lineEdit.setPlaceholderText("Port")
 
         self.server_port_ip1 = QtWidgets.QLabel(self.centralwidget)
         self.server_port_ip1.setGeometry(QtCore.QRect(85, 200, 81, 22))
@@ -97,8 +102,9 @@ class Ui_Login_Window(object):
 
     def Login_Button(self):
         Login_Window.close()
-        Client = client.Client(10, "127.0.0.1", 4444)
-        Client.Connect_to_Server("mehrdad")
+        #password = self.password_lineEdit.text()
+        Client = client.Client(10, self.server_address_lineEdit.text(), int(self.server_port_lineEdit.text()))
+        Client.Connect_to_Server(self.username_lineEdit.text())
         report = Client.Report
         if report == False:
             self.Show_notify_fail_login()
