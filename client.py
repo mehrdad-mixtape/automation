@@ -2,28 +2,29 @@ import socket
 import sys
 
 class Client():
-    def __init__(self, HEADER_LENGTH, IP, PORT):
-        self.HEADER_LENGTH = HEADER_LENGTH
-        self.IP = IP
-        self.PORT = PORT
+    def __init__(self):
+        self.HEADER_LENGTH = 10
         self.Report = True
 
-    def Connect_to_Server(self, username):
+    def Connect_and_authenticate_to_server(self, server_ip, server_port, username, password):
         try:
-            my_username = str(username)
+
             client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # socket.AF_INET = create a ipv4 socket |||| socket.SOCK_STREAM = this socket work with TCP-IP.
-            client_socket.connect((self.IP, self.PORT)) # I ready my socket for connect to server.
+            client_socket.connect((server_ip, server_port)) # I ready my socket for connect to server.
             client_socket.setblocking(False) # disable blocking operation socket.
 
-            encode_username = my_username.encode("utf-8") # encode username to uft-8 for send first message to server.
-            username_header = f"{len(encode_username):<{self.HEADER_LENGTH}}".encode("utf-8") # calculate username length and + with Header_length.
-            client_socket.send(username_header + encode_username) # I send my username to server for first message.
+            my_username = username.encode('utf-8') # encode username to uft-8 for send first message to server.
+            my_password = password.encode('utf-8') # encode password to uft-8 for send first message to server.
+            username_header = f"{len(my_username)+len(my_password):<{self.HEADER_LENGTH}}".encode('utf-8') # calculate username length and + with Header_length.
+            password_header = f"{len(my_password):<{self.HEADER_LENGTH}}".encode('utf-8') # calculate password length and + with Header_length.
+
+            client_socket.send(username_header + my_username) # I send my username to server for first message.
 
             while True:
-                message = input(f"{my_username} > ") # now I can write my message and send it to server.
+                message = input(f"{username} > ") # now I can write my message and send it to server.
 
                 if (message == "exit"):
-                    print(f"Connection Closed Dear user: {my_username}")
+                    print("Connection closed")
                     sys.exit()
 
                 if message:
