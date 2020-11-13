@@ -102,13 +102,16 @@ class Ui_Login_Window(object):
 
     def Login_Button(self):
         Login_Window.close()
+
         username = self.username_lineEdit.text()
         password = self.password_lineEdit.text()
         ip = self.server_address_lineEdit.text()
         port = int(self.server_port_lineEdit.text())
+
         Client = client.Client()
         Client.Connect_and_authenticate_to_server(ip, port, username, password)
         report = Client.Report
+
         if report == False:
             self.Show_notify_fail_login()
 
@@ -119,12 +122,9 @@ class Ui_Login_Window(object):
         msg.setStandardButtons(QMessageBox.Retry)
         msg.setDefaultButton(QMessageBox.Retry)
         msg.setDetailedText("Sorry server is down :( Connection refused, please try again")
-        msg.buttonClicked.connect(self.Show_again_login_window)
+        msg.buttonClicked.connect(lambda: Login_Window.show())
         msg.exec_()
-
-    def Show_again_login_window(self):
-        Login_Window.show()
-
+        
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     Login_Window = QtWidgets.QMainWindow()
