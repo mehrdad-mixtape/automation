@@ -102,9 +102,12 @@ class Ui_Login_Window(object):
 
     def Login_Button(self):
         Login_Window.close()
-        #password = self.password_lineEdit.text()
-        Client = client.Client(10, self.server_address_lineEdit.text(), int(self.server_port_lineEdit.text()))
-        Client.Connect_to_Server(self.username_lineEdit.text())
+        username = self.username_lineEdit.text()
+        password = self.password_lineEdit.text()
+        ip = self.server_address_lineEdit.text()
+        port = int(self.server_port_lineEdit.text())
+        Client = client.Client()
+        Client.Connect_and_authenticate_to_server(ip, port, username, password)
         report = Client.Report
         if report == False:
             self.Show_notify_fail_login()
