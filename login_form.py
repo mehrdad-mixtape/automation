@@ -1,19 +1,25 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMessageBox, QLineEdit
+from PyQt5 import QtCore, QtGui, QtWidgets # PyQt5 have 620 class and 6000 method
+# QtCore use for working with files, directories, URL protocols, ...
+# QtGui use for working with graphical content like font-size, sentence-size, ...
+# QtWidgets for working with widgets_UI like buttons, labels, combobox, ...
+from PyQt5.QtWidgets import QMessageBox, QApplication, QMainWindow
 import sys
-import client
+import client # this is my client module
 
-class Ui_Login_Window(object):
+class Ui_Login_Window():
 
     def SetupUi(self, Login_Window):
         Login_Window.setObjectName("Login_Window")
         Login_Window.setEnabled(True)
-        Login_Window.setGeometry(730, 300, 490, 370)
-        Login_Window.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        Login_Window.setGeometry(700, 300, 490, 370)
+        Login_Window.setMaximumSize(QtCore.QSize(490, 350))
+        Login_Window.setMinimumSize(QtCore.QSize(490, 350))
+
         font = QtGui.QFont()
         font.setPointSize(12)
         Login_Window.setFont(font)
         Login_Window.setToolTip("")
+
         self.centralwidget = QtWidgets.QWidget(Login_Window)
         self.centralwidget.setObjectName("centralwidget")
 
@@ -55,13 +61,13 @@ class Ui_Login_Window(object):
         self.password_lineEdit.setFrame(True)
         self.password_lineEdit.setObjectName("password_lineEdit")
         self.password_lineEdit.setPlaceholderText("Enter your password")
-        self.password_lineEdit.setEchoMode(QLineEdit.Password)
+        self.password_lineEdit.setEchoMode(QtWidgets.QLineEdit.Password)
 
         self.server_address_lineEdit = QtWidgets.QLineEdit(self.centralwidget)
         self.server_address_lineEdit.setGeometry(QtCore.QRect(190, 190, 130, 36))
         self.server_address_lineEdit.setFrame(True)
         self.server_address_lineEdit.setObjectName("server_address_lineEdit")
-        self.server_address_lineEdit.setPlaceholderText("Ip Address")
+        self.server_address_lineEdit.setPlaceholderText("ex : 127.0.0.1")
 
         self.server_port_lineEdit = QtWidgets.QLineEdit(self.centralwidget)
         self.server_port_lineEdit.setGeometry(QtCore.QRect(330, 190, 81, 36))
@@ -74,7 +80,7 @@ class Ui_Login_Window(object):
         self.server_port_ip1.setObjectName("server_port_ip1")
 
         self.server_port_ip2 = QtWidgets.QLabel(self.centralwidget)
-        self.server_port_ip2.setGeometry(QtCore.QRect(323, 196, 81, 22))
+        self.server_port_ip2.setGeometry(QtCore.QRect(323, 196, 10, 20))
         self.server_port_ip2.setObjectName("server_port_ip2")
 
         Login_Window.setCentralWidget(self.centralwidget)
@@ -93,12 +99,9 @@ class Ui_Login_Window(object):
         self.username_lineEdit.setToolTip(_translate("Login_Window", "Enter your username"))
         self.server_address_lineEdit.setToolTip(_translate("Login_Window","Enter IP Address of server"))
         self.server_port_lineEdit.setToolTip(_translate("Login_Window", "Enter Port of server"))
-        self.automation_label.setText(_translate("Login_Window", "Automation Welcome!"))
+        self.automation_label.setText(_translate("Login_Window", "Login page Welcome!"))
         self.server_port_ip1.setText(_translate("Login_Window", "Ip : Port"))
         self.server_port_ip2.setText(_translate("Login_Window", ":"))
-
-    # def Update_Label_Size(self, label):
-    #     label.adjustSize()
 
     def Login_Button(self):
         Login_Window.close()
@@ -106,14 +109,18 @@ class Ui_Login_Window(object):
         username = self.username_lineEdit.text()
         password = self.password_lineEdit.text()
         ip = self.server_address_lineEdit.text()
-        port = int(self.server_port_lineEdit.text())
+        port = self.server_port_lineEdit.text()
 
-        Client = client.Client()
-        Client.Connect_and_authenticate_to_server(ip, port, username, password)
-        report = Client.Report
+        if (username == "") or (password == "") or (ip == "") or (port == ""):
+            self.Show_notify_bad_input()
 
-        if report == False:
-            self.Show_notify_fail_login()
+        else:
+            Client = client.Client()
+            Client.Connect_and_authenticate_to_server(ip, int(port), username, password)
+            report = Client.Report
+
+            if report == False:
+                self.Show_notify_fail_login()
 
     def Show_notify_fail_login(self):
         msg = QMessageBox()
@@ -125,10 +132,22 @@ class Ui_Login_Window(object):
         msg.buttonClicked.connect(lambda: Login_Window.show())
         msg.exec_()
 
+    def Show_notify_bad_input(self):
+        msg = QMessageBox()
+        msg.setText("Please fill all fields !")
+        msg.setIcon(QMessageBox.Warning)
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.setDefaultButton(QMessageBox.Ok)
+        msg.buttonClicked.connect(lambda: Login_Window.show())
+        msg.exec_()
+
 if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
-    Login_Window = QtWidgets.QMainWindow()
+    app = QApplication(sys.argv) # create a application and get it system argument.
+    Login_Window = QMainWindow() # create a main window.
+
     ui = Ui_Login_Window()
     ui.SetupUi(Login_Window)
+
     Login_Window.show()
-    sys.exit(app.exec_())
+
+    sys.exit(app.exec_()) # OS can know my app.
