@@ -37,10 +37,16 @@ class Ui_Login_Window():
         self.log_label.setObjectName("log_label")
 
         self.login_Button = QtWidgets.QPushButton(self.centralwidget)
-        self.login_Button.setGeometry(QtCore.QRect(180, 270, 131, 38))
+        self.login_Button.setGeometry(QtCore.QRect(127, 270, 110, 38))
         self.login_Button.setObjectName("login_Button")
         ################### login_Button Signal #####################
         self.login_Button.clicked.connect(lambda: self.Login_Button())
+
+        self.close_Button = QtWidgets.QPushButton(self.centralwidget)
+        self.close_Button.setGeometry(QtCore.QRect(247, 270, 110, 38))
+        self.close_Button.setObjectName("close_Button")
+        ################### close_Button Signal #####################
+        self.close_Button.clicked.connect(lambda: self.Close_Button())
 
         self.username = QtWidgets.QLabel(self.centralwidget)
         self.username.setGeometry(QtCore.QRect(76, 120, 91, 22))
@@ -83,6 +89,10 @@ class Ui_Login_Window():
         self.server_port_ip2.setGeometry(QtCore.QRect(323, 196, 10, 20))
         self.server_port_ip2.setObjectName("server_port_ip2")
 
+        self.status_bar = QtWidgets.QStatusBar(self.centralwidget)
+        self.status_bar.setGeometry(QtCore.QRect(0, 322, 490, 20))
+        self.status_bar.setObjectName("status_bar")
+
         Login_Window.setCentralWidget(self.centralwidget)
 
         self.RetranslateUi(Login_Window)
@@ -93,6 +103,8 @@ class Ui_Login_Window():
         Login_Window.setWindowTitle(_translate("Login_Window", "Login page"))
         self.login_Button.setToolTip(_translate("Login_Window", "login button"))
         self.login_Button.setText(_translate("Login_Window", "Login"))
+        self.close_Button.setToolTip(_translate("Login_Window", "Close button"))
+        self.close_Button.setText(_translate("Login_Window", "Close"))
         self.username.setText(_translate("Login_Window", "Username:"))
         self.password.setText(_translate("Login_Window", "Password:"))
         self.password_lineEdit.setToolTip(_translate("Login_Window", "Enter your password"))
@@ -102,52 +114,75 @@ class Ui_Login_Window():
         self.automation_label.setText(_translate("Login_Window", "Login page Welcome!"))
         self.server_port_ip1.setText(_translate("Login_Window", "Ip : Port"))
         self.server_port_ip2.setText(_translate("Login_Window", ":"))
+        self.status_bar.showMessage(_translate("Login_Window", "status: ok"))
 
     def Login_Button(self):
         Login_Window.close()
-
         username = self.username_lineEdit.text()
         password = self.password_lineEdit.text()
         ip = self.server_address_lineEdit.text()
         port = self.server_port_lineEdit.text()
 
-        if (username == "") or (password == "") or (ip == "") or (port == ""):
-            self.Show_notify_bad_input()
-
+        if (username == "") or (password == ""):
+            self.Show_notify_bad_input("1")
+        elif (len(ip) < 7) or (len(ip) >= 16) or (ip == ""):
+            self.Show_notify_bad_input("2")
+        elif port == "":
+            self.Show_notify_bad_input("3")
+        elif int(port) <= 0 or int(port) > 65536:
+            self.Show_notify_bad_input("3")
         else:
             Client = client.Client()
-            Client.Connect_and_authenticate_to_server(ip, int(port), username, password)
+            Client.Connect_and_authenticate_to_server(ip, port, username, password)
             report = Client.Report
-
             if report == False:
                 self.Show_notify_fail_login()
 
+    def Close_Button(self):
+        Login_Window.close()
+
     def Show_notify_fail_login(self):
+        self.status_bar.showMessage("login error")
         msg = QMessageBox()
         msg.setText("Login was Failed")
         msg.setIcon(QMessageBox.Warning)
         msg.setStandardButtons(QMessageBox.Retry)
         msg.setDefaultButton(QMessageBox.Retry)
-        msg.setDetailedText("Sorry server is down :( Connection refused, please try again")
+        msg.setDetailedText("Please check your ip / port or server maybe shutdown, please try again")
         msg.buttonClicked.connect(lambda: Login_Window.show())
         msg.exec_()
 
-    def Show_notify_bad_input(self):
-        msg = QMessageBox()
-        msg.setText("Please fill all fields !")
-        msg.setIcon(QMessageBox.Warning)
-        msg.setStandardButtons(QMessageBox.Ok)
-        msg.setDefaultButton(QMessageBox.Ok)
-        msg.buttonClicked.connect(lambda: Login_Window.show())
-        msg.exec_()
+    def Show_notify_bad_input(self, flag):
+        self.status_bar.showMessage("empty field error")
+        if flag == "1": # username or password
+            msg = QMessageBox()
+            msg.setText("Please fill username or password field!")
+            msg.setIcon(QMessageBox.Warning)
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.setDefaultButton(QMessageBox.Ok)
+            msg.buttonClicked.connect(lambda: Login_Window.show())
+            msg.exec_()
+        elif flag == "2": # ip
+            msg = QMessageBox()
+            msg.setText("Ip Address format is wrong!")
+            msg.setIcon(QMessageBox.Warning)
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.setDefaultButton(QMessageBox.Ok)
+            msg.buttonClicked.connect(lambda: Login_Window.show())
+            msg.exec_()
+        elif flag == "3": # port
+            msg = QMessageBox()
+            msg.setText("Port have invalid range!")
+            msg.setIcon(QMessageBox.Warning)
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.setDefaultButton(QMessageBox.Ok)
+            msg.buttonClicked.connect(lambda: Login_Window.show())
+            msg.exec_()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv) # create a application and get it system argument.
     Login_Window = QMainWindow() # create a main window.
-
     ui = Ui_Login_Window()
     ui.SetupUi(Login_Window)
-
     Login_Window.show()
-
     sys.exit(app.exec_()) # OS can know my app.
