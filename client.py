@@ -1,5 +1,4 @@
-import socket
-import sys
+import socket, sys, pickle
 
 class Client():
     def __init__(self):
@@ -8,10 +7,17 @@ class Client():
 
     def Connect_and_authenticate_to_server(self, server_ip, server_port, username, password):
         try:
-
-            client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # socket.AF_INET = create a ipv4 socket |||| socket.SOCK_STREAM = this socket work with TCP-IP.
+            '''
+            d = {1: "Hey", 2: "There"}
+            msg = pickle.dumps(d)
+            msg = bytes(f'{len(msg):<{HEADER_SIZE}}', "utf-8") + msg
+            client_socket.send(msg) # server said to client welcome.
+            '''
+            client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # socket.AF_INET = create a ipv4 socket, socket.SOCK_STREAM = this socket work with TCP-IP.
             client_socket.connect((server_ip, server_port)) # I ready my socket for connect to server.
             client_socket.setblocking(False) # disable blocking operation socket.
+
+            user_pass = pickle.dump([username, password])
 
             my_username = username.encode('utf-8') # encode username to uft-8 for send first message to server.
             my_password = password.encode('utf-8') # encode password to uft-8 for send first message to server.
@@ -37,6 +43,3 @@ class Client():
             self.Report = False
             return self.Report
             #sys.exit()
-
-# client = Client()
-# client.Connect_and_authenticate_to_server("127.0.0.1", 8888, "mehrdad", "123")
