@@ -1,4 +1,4 @@
-import socket, select, pymongo, datetime # use for socket.
+import socket, select, datetime # use for socket.
 
 class Server():
     def __init__(self):
