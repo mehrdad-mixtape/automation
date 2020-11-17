@@ -1,4 +1,5 @@
 import socket, select, datetime # use for socket.
+import manage_db
 
 class Server():
     def __init__(self):
@@ -30,6 +31,11 @@ class Server():
 
     def Run_Server(self):
 
+        db = manage_db.Automation_BD()
+        db.Insert_admin('mehrdad', 'arman')
+        #db.Delete_admin("mixtape")
+        #db.Update_admin("5fb427cb2584ac9a1dd9f933", 'sname', 'mixtape')
+        #db.Get_attrib_admin()
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # socket.AF_INET = create a ipv4 socket, socket.SOCK_STREAM = this socket work with TCP-IP.
         server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # initial socket.
         server_socket.bind((self.IP, self.PORT)) # bind ip and port on socket.
