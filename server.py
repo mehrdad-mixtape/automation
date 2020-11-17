@@ -45,6 +45,7 @@ class Server():
 
                     client_socket, client_address = server_socket.accept() # when client connect to my server I accept it and get IP:PORT from it. I get client_socket and client address=[IP, PORT]
                     user = self.Receive_Message(client_socket) # I call my def to receive message from client. this def return a dictionary that contain message_header and data, data for first time is username of client.
+                    print(user)
                     if user is False: # if user don't send message I continue other lines(disconnect client) :).
                         continue
                     # else:
