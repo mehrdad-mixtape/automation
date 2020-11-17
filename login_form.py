@@ -133,8 +133,7 @@ class Ui_Login_Window():
             self.Show_notify_bad_input("3")
         else:
             Client = client.Client()
-            Client.Connect_and_authenticate_to_server(ip, port, username, password)
-            report = Client.Report
+            report = Client.Connect_and_authenticate_to_server(ip, int(port), username, password)
             if report == False:
                 self.Show_notify_fail_login()
 

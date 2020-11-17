@@ -15,7 +15,7 @@ class Client():
 
             my_username = username.encode('utf-8') # encode username to uft-8 for send first message to server.
             my_password = password.encode('utf-8') # encode password to uft-8 for send first message to server.
-            username_header = f"{len(my_username)+len(my_password):<{self.HEADER_LENGTH}}".encode('utf-8') # calculate username length and + with Header_length.
+            username_header = f"{len(my_username):<{self.HEADER_LENGTH}}".encode('utf-8') # calculate username length and + with Header_length.
             password_header = f"{len(my_password):<{self.HEADER_LENGTH}}".encode('utf-8') # calculate password length and + with Header_length.
 
             client_socket.send(username_header + my_username) # I send my username to server for first message.
@@ -35,4 +35,8 @@ class Client():
         except Exception:
             #print("Sorry server is down :(",'\n',"Connection refused, please try again")
             self.Report = False
+            return self.Report
             #sys.exit()
+
+# client = Client()
+# client.Connect_and_authenticate_to_server("127.0.0.1", 8888, "mehrdad", "123")

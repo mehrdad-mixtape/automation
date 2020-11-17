@@ -4,10 +4,9 @@ import pymongo
 
 class Server():
     def __init__(self):
-
         self.HEADER_LENGTH = 10 # size packets.
         self.IP = "127.0.0.1"
-        self.PORT = 4444
+        self.PORT = 8888
         self.sockets_list = [] # list of sockets : server and other client.
         self.clients = {} # {socket:data}.
 
@@ -29,12 +28,10 @@ class Server():
             return False
 
     def Run_Server(self):
-        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # socket.AF_INET = create a ipv4 socket |||| socket.SOCK_STREAM = this socket work with TCP-IP.
+        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # socket.AF_INET = create a ipv4 socket, socket.SOCK_STREAM = this socket work with TCP-IP.
         server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # initial socket.
-
         server_socket.bind((self.IP, self.PORT)) # bind ip and port on socket.
         server_socket.listen() # socket should be lister on IP:PORT because I am server :D.
-
         self.sockets_list.append(server_socket)
 
         while True:
