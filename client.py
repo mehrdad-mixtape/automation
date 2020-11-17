@@ -1,4 +1,4 @@
-import socket, sys, pickle
+import socket, sys
 
 class Client():
     def __init__(self):
@@ -12,20 +12,18 @@ class Client():
             msg = pickle.dumps(d)
             msg = bytes(f'{len(msg):<{HEADER_SIZE}}', "utf-8") + msg
             client_socket.send(msg) # server said to client welcome.
+            
+            d = pickle.loads(full_msg[HEADER_SIZE:])
             '''
             client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # socket.AF_INET = create a ipv4 socket, socket.SOCK_STREAM = this socket work with TCP-IP.
             client_socket.connect((server_ip, server_port)) # I ready my socket for connect to server.
             client_socket.setblocking(False) # disable blocking operation socket.
 
-            user_pass = pickle.dump({1 : username, 2 : password})
-            user_pass = bytes(f"{len(user_pass):<{self.HEADER_LENGTH}}", 'utf-8') + user_pass
+            user_pass = username + " " + password
+            user_pass = user_pass.encode('utf-8')
+            user_pass_header = f"{len(user_pass):<{self.HEADER_LENGTH}}".encode('utf-8')
 
-            # my_username = username.encode('utf-8') # encode username to uft-8 for send first message to server.
-            # my_password = password.encode('utf-8') # encode password to uft-8 for send first message to server.
-            # username_header = f"{len(my_username):<{self.HEADER_LENGTH}}".encode('utf-8') # calculate username length and + with Header_length.
-            # password_header = f"{len(my_password):<{self.HEADER_LENGTH}}".encode('utf-8') # calculate password length and + with Header_length.
-
-            client_socket.send(user_pass) # I send my username to server for first message.
+            client_socket.send(user_pass_header + user_pass)
 
             while True:
                 message = input(f"{username} > ") # now I can write my message and send it to server.
@@ -44,3 +42,6 @@ class Client():
             self.Report = False
             return self.Report
             #sys.exit()
+
+client = Client()
+client.Connect_and_authenticate_to_server("127.0.0.1", 8888, "mehrdad", "123")

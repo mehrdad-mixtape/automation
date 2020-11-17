@@ -22,7 +22,8 @@ class Server():
                 return False
 
             message_length = int(message_header.decode("utf-8").strip()) # yes my message received XD, I should decode received message to utf-8 and calculate length.
-            return {"header": message_header, "data": client_socket.recv(message_length)} # we can receive message from each client with new header_length size.
+            message_data = client_socket.recv(message_length).decode('utf-8').split(" ") # "username password".split(" ")
+            return {"header": message_header, "data": message_data[0]} # we can receive message from each client with new header_length size.
 
         except:
             return False
@@ -45,36 +46,32 @@ class Server():
 
                     client_socket, client_address = server_socket.accept() # when client connect to my server I accept it and get IP:PORT from it. I get client_socket and client address=[IP, PORT]
                     user = self.Receive_Message(client_socket) # I call my def to receive message from client. this def return a dictionary that contain message_header and data, data for first time is username of client.
-                    print(user)
                     if user is False: # if user don't send message I continue other lines(disconnect client) :).
                         continue
                     # else:
                     self.sockets_list.append(client_socket)
                     self.clients[client_socket] = user # I create dictionary keys=client_socket : value= a dictionary that I received from client.
 
-                    print(f"Accepted new connection from {client_address[0]}:{client_address[1]} username:{user['data'].decode('utf-8')}") # yes you connected ! and your first message is your username.
+                    print(f"Accepted new connection from {client_address[0]}:{client_address[1]} username:{user['data']}") # yes you connected ! and your first message is your username.
 
                 ################################ for second time we check client that send message.################################
                 else:
                     message = self.Receive_Message(notified_socket) # my notify socket is client_socket.
 
                     if message is False:
-                        print(f"Closed connection from {self.clients[notified_socket]['data'].decode('utf-8')}") # clients={client_socket:{"header": message_header, "data": client_socket.recv(message_length)}, ...}
+                        print(f"Closed connection from {self.clients[notified_socket]['data']}") # clients={client_socket:{"header": message_header, "data": client_socket.recv(message_length)}, ...}
                         self.sockets_list.remove(notified_socket)
                         del self.clients[notified_socket]
                         continue
 
                     user = self.clients[notified_socket] # I access to {"header": message_header, "data": client_socket.recv(message_length)}
-                    print(f"message from >>> {user['data'].decode('utf-8')} <<<: {message['data'].decode('utf-8')}")
+                    print(f"message from #{user['data']}# : {message['data']}")
 
-                    self.Instraction_Handler(message['data'].decode('utf-8'), notified_socket)
+                    self.Instraction_Handler(message['data'], notified_socket)
 
             for notified_socket in exception_sockets:
                 self.sockets_list.remove(notified_socket)
                 del self.clients[notified_socket]
 
-def Start_Server():
-    server = Server()
-    server.Run_Server()
-#---------------------------------------------------------------------------------------------------------------------#
-Start_Server()
+server = Server()
+server.Run_Server()
