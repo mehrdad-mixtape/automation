@@ -1,4 +1,4 @@
-import socket, select, datetime# use for socket.
+import socket, select, datetime, hashlib# use for socket.
 import manage_db
 
 class Server():
@@ -32,16 +32,17 @@ class Server():
     def Send_Message(self, client_socket, message):
         pass
 
-    def Authenticate(self):
-        pass
+    def Authenticate(self, usr, passwd):
+        data = db.Get_attrib_admin(usr)
+        if data == False:
+            return False
+
+        elif data[0] == usr and data[1] == passwd:
+            return True
+
 
     def Run_Server(self):
 
-        db = manage_db.Automation_BD()
-        #db.Insert_admin('mixtape', str(hashlib.sha256('123'.encode('utf-8')).hexdigest()), 'mehrdad', 'arman', 'mehrdad1998a@gmail.com', '09369798295')
-        #db.Delete_admin("5fb52fc768fdd8977be33228")
-        #db.Update_admin("5fb427cb2584ac9a1dd9f933", 'sname', 'mixtape')
-        #print(db.Get_attrib_admin('mixtape'))
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # socket.AF_INET = create a ipv4 socket, socket.SOCK_STREAM = this socket work with TCP-IP.
         server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # initial socket.
         server_socket.bind((self.IP, self.PORT)) # bind ip and port on socket.
@@ -61,11 +62,13 @@ class Server():
                     user_pass = self.Receive_Message(client_socket) # I call my def to receive message from client. this def return a dictionary that contain message_header and data, data for first time is username of client.
                     if user_pass is False: # user can press enter with out message
                         continue
-                    # else:
-                    self.sockets_list.append(client_socket)
-                    self.clients[client_socket] = user_pass # I create dictionary keys=client_socket : value= a dictionary that I received from client.
-
-                    print(f"{self.Server_time()} '{user_pass['data'][0]}' with {client_address[0]}:{client_address[1]} login to server") # yes you connected ! and your first message is your username.
+                    else:
+                        if self.Authenticate(user_pass['data'][0], user_pass['data'][1]) == True:
+                            self.sockets_list.append(client_socket)
+                            self.clients[client_socket] = user_pass
+                            print(f"{self.Server_time()} '{user_pass['data'][0]}' with {client_address[0]}:{client_address[1]} login to server") # yes you connected ! and your first message is your username.
+                        else:
+                            print('authentication failed')
 
                 ################################ for second time we check client that send message.################################
                 else:
@@ -85,5 +88,11 @@ class Server():
                 self.sockets_list.remove(notified_socket)
                 del self.clients[notified_socket]
 
-server = Server()
-server.Run_Server()
+if __name__ == "__main__":
+    db = manage_db.Automation_BD()
+    # db.Insert_admin('mixtape', str(hashlib.sha256('123'.encode('utf-8')).hexdigest()), 'mehrdad', 'arman', 'mehrdad1998a@gmail.com', '09369798295')
+    # db.Delete_admin("5fb52fc768fdd8977be33228")
+    # db.Update_admin("5fb427cb2584ac9a1dd9f933", 'sname', 'mixtape')
+    # print(db.Get_attrib_admin('mixtape'))
+    server = Server()
+    server.Run_Server()
