@@ -1,4 +1,5 @@
 import socket, sys
+from hashlib import sha256
 
 class Client():
     def __init__(self):
@@ -19,7 +20,7 @@ class Client():
             client_socket.connect((server_ip, server_port)) # I ready my socket for connect to server.
             client_socket.setblocking(False) # disable blocking operation socket.
 
-            user_pass = username + " " + password
+            user_pass = username + " " + self.Hash(password)
             user_pass = user_pass.encode('utf-8')
             user_pass_header = f"{len(user_pass):<{self.HEADER_LENGTH}}".encode('utf-8')
 
@@ -43,5 +44,8 @@ class Client():
             return self.Report
             #sys.exit()
 
+    def Hash(self, input):
+        return str(sha256(input.encode('utf-8')).hexdigest())
+
 client = Client()
-client.Connect_and_authenticate_to_server("127.0.0.1", 8888, "mehrdad", "123")
+client.Connect_and_authenticate_to_server("127.0.0.1", 4444, "mehrdad", "123")
