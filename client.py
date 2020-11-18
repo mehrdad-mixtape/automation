@@ -8,14 +8,6 @@ class Client():
 
     def Connect_and_authenticate_to_server(self, server_ip, server_port, username, password):
         try:
-            '''
-            d = {1: "Hey", 2: "There"}
-            msg = pickle.dumps(d)
-            msg = bytes(f'{len(msg):<{HEADER_SIZE}}', "utf-8") + msg
-            client_socket.send(msg) # server said to client welcome.
-            
-            d = pickle.loads(full_msg[HEADER_SIZE:])
-            '''
             client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # socket.AF_INET = create a ipv4 socket, socket.SOCK_STREAM = this socket work with TCP-IP.
             client_socket.connect((server_ip, server_port)) # I ready my socket for connect to server.
             client_socket.setblocking(False) # disable blocking operation socket.
@@ -27,6 +19,7 @@ class Client():
             client_socket.send(user_pass_header + user_pass)
 
             while True:
+
                 message = input(f"{username} > ") # now I can write my message and send it to server.
 
                 if (message == "exit"):
@@ -47,5 +40,6 @@ class Client():
     def Hash(self, input):
         return str(sha256(input.encode('utf-8')).hexdigest())
 
-client = Client()
-client.Connect_and_authenticate_to_server("127.0.0.1", 4444, "mehrdad", "123")
+# if __name__ == "__main__":
+    # client = Client()
+    # client.Connect_and_authenticate_to_server("127.0.0.1", 4444, "mehrdad", "123")
