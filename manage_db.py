@@ -32,11 +32,14 @@ class Automation_BD:
             return 'Selected index Update'
 
     def Get_attrib_admin(self, username):
-        data = self.admin_coll.find_one({'_id' : username})
-        result = []
-        for key in data:
-            result.append(data[key])
-        return result
+        if self.admin_coll.find_one({'_id' : username}):
+            data = self.admin_coll.find_one({'_id' : username})
+            result = []
+            for key in data:
+                result.append(data[key])
+            return result
+        else:
+            return False
 
     def Close_connection(self):
         self.connection.close()
