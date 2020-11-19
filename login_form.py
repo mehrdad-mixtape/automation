@@ -135,21 +135,44 @@ class Ui_Login_Window():
             Client = client.Client()
             report = Client.Connect_and_authenticate_to_server(ip, int(port), username, password)
             if report == False:
-                self.Show_notify_fail_login()
+                self.Show_notify_fail_login(1)
+            elif report == 'Connection closed from you':
+                self.Show_notify_fail_login(2)
+            elif report == 'Server shutdown':
+                self.Show_notify_fail_login(3)
 
     def Close_Button(self):
         Login_Window.close()
 
-    def Show_notify_fail_login(self):
-        self.status_bar.showMessage("login error")
-        msg = QMessageBox()
-        msg.setText("Login was Failed")
-        msg.setIcon(QMessageBox.Warning)
-        msg.setStandardButtons(QMessageBox.Retry)
-        msg.setDefaultButton(QMessageBox.Retry)
-        msg.setDetailedText("Please check your ip / port or server maybe shutdown, please try again")
-        msg.buttonClicked.connect(lambda: Login_Window.show())
-        msg.exec_()
+    def Show_notify_fail_login(self, flag):
+        if flag == 1:
+            self.status_bar.showMessage("login error")
+            msg = QMessageBox()
+            msg.setText("Login failed")
+            msg.setIcon(QMessageBox.Warning)
+            msg.setStandardButtons(QMessageBox.Retry)
+            msg.setDefaultButton(QMessageBox.Retry)
+            msg.setDetailedText("Please check your ip / port or server maybe shutdown, please try again")
+            msg.buttonClicked.connect(lambda: Login_Window.show())
+            msg.exec_()
+        elif flag == 2:
+            self.status_bar.showMessage("notify")
+            msg = QMessageBox()
+            msg.setText("connection close from you")
+            msg.setIcon(QMessageBox.Information)
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.setDefaultButton(QMessageBox.Ok)
+            msg.exec_()
+        # elif flag == 3:
+        #     self.status_bar.showMessage("error 503")
+        #     msg = QMessageBox()
+        #     msg.setText("error 503")
+        #     msg.setIcon(QMessageBox.Warning)
+        #     msg.setStandardButtons(QMessageBox.Retry)
+        #     msg.setDefaultButton(QMessageBox.Retry)
+        #     msg.setDetailedText("Server maybe shutdown, please try again")
+        #     msg.buttonClicked.connect(lambda: Login_Window.show())
+        #     msg.exec_()
 
     def Show_notify_bad_input(self, flag):
         self.status_bar.showMessage("empty field error")
