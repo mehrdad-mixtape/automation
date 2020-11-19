@@ -1,4 +1,4 @@
-import socket, sys
+import socket, sys, login_form
 from hashlib import sha256
 
 class Client():
@@ -6,30 +6,51 @@ class Client():
         self.HEADER_LENGTH = 10
         self.Report = True
 
+    def Receive_Message(self, receiver_socket):  # internal function
+        try:
+            message_header = receiver_socket.recv(self.HEADER_LENGTH)  # try to get first message from clients with 10 bytes.
+            if not len(message_header):  # if message_header was empty we can close the connection.
+                return False
+
+            message_length = int(message_header.decode("utf-8").strip())  # yes my message received XD, I should decode received message to utf-8 and calculate length.
+            return receiver_socket.recv(message_length).decode('utf-8')
+        except:
+            return False
+
+    def Send_Message(self, sender_socket, message):
+        msg = message.encode('utf-8')
+        msg_header = f"{len(msg):<{self.HEADER_LENGTH}}".encode("utf-8")
+        sender_socket.send(msg_header + msg)
+
     def Connect_and_authenticate_to_server(self, server_ip, server_port, username, password):
         try:
             client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # socket.AF_INET = create a ipv4 socket, socket.SOCK_STREAM = this socket work with TCP-IP.
             client_socket.connect((server_ip, server_port)) # I ready my socket for connect to server.
             client_socket.setblocking(False) # disable blocking operation socket.
 
-            user_pass = username + " " + self.Hash(password)
+            user_pass = username + "ε" + self.Hash(password)
             user_pass = user_pass.encode('utf-8')
             user_pass_header = f"{len(user_pass):<{self.HEADER_LENGTH}}".encode('utf-8')
 
             client_socket.send(user_pass_header + user_pass)
 
             while True:
+                send_message = input(f"{username} > ") # now I can write my message and send it to server.
 
-                message = input(f"{username} > ") # now I can write my message and send it to server.
+                if send_message:
+                    self.Send_Message(client_socket, send_message)
 
-                if (message == "exit"):
-                    print("Connection closed")
-                    sys.exit()
-
-                if message:
-                    message = message.encode("utf-8") # encode message to utf-8.
-                    message_header = f"{len(message):<{self.HEADER_LENGTH}}".encode("utf-8") # calculate message_length for header and send it to server for check my header.
-                    client_socket.send(message_header + message)
+                while True:
+                    receive_message = self.Receive_Message(client_socket)
+                    if receive_message != False:
+                        if receive_message == 'Connection closed from you':
+                            self.Report = receive_message
+                            sys.exit()
+                        if receive_message == '':
+                            pass
+                        else:
+                            print(receive_message)
+                            break
 
         except Exception:
             #print("Sorry server is down :(",'\n',"Connection refused, please try again")
@@ -40,6 +61,6 @@ class Client():
     def Hash(self, input):
         return str(sha256(input.encode('utf-8')).hexdigest())
 
-# if __name__ == "__main__":
-    # client = Client()
-    # client.Connect_and_authenticate_to_server("127.0.0.1", 4444, "mehrdad", "123")
+if __name__ == "__main__":
+    client = Client()
+    client.Connect_and_authenticate_to_server('127.0.0.1', 4444, 'mixtape', '123')
