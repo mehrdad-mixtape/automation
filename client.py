@@ -33,34 +33,37 @@ class Client():
             user_pass_header = f"{len(user_pass):<{self.HEADER_LENGTH}}".encode('utf-8')
 
             client_socket.send(user_pass_header + user_pass)
-
             while True:
-                send_message = input(f"{username} > ") # now I can write my message and send it to server.
+                receive_message = self.Receive_Message(client_socket)
+                if receive_message != False:
+                    if receive_message == 'authentication failed':
+                        self.Report = False
+                        return self.Report
+                    else:
+                        while True:
+                            send_message = input(f"{username} > ") # now I can write my message and send it to server.
+                            if send_message:
+                                self.Send_Message(client_socket, send_message)
 
-                if send_message:
-                    self.Send_Message(client_socket, send_message)
+                            while True:
+                                receive_message = self.Receive_Message(client_socket)
+                                if receive_message == 'Connection closed from you': # if I send 'exit' server send me this message.
+                                    self.Report = receive_message
+                                    return self.Report
+                                # elif receive_message == 'Server shutdown':
+                                #     self.Report = receive_message
+                                #     return self.Report
+                                else:
+                                    print(receive_message)
+                                    break
 
-                while True:
-                    receive_message = self.Receive_Message(client_socket)
-                    if receive_message != False:
-                        if receive_message == 'Connection closed from you':
-                            self.Report = receive_message
-                            sys.exit()
-                        if receive_message == '':
-                            pass
-                        else:
-                            print(receive_message)
-                            break
-
-        except Exception:
-            #print("Sorry server is down :(",'\n',"Connection refused, please try again")
+        except Exception: # If anything happens to the server this exception can handle it.
             self.Report = False
             return self.Report
-            #sys.exit()
 
     def Hash(self, input):
         return str(sha256(input.encode('utf-8')).hexdigest())
 
-if __name__ == "__main__":
-    client = Client()
-    client.Connect_and_authenticate_to_server('127.0.0.1', 4444, 'mixtape', '123')
+# if __name__ == "__main__":
+#     client = Client()
+#     client.Connect_and_authenticate_to_server('127.0.0.1', 4444, 'mixtape', '123')
