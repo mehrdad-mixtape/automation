@@ -9,7 +9,7 @@ class Automation_BD:
         self.user_coll = self.automation_db['user']
         self.server_coll = self.automation_db['server']
         self.workspace_coll = self.automation_db['workspace']
-        self.login_log__coll = self.automation_db['login_log']
+        self.login_log_coll = self.automation_db['login_log']
         self.action_log_coll = self.automation_db['action_log']
         self.script_coll = self.automation_db['script']
 
@@ -43,5 +43,3 @@ class Automation_BD:
 
     def Close_connection(self):
         self.connection.close()
-
-
