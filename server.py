@@ -12,8 +12,6 @@ class Server():
     def Instraction_Handler(self, cmd, client_socket): # use for check messages
         if (cmd == "exit"):
             self.Send_Message(client_socket, 'Connection closed from you')
-            # self.sockets_list.remove(client_socket)
-            # del self.clients[client_socket]
 
     def Receive_Message(self, receiver_socket): # internal function
         try:
@@ -49,47 +47,54 @@ class Server():
         self.sockets_list.append(server_socket)
 
         while True:
-            read_sockets, _, exception_sockets = select.select(self.sockets_list, [], self.sockets_list) # manage more client sockets, I give it my socket_list, [] empty, my socket_list for what?
-            # first: read all sockets from list, second: write sockets to [], third: ?, each time I read socket list if new client connect to my server and check it.
+            try:
+                read_sockets, _, exception_sockets = select.select(self.sockets_list, [], self.sockets_list) # manage more client sockets, I give it my socket_list, [] empty, my socket_list for what?
+                # first: read all sockets from list, second: write sockets to [], third: ?, each time I read socket list if new client connect to my server and check it.
 
-            for notified_socket in read_sockets: # search in read_sockets.
+                for notified_socket in read_sockets: # search in read_sockets.
 
-                ################################ for first time we check server socket for client that connect and authenticate.################################
-                if notified_socket == server_socket: # server socket is always first socket that give me notify because client connect to my server.
+                    ################################ for first time we check server socket for client that connect and authenticate.################################
+                    if notified_socket == server_socket: # server socket is always first socket that give me notify because client connect to my server.
 
-                    client_socket, client_address = server_socket.accept() # when client connect to my server I accept it and get IP:PORT from it. I get client_socket and client address=[IP, PORT]
-                    user_pass = self.Receive_Message(client_socket) # I call my def to receive message from client. this def return a dictionary that contain message_header and data, data for first time is username of client.
-                    if user_pass is False: # user can press enter with out message
-                        continue
+                        client_socket, client_address = server_socket.accept() # when client connect to my server I accept it and get IP:PORT from it. I get client_socket and client address=[IP, PORT]
+                        user_pass = self.Receive_Message(client_socket) # I call my def to receive message from client. this def return a dictionary that contain message_header and data, data for first time is username of client.
+                        if user_pass is False: # user can press enter with out message
+                            continue
 
-                    else:
-                        if self.Authenticate(user_pass['data'][0], user_pass['data'][1]) == True:
-                            self.sockets_list.append(client_socket)
-                            self.clients[client_socket] = user_pass['data'][0] # clients={client_socket:{"header": message_header, "data": client_socket.recv(message_length)}, ...}
-                            self.Send_Message(client_socket, 'authentication complete')
-                            print(f"{self.Server_time()} authentication complete from '{user_pass['data'][0]}' with {client_address[0]}:{client_address[1]} to server") # log
                         else:
-                            self.Send_Message(client_socket, 'authentication failed')
-                            print(f"{self.Server_time()} authentication fail from '{user_pass['data'][0]}' with {client_address[0]}:{client_address[1]} to server") # log
+                            if self.Authenticate(user_pass['data'][0], user_pass['data'][1]) == True: # user_pass = {'header' : message_header, 'data' : ['username', 'hash']}
+                                self.Send_Message(client_socket, 'authentication complete')
+                                print(f"{self.Server_time()} authentication complete from '{user_pass['data'][0]}' with {client_address[0]}:{client_address[1]} to server")  # log
 
-                ################################ for second time we check client that send message to server and  client want to receive acknowledge from server.################################
-                else:
-                    message = self.Receive_Message(notified_socket) # my notify socket is client_socket.
+                                self.sockets_list.append(client_socket)
+                                self.clients[client_socket] = user_pass['data'][0] # clients={client_socket: username}, ...}
 
-                    if message is False:
-                        print(f"{self.Server_time()}Connection closed from '{self.clients[notified_socket]['data'][0]}'") # log
-                        self.sockets_list.remove(notified_socket)
-                        del self.clients[notified_socket]
-                        continue
+                            else:
+                                self.Send_Message(client_socket, 'authentication failed')
+                                print(f"{self.Server_time()} authentication fail from '{user_pass['data'][0]}' with {client_address[0]}:{client_address[1]} to server") # log
 
-                    user = self.clients[notified_socket] # I access to {"header": message_header, "data": client_socket.recv(message_length)}
-                    self.Instraction_Handler(message['data'][0], notified_socket)
-                    self.Send_Message(notified_socket, 'ack')
-                    print(f"{self.Server_time()} message from '{user['data'][0]}':  {message['data']}")  # log
+                    ################################ for second time we check client that send message to server and  client want to receive acknowledge from server.################################
+                    else:
+                        message = self.Receive_Message(notified_socket) # my notify socket is client_socket.
 
-            for notified_socket in exception_sockets:
-                self.sockets_list.remove(notified_socket)
-                del self.clients[notified_socket]
+                        if message is False:
+                            print(f"{self.Server_time()} connection closed from '{self.clients[notified_socket]}'") # log
+                            self.sockets_list.remove(notified_socket)
+                            del self.clients[notified_socket]
+                            continue
+
+                        user = self.clients[notified_socket] # I access to {"header": message_header, "data": client_socket.recv(message_length)}
+                        self.Instraction_Handler(message['data'][0], notified_socket)
+                        self.Send_Message(notified_socket, 'ack')
+                        print(f"{self.Server_time()} message from '{user}':  {message['data'][0]}")  # log
+
+                for notified_socket in exception_sockets:
+                    self.sockets_list.remove(notified_socket)
+                    del self.clients[notified_socket]
+
+            except Exception:
+                for notified_socket in self.sockets_list:
+                    self.Send_Message(notified_socket, "Server shutdown")
 
     def Server_time(self):
         return datetime.datetime.now().strftime("%y-%m-%d %H:%M:%S")
