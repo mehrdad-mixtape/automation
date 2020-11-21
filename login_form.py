@@ -122,7 +122,7 @@ class Ui_Login_Window():
         password = self.password_lineEdit.text()
         ip = self.server_address_lineEdit.text()
         port = self.server_port_lineEdit.text()
-
+        # login_page can handle input : username, password, ip, port
         if (username == "") or (password == ""):
             self.Show_notify_bad_input("1")
         elif (len(ip) < 7) or (len(ip) >= 16) or (ip == ""):
@@ -134,12 +134,12 @@ class Ui_Login_Window():
         else:
             Client = client.Client()
             report = Client.Connect_and_authenticate_to_server(ip, int(port), username, password)
-            if report == False:
+            if report == False: # if server shuts down or cannot give service this line can help me.
                 self.Show_notify_fail_login(1)
-            elif report == 'Connection closed from you':
+            elif report == 'Connection closed': # if user send 'exit' to server, server send me Connection closed and I can see a notify.
                 self.Show_notify_fail_login(2)
-            elif report == 'Server shutdown':
-                self.Show_notify_fail_login(3)
+            # elif report == 'Server shutdown':
+            #     self.Show_notify_fail_login(3)
 
     def Close_Button(self):
         Login_Window.close()
@@ -148,6 +148,7 @@ class Ui_Login_Window():
         if flag == 1:
             self.status_bar.showMessage("login error")
             msg = QMessageBox()
+            msg.setWindowTitle("Notify")
             msg.setText("Login failed")
             msg.setIcon(QMessageBox.Warning)
             msg.setStandardButtons(QMessageBox.Retry)
@@ -158,7 +159,8 @@ class Ui_Login_Window():
         elif flag == 2:
             self.status_bar.showMessage("notify")
             msg = QMessageBox()
-            msg.setText("connection close from you")
+            msg.setWindowTitle("Notify")
+            msg.setText("You are Logout from server goodbye :)")
             msg.setIcon(QMessageBox.Information)
             msg.setStandardButtons(QMessageBox.Ok)
             msg.setDefaultButton(QMessageBox.Ok)
@@ -178,6 +180,7 @@ class Ui_Login_Window():
         self.status_bar.showMessage("empty field error")
         if flag == "1": # username or password
             msg = QMessageBox()
+            msg.setWindowTitle("Notify")
             msg.setText("Please fill username or password field!")
             msg.setIcon(QMessageBox.Warning)
             msg.setStandardButtons(QMessageBox.Ok)
@@ -186,6 +189,7 @@ class Ui_Login_Window():
             msg.exec_()
         elif flag == "2": # ip
             msg = QMessageBox()
+            msg.setWindowTitle("Notify")
             msg.setText("Ip Address format is wrong!")
             msg.setIcon(QMessageBox.Warning)
             msg.setStandardButtons(QMessageBox.Ok)
@@ -194,6 +198,7 @@ class Ui_Login_Window():
             msg.exec_()
         elif flag == "3": # port
             msg = QMessageBox()
+            msg.setWindowTitle("Notify")
             msg.setText("Port have invalid range!")
             msg.setIcon(QMessageBox.Warning)
             msg.setStandardButtons(QMessageBox.Ok)
