@@ -9,34 +9,40 @@ class Server():
         self.sockets_list = [] # list of sockets : server and other client.
         self.clients = {} # {socket:data}.
 
-    def Instraction_Handler(self, cmd, client_socket): # use for check messages
-        if (cmd == "exit"):
-            self.Send_Message(client_socket, 'Connection closed from you')
+    def Server_time(self): # internal function to return live time for logs.
+        return datetime.datetime.now().strftime("%y-%m-%d %H:%M:%S")
 
-    def Receive_Message(self, receiver_socket): # internal function
+    def Instruction_Handler(self, cmd, client_socket): # internal function to check contain of messages that have keyword.
+        if (cmd == "exit"):
+            self.Send_Message(client_socket, 'Connection closed')
+
+
+    def Authenticate(self, usr, passwd): # internal function to authenticate users that want login to server.
+        data = db.Get_attrib_admin(usr)
+        if data == False:
+            return False
+        elif data[0] == usr and data[1] == passwd:
+            return True
+
+    def Receive_Message(self, receiver_socket): # internal function to receive messages.
         try:
-            message_header = receiver_socket.recv(self.HEADER_LENGTH) # try to get first message from clients with 10 bytes.
+            message_header = receiver_socket.recv(self.HEADER_LENGTH) # try to get first message from clients with 10byte buffer.
             if not len(message_header): # if message_header was empty we can close the connection.
                 return False
-
-            message_length = int(message_header.decode("utf-8").strip()) # yes my message received XD, I should decode received message to utf-8 and calculate length.
+            message_length = int(message_header.decode("utf-8").strip()) # server should decode received message to utf-8 and calculate length to can receive message_data.
             message_data = receiver_socket.recv(message_length).decode('utf-8').split("ε") # "username password".split("ε") for an other messages don't split.
             return {"header": message_header, "data": message_data} # we can receive message from each client with new header_length size.
         except:
             return False
 
-    def Send_Message(self, sender_socket, message):
-        msg = message.encode('utf-8')
-        msg_header = f"{len(msg):<{self.HEADER_LENGTH}}".encode("utf-8")
-        sender_socket.send(msg_header + msg)
-
-    def Authenticate(self, usr, passwd):
-        data = db.Get_attrib_admin(usr)
-        if data == False:
+    def Send_Message(self, sender_socket, message): # internal function to send messages.
+        try:
+            msg = message.encode('utf-8') # server encode message.
+            msg_header = f"{len(msg):<{self.HEADER_LENGTH}}".encode("utf-8") # server calculate length of message to allocated it for sending.
+            sender_socket.send(msg_header + msg)
+            return 'ack'
+        except:
             return False
-
-        elif data[0] == usr and data[1] == passwd:
-            return True
 
     def Run_Server(self):
 
@@ -47,9 +53,9 @@ class Server():
         self.sockets_list.append(server_socket)
 
         while True:
-            try:
-                read_sockets, _, exception_sockets = select.select(self.sockets_list, [], self.sockets_list) # manage more client sockets, I give it my socket_list, [] empty, my socket_list for what?
-                # first: read all sockets from list, second: write sockets to [], third: ?, each time I read socket list if new client connect to my server and check it.
+            try: # when server start to work, try to accept requests from clients, authenticate them and add client_sockets to lists.
+                read_sockets, _, exception_sockets = select.select(self.sockets_list, [], self.sockets_list) # manage multi client sockets, server give it socket_list, [] empty, socket_list, for what?
+                # first: read all sockets from list, second: write sockets to [], third: write exception_sockets to this list, each time I read socket list if new client connect to my server and check it.
 
                 for notified_socket in read_sockets: # search in read_sockets.
 
@@ -58,46 +64,51 @@ class Server():
 
                         client_socket, client_address = server_socket.accept() # when client connect to my server I accept it and get IP:PORT from it. I get client_socket and client address=[IP, PORT]
                         user_pass = self.Receive_Message(client_socket) # I call my def to receive message from client. this def return a dictionary that contain message_header and data, data for first time is username of client.
-                        if user_pass is False: # user can press enter with out message
+                        if user_pass is False:
                             continue
 
                         else:
-                            if self.Authenticate(user_pass['data'][0], user_pass['data'][1]) == True: # user_pass = {'header' : message_header, 'data' : ['username', 'hash']}
+                            if self.Authenticate(user_pass['data'][0], user_pass['data'][1]) == True: # user_pass = {'header' : message_header, 'data' : ['username', 'hash']}.
+                                # Server check user/pass and if this user/pass exist on db, return True.
                                 self.Send_Message(client_socket, 'authentication complete')
+                                # If Authentication() return True, server send a message to client with client_socket.
                                 print(f"{self.Server_time()} authentication complete from '{user_pass['data'][0]}' with {client_address[0]}:{client_address[1]} to server")  # log
 
-                                self.sockets_list.append(client_socket)
-                                self.clients[client_socket] = user_pass['data'][0] # clients={client_socket: username}, ...}
+                                self.sockets_list.append(client_socket) # After authentication I add client socket to socket_list.
+                                self.clients[client_socket] = user_pass['data'][0] # clients={client_socket: username}, ...}.
+                                # And client_socket add to dictionary that server can recognize client_socket with client_message.
 
                             else:
                                 self.Send_Message(client_socket, 'authentication failed')
+                                # If Authentication() return False, server send message to client with client_socket.
                                 print(f"{self.Server_time()} authentication fail from '{user_pass['data'][0]}' with {client_address[0]}:{client_address[1]} to server") # log
 
                     ################################ for second time we check client that send message to server and  client want to receive acknowledge from server.################################
                     else:
-                        message = self.Receive_Message(notified_socket) # my notify socket is client_socket.
+                        message = self.Receive_Message(notified_socket) # my notify_socket is client_socket.
+                        # Server receive messages from clients.
 
-                        if message is False:
+                        if message is False: # if client disconnect or send 'exit' message, server remove that client_socket from socket_list[] & clients{}
                             print(f"{self.Server_time()} connection closed from '{self.clients[notified_socket]}'") # log
                             self.sockets_list.remove(notified_socket)
                             del self.clients[notified_socket]
                             continue
 
-                        user = self.clients[notified_socket] # I access to {"header": message_header, "data": client_socket.recv(message_length)}
-                        self.Instraction_Handler(message['data'][0], notified_socket)
-                        self.Send_Message(notified_socket, 'ack')
+                        user = self.clients[notified_socket] # I access to {"header": message_header, "data": client_socket.recv(message_length)}.
+                        # I get username that saved with socket in clients{}.
+                        self.Instruction_Handler(message['data'][0], notified_socket) # Can check messages if client send keyword to server, this function can handle it.
+                        self.Send_Message(notified_socket, 'ack') # When server receive message and check it with Instruction_Handler(), send 'ack' with client_socket to client, it's mean : yes I receive your message.
                         print(f"{self.Server_time()} message from '{user}':  {message['data'][0]}")  # log
 
-                for notified_socket in exception_sockets:
+                for notified_socket in exception_sockets: # if each client_socket exist on exception_socket, server remove it.
                     self.sockets_list.remove(notified_socket)
                     del self.clients[notified_socket]
 
-            except Exception:
+            except Exception: # if server cannot service to clients, send a message to clients and disconnect all clients.
                 for notified_socket in self.sockets_list:
-                    self.Send_Message(notified_socket, "Server shutdown")
-
-    def Server_time(self):
-        return datetime.datetime.now().strftime("%y-%m-%d %H:%M:%S")
+                    self.Send_Message(notified_socket, "Server shuts down")
+                    self.sockets_list.remove(notified_socket)
+                    del self.clients[notified_socket]
 
 if __name__ == "__main__":
     db = manage_db.Automation_BD()
