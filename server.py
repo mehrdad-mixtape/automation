@@ -21,7 +21,7 @@ class Server():
         data = db.Get_attrib_admin(usr)
         if data == False:
             return False
-        elif data[0] == usr and data[1] == passwd:
+        elif data[1] == usr and data[2] == passwd:
             return True
 
     def Receive_Message(self, receiver_socket): # internal function to receive messages.
@@ -112,9 +112,9 @@ class Server():
 
 if __name__ == "__main__":
     db = manage_db.Automation_BD()
-    # db.Insert_admin('mixtape', str(hashlib.sha256('123'.encode('utf-8')).hexdigest()), 'mehrdad', 'arman', 'mehrdad1998a@gmail.com', '09369798295')
-    # db.Delete_admin("5fb52fc768fdd8977be33228")
-    # db.Update_admin("5fb427cb2584ac9a1dd9f933", 'sname', 'mixtape')
-    # print(db.Get_attrib_admin('mixtape'))
-    server = Server()
-    server.Run_Server()
+    # db.Insert_admin('mixtape', str(hashlib.sha256('123'.encode('utf-8')).hexdigest()), 'mehrdad', 'arman', '1998', '12', '31', 'mehrdad1998a@gmail.com', '09369798295')
+    # db.Delete_admin("mixtape")
+    # db.Update_admin("mixtape", 'first_name', 'mehrdad')
+    print(db.Get_attrib_admin('mixtape'))
+    # server = Server()
+    # server.Run_Server()
