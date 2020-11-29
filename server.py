@@ -2,10 +2,10 @@ import socket, select, datetime, hashlib, sys# use for socket.
 import manage_db
 
 class Server():
-    def __init__(self):
+    def __init__(self, ip, port):
         self.HEADER_LENGTH = 10 # size packets.
-        self.IP = "127.0.0.1"
-        self.PORT = 4444
+        self.IP = ip
+        self.PORT = port
         self.sockets_list = [] # list of sockets : server and other client.
         self.clients = {} # {socket:data}.
 
@@ -115,6 +115,6 @@ if __name__ == "__main__":
     # db.Insert_admin('mixtape', str(hashlib.sha256('123'.encode('utf-8')).hexdigest()), 'mehrdad', 'arman', '1998', '12', '31', 'mehrdad1998a@gmail.com', '09369798295')
     # db.Delete_admin("mixtape")
     # db.Update_admin("mixtape", 'first_name', 'mehrdad')
-    print(db.Get_attrib_admin('mixtape'))
-    # server = Server()
-    # server.Run_Server()
+    #print(db.Get_attrib_admin('mixtape'))
+    server = Server("127.0.0.1", 4444)
+    server.Run_Server()
