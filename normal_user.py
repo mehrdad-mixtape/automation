@@ -3,9 +3,9 @@ import client
 
 class Normal_user():
 
-    def Login(self, server_ip, server_port, username, password):
+    def Login(self, server_ip, server_port, username, password, key):
         C = client.Client()
-        return C.Connect_and_authenticate_to_server(server_ip, server_port, username, password)
+        return C.Connect_and_authenticate_to_server(server_ip, server_port, username, password, key)
 
     def Create_user(self, username, password, fname, lname, email, phone, permission):
         self.username = username

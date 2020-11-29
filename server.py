@@ -17,12 +17,18 @@ class Server():
             self.Send_Message(client_socket, 'Connection closed')
 
 
-    def Authenticate(self, usr, passwd): # internal function to authenticate users that want login to server.
-        data = db.Get_attrib_admin(usr)
-        if data == False:
+    def Authenticate(self, usr, passwd, key): # internal function to authenticate users that want login to server.
+        if key == 'admin':  # I want to login with admin
+            data = db.Get_attrib_admin(usr)
+            if data == False:
+                return False
+            elif data[1] == usr and data[2] == passwd:
+                return True
+
+        elif key == 'normal_user': # I want to login with normal_user
             return False
-        elif data[1] == usr and data[2] == passwd:
-            return True
+
+
 
     def Receive_Message(self, receiver_socket): # internal function to receive messages.
         try:
@@ -68,7 +74,7 @@ class Server():
                             continue
 
                         else:
-                            if self.Authenticate(user_pass['data'][0], user_pass['data'][1]) == True: # user_pass = {'header' : message_header, 'data' : ['username', 'hash']}.
+                            if self.Authenticate(user_pass['data'][0], user_pass['data'][1], user_pass['data'][2]) == True: # user_pass = {'header' : message_header, 'data' : ['username', 'hash']}.
                                 # Server check user/pass and if this user/pass exist on db, return True.
                                 self.Send_Message(client_socket, 'authentication complete')
                                 # If Authentication() return True, server send a message to client with client_socket.

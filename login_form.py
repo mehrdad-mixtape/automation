@@ -81,6 +81,20 @@ class Ui_Login_Window():
         self.server_port_lineEdit.setObjectName("server_port_lineEdit")
         self.server_port_lineEdit.setPlaceholderText("Port")
 
+        self.admin_radioButton = QtWidgets.QRadioButton(self.centralwidget)
+        self.admin_radioButton.setGeometry(QtCore.QRect(190, 230, 160, 28))
+        self.admin_radioButton.setObjectName("admin_radioButton")
+        # self.admin_radioButton.setChecked(True or False)
+        # self.admin_radioButton.setIcon(QtGui.QIcon('url'))
+        # self.admin_radioButton.setIconSize(QtCore.QSize(40,40))
+        self.admin_radioButton.toggled.connect(lambda: self.Admin_radiobutton())
+
+        self.user_radioButton = QtWidgets.QRadioButton(self.centralwidget)
+        self.user_radioButton.setGeometry(QtCore.QRect(190, 250, 160, 28))
+        self.user_radioButton.setObjectName("user_radioButton")
+        self.user_radioButton.setChecked(True)
+        self.user_radioButton.toggled.connect(lambda: self.User_radiobutton())
+
         self.password2_lineEdit = QtWidgets.QLineEdit(self.centralwidget)
         self.password2_lineEdit.setGeometry(QtCore.QRect(190, 280, 221, 36))
         self.password2_lineEdit.setFrame(True)
@@ -96,20 +110,6 @@ class Ui_Login_Window():
         self.server_port_ip2 = QtWidgets.QLabel(self.centralwidget)
         self.server_port_ip2.setGeometry(QtCore.QRect(323, 196, 10, 20))
         self.server_port_ip2.setObjectName("server_port_ip2")
-
-        self.admin_radioButton = QtWidgets.QRadioButton(self.centralwidget)
-        self.admin_radioButton.setGeometry(QtCore.QRect(190, 230, 160, 28))
-        self.admin_radioButton.setObjectName("admin_radioButton")
-        #self.admin_radioButton.setChecked(True or False)
-        #self.admin_radioButton.setIcon(QtGui.QIcon('url'))
-        #self.admin_radioButton.setIconSize(QtCore.QSize(40,40))
-        self.admin_radioButton.toggled.connect(lambda: self.Admin_radiobutton())
-
-        self.user_radioButton = QtWidgets.QRadioButton(self.centralwidget)
-        self.user_radioButton.setGeometry(QtCore.QRect(190, 250, 160, 28))
-        self.user_radioButton.setObjectName("user_radioButton")
-        self.user_radioButton.setChecked(True)
-        self.user_radioButton.toggled.connect(lambda: self.User_radiobutton())
 
         self.status_bar = QtWidgets.QStatusBar(self.centralwidget)
         self.status_bar.setGeometry(QtCore.QRect(5, 392, 490, 20))
@@ -159,11 +159,10 @@ class Ui_Login_Window():
             self.Show_notify_bad_input("3")
         elif (passwd2 == "") and (self.password2_lineEdit.isReadOnly() == False):
             self.Show_notify_bad_input("4")
-
-        else:
+        else: # ok admin want's to login or normal user?.
             if self.password2_lineEdit.isReadOnly() == False:
                 Admin = admin.Admin()
-                report = Admin.Login(ip, int(port), username, passwd1 + passwd2)
+                report = Admin.Login(ip, int(port), username, passwd1 + passwd2, 'admin') # passwd2 is not empty
                 if report == False: # if server shuts down or cannot give service this line can help me.
                     self.Show_notify_fail_login(1)
                 elif report == 'Connection closed': # if user send 'exit' to server, server send me Connection closed and I can see a notify.
@@ -171,7 +170,7 @@ class Ui_Login_Window():
 
             elif self.password2_lineEdit.isReadOnly() == True:
                 User = normal_user.Normal_user()
-                report = User.Login(ip, int(port), username, passwd1)
+                report = User.Login(ip, int(port), username, passwd1, 'normal_user') # passwd2 is empty
                 if report == False: # if server shuts down or cannot give service this line can help me.
                     self.Show_notify_fail_login(1)
                 elif report == 'Connection closed': # if user send 'exit' to server, server send me Connection closed and I can see a notify.
@@ -210,6 +209,7 @@ class Ui_Login_Window():
             msg.setStandardButtons(QMessageBox.Ok)
             msg.setDefaultButton(QMessageBox.Ok)
             msg.exec_()
+            Login_Window.show()
 
     def Show_notify_bad_input(self, flag):
         self.status_bar.showMessage("status: empty field error")
