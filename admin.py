@@ -1,12 +1,11 @@
 import manage_db
-from client import Client
+import client
 
-class Admin(Client):
-    def __init__(self):
-        super(Admin, self).__init__()
+class Admin():
 
     def Login(self, server_ip, server_port, username, password):
-        return self.Connect_and_authenticate_to_server(server_ip, server_port, username, password)
+        C = client.Client()
+        return C.Connect_and_authenticate_to_server(server_ip, server_port, username, password)
 
     def Admin_add(self, username, password, administration_password ,fname, lname, email, phone):
         self.username = username

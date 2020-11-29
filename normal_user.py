@@ -1,7 +1,13 @@
 import manage_db
+import client
 
 class Normal_user():
-    def __init__(self, username, password, fname, lname, email, phone, permission):
+
+    def Login(self, server_ip, server_port, username, password):
+        C = client.Client()
+        return C.Connect_and_authenticate_to_server(server_ip, server_port, username, password)
+
+    def Create_user(self, username, password, fname, lname, email, phone, permission):
         self.username = username
         self.passwoed = password
         self.fname = fname

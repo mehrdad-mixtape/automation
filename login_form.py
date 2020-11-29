@@ -4,7 +4,6 @@ from PyQt5 import QtCore, QtGui, QtWidgets # PyQt5 have 620 class and 6000 metho
 # QtWidgets for working with widgets_UI like buttons, labels, combobox, ...
 from PyQt5.QtWidgets import QMessageBox, QApplication, QMainWindow
 import sys
-#import client
 import admin, normal_user
 
 class Ui_Login_Window():
@@ -169,9 +168,14 @@ class Ui_Login_Window():
                     self.Show_notify_fail_login(1)
                 elif report == 'Connection closed': # if user send 'exit' to server, server send me Connection closed and I can see a notify.
                     self.Show_notify_fail_login(2)
-            # elif self.password2_lineEdit.isReadOnly() == True:
-            #     User = normal_user.Normal_user()
-            #     report = User.
+
+            elif self.password2_lineEdit.isReadOnly() == True:
+                User = normal_user.Normal_user()
+                report = User.Login(ip, int(port), username, passwd1)
+                if report == False: # if server shuts down or cannot give service this line can help me.
+                    self.Show_notify_fail_login(1)
+                elif report == 'Connection closed': # if user send 'exit' to server, server send me Connection closed and I can see a notify.
+                    self.Show_notify_fail_login(2)
 
     def Close_Button(self):
         Login_Window.close()
