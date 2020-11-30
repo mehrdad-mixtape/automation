@@ -83,5 +83,35 @@ class Automation_BD:
     def Get_attrib_user(self, username, password):
         pass
 
+    ################################## Log Section ##################################
+    def Record_login_log(self, content, username):
+        data = {
+            'year': datetime.now().strftime("%y"),
+            'mouth': datetime.now().strftime("%m"),
+            'day': datetime.now().strftime("%d"),
+            'hour': datetime.now().strftime("%H"),
+            'minute': datetime.now().strftime("%M"),
+            'second': datetime.now().strftime("%S"),
+            'content': content,
+            'username': username
+        }
+        if self.login_log_coll.insert_one(data).acknowledged == True:
+            return True
+    def Show_login_log(self):
+        print(self.login_log_coll.find())
+        return True
+
+    def Record_action_log(self, content, username):
+        data = {
+            'year': datetime.now().strftime("%y"),
+            'mouth': datetime.now().strftime("%m"),
+            'day': datetime.now().strftime("%d"),
+            'hour': datetime.now().strftime("%H"),
+            'minute': datetime.now().strftime("%M"),
+            'second': datetime.now().strftime("%S"),
+            'content': content,
+            'username': username
+        }
+
     def Close_connection(self):
         self.connection.close()
