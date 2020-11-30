@@ -6,6 +6,9 @@ class Client():
         self.HEADER_LENGTH = 10
         self.Report = True
 
+    def Get_msg(self):
+        return input('>>> ')
+
     def Receive_Message(self, receiver_socket):  # internal function to receive messages.
         try:
             message_header = receiver_socket.recv(self.HEADER_LENGTH)  # try to get first message from clients with 10 bytes.
@@ -43,7 +46,7 @@ class Client():
                         return self.Report
                     else: # authentication complete
                         while True:
-                            send_message = input(f"{username} > ") # now I can send message to server.
+                            send_message = self.Get_msg()
                             if send_message:
                                 self.Send_Message(client_socket, send_message)
 
@@ -52,13 +55,10 @@ class Client():
                                 if receive_message == 'Connection closed': # if I send 'exit' server send me this message.
                                     self.Report = receive_message
                                     return self.Report
-                                # elif receive_message == 'Server shutdown':
-                                #     self.Report = receive_message
-                                #     return self.Report
                                 elif receive_message != False:
                                     print(receive_message)
                                     break
-                                else: # if I don't send message to server and push "enter_button", server don;t send me message too and I can get out from this loop.
+                                else: # if I don't send message to server and push "enter_button", server don't send me message too and I can get out from this loop.
                                     break
 
         except Exception: # If anything happens to the server this exception can handle it.
