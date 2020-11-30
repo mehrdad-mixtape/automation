@@ -98,8 +98,7 @@ class Automation_BD:
         if self.login_log_coll.insert_one(data).acknowledged == True:
             return True
     def Show_login_log(self):
-        print(self.login_log_coll.find())
-        return True
+        return self.login_log_coll.find()
 
     def Record_action_log(self, content, username):
         data = {
@@ -112,6 +111,8 @@ class Automation_BD:
             'content': content,
             'username': username
         }
+        if self.action_log_coll.insert_one(data).acknowledged == True:
+            return True
 
     def Close_connection(self):
         self.connection.close()

@@ -52,7 +52,8 @@ class Admin():
         pass
 
     def Show_login_log(self):
-        pass
+        return self.db.Show_login_log()
+
     def Show_action_log(self):
         pass
 
@@ -68,3 +69,4 @@ class Admin():
     # print(A.Admin_update('mixtape', '123', 'password', '12345'))
     # print(A.Admin_del('alex2', '1234'))
     # print(A.Admin_find('alex2', '1234'))
+    # print(A.Show_login_log())
