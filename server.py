@@ -1,5 +1,6 @@
-import socket, select, datetime, hashlib, sys# use for socket.
+import socket, select, datetime, sys# use for socket.
 import manage_db
+from hashlib import sha256
 
 class Server():
     def __init__(self, ip, port):
@@ -8,6 +9,10 @@ class Server():
         self.PORT = port
         self.sockets_list = [] # list of sockets : server and other client.
         self.clients = {} # {socket:data}.
+        self.db = manage_db.Automation_BD()
+
+    def Hash(self, input):
+        return str(sha256(input.encode('utf-8')).hexdigest())
 
     def Server_time(self): # internal function to return live time for logs.
         return datetime.datetime.now().strftime("%y-%m-%d %H:%M:%S")
@@ -19,7 +24,7 @@ class Server():
 
     def Authenticate(self, usr, passwd, key): # internal function to authenticate users that want login to server.
         if key == 'admin':  # I want to login with admin
-            data = db.Get_attrib_admin(usr)
+            data = self.db.Get_attrib_admin(usr, passwd)
             if data == False:
                 return False
             elif data[1] == usr and data[2] == passwd:
@@ -117,10 +122,5 @@ class Server():
                     del self.clients[notified_socket]
 
 if __name__ == "__main__":
-    db = manage_db.Automation_BD()
-    # db.Insert_admin('mixtape', str(hashlib.sha256('123'.encode('utf-8')).hexdigest()), 'mehrdad', 'arman', '1998', '12', '31', 'mehrdad1998a@gmail.com', '09369798295')
-    # db.Delete_admin("mixtape")
-    # db.Update_admin("mixtape", 'first_name', 'mehrdad')
-    #print(db.Get_attrib_admin('mixtape'))
     server = Server("127.0.0.1", 4444)
     server.Run_Server()
