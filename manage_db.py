@@ -15,6 +15,7 @@ class Automation_BD:
         self.action_log_coll = self.automation_db['action_log']
         self.script_coll = self.automation_db['script']
 
+    ################################## Admin Section ##################################
     def Insert_admin(self, username, password, first_name, last_name, birth_year, birth_month, birth_day, email, phone):
         data = {
             'username' : username,
@@ -36,30 +37,51 @@ class Automation_BD:
 
     def Delete_admin(self, username, password):
         data = {
-            'username' : username,
-            'password' : password
+            'username' : username
         }
-        if self.admin_coll.delete_one(data).acknowledged == True:
-            return 'Admin deleted successfully'
+        if self.Get_attrib_admin(username, password) != False:
+            if self.admin_coll.delete_one(data).acknowledged == True:
+                return 'Admin deleted successfully'
+            else:
+                return 'Operation failed, please try again'
         else:
-            return 'Operation failed, please try again'
+            return f'Admin not found with this username: {username}'
 
-    def Update_admin(self, username, attrib, new_value):
+    def Update_admin(self, username, password, attrib, new_value):
         data = {
             attrib : new_value
         }
-        if self.admin_coll.update_one({'username': username}, {"$set": data}).acknowledged == True:
-            return 'Operation complete'
+        if self.Get_attrib_admin(username, password) != False:
+            if self.admin_coll.update_one({'username': username}, {"$set": data}).acknowledged == True:
+                return 'Operation complete'
+            else:
+                return 'Operation failed, please try again'
+        else:
+            return f'Admin not found with this username: {username}'
 
-    def Get_attrib_admin(self, username):
-        if self.admin_coll.find_one({'username' : username}):
-            data = self.admin_coll.find_one({'username' : username}) # , {'username' : 0}
+    def Get_attrib_admin(self, username, password):
+        data = {
+            'username': username,
+            'password': password
+        }
+        if self.admin_coll.find_one(data):
+            all_attribs = self.admin_coll.find_one(data)
             result = []
-            for key in data:
-                result.append(data[key])
+            for key in all_attribs:
+                result.append(all_attribs[key])
             return result
         else:
             return False
+
+    ################################## User Section ##################################
+    def Insert_user(self, username, password, first_name, last_name, birth_year, birth_month, birth_day, email, phone, permission):
+        pass
+    def Delete_user(self, username, password):
+        pass
+    def Update_user(self, username, password, attrib, new_value):
+        pass
+    def Get_attrib_user(self, username, password):
+        pass
 
     def Close_connection(self):
         self.connection.close()
