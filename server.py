@@ -21,7 +21,6 @@ class Server():
         if (cmd == "exit"):
             self.Send_Message(client_socket, 'Connection closed')
 
-
     def Authenticate(self, usr, passwd, key): # internal function to authenticate users that want login to server.
         if key == 'admin':  # I want to login with admin
             data = self.db.Get_attrib_admin(usr, passwd)
@@ -32,8 +31,6 @@ class Server():
 
         elif key == 'normal_user': # I want to login with normal_user
             return False
-
-
 
     def Receive_Message(self, receiver_socket): # internal function to receive messages.
         try:
@@ -83,16 +80,18 @@ class Server():
                                 # Server check user/pass and if this user/pass exist on db, return True.
                                 self.Send_Message(client_socket, 'authentication complete')
                                 # If Authentication() return True, server send a message to client with client_socket.
-                                print(f"{self.Server_time()} authentication complete from '{user_pass['data'][0]}' with {client_address[0]}:{client_address[1]} to server")  # log
+                                self.db.Record_login_log(f"authentication complete, from {client_address[0]}:{client_address[1]} to server", user_pass['data'][0])
+                                print(f"{self.Server_time()} authentication complete, from '{user_pass['data'][0]}' with {client_address[0]}:{client_address[1]} to server")  # log
 
                                 self.sockets_list.append(client_socket) # After authentication I add client socket to socket_list.
-                                self.clients[client_socket] = user_pass['data'][0] # clients={client_socket: username}, ...}.
+                                self.clients[client_socket] = user_pass['data'] # clients={client_socket: username}, ...}.
                                 # And client_socket add to dictionary that server can recognize client_socket with client_message.
 
                             else:
                                 self.Send_Message(client_socket, 'authentication failed')
                                 # If Authentication() return False, server send message to client with client_socket.
-                                print(f"{self.Server_time()} authentication fail from '{user_pass['data'][0]}' with {client_address[0]}:{client_address[1]} to server") # log
+                                self.db.Record_login_log(f"authentication failed, from {client_address[0]}:{client_address[1]} to server", user_pass['data'][0])
+                                print(f"{self.Server_time()} authentication failed, from '{user_pass['data'][0]}' with {client_address[0]}:{client_address[1]} to server") # log
 
                     ################################ for second time we check client that send message to server and  client want to receive acknowledge from server.################################
                     else:
@@ -109,7 +108,7 @@ class Server():
                         # I get username that saved with socket in clients{}.
                         self.Instruction_Handler(message['data'][0], notified_socket) # Can check messages if client send keyword to server, this function can handle it.
                         self.Send_Message(notified_socket, 'ack') # When server receive message and check it with Instruction_Handler(), send 'ack' with client_socket to client, it's mean : yes I receive your message.
-                        print(f"{self.Server_time()} message from '{user}':  {message['data'][0]}")  # log
+                        print(f"{self.Server_time()} message from '{user['data']}':  {message['data'][0]}")  # log
 
                 for notified_socket in exception_sockets: # if each client_socket exist on exception_socket, server remove it.
                     self.sockets_list.remove(notified_socket)
@@ -117,7 +116,7 @@ class Server():
 
             except Exception: # if server cannot service to clients, send a message to clients and disconnect all clients.
                 for notified_socket in self.sockets_list:
-                    self.Send_Message(notified_socket, "Server shuts down")
+                    #self.Send_Message(notified_socket, "Server shuts down")
                     self.sockets_list.remove(notified_socket)
                     del self.clients[notified_socket]
 
