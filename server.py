@@ -2,6 +2,9 @@ import socket, select, datetime, sys# use for socket.
 import manage_db
 from hashlib import sha256
 
+def Hash(input):
+    return str(sha256(input.encode('utf-8')).hexdigest())
+
 class Server():
     def __init__(self, ip, port):
         self.HEADER_LENGTH = 10 # size packets.
@@ -10,9 +13,6 @@ class Server():
         self.sockets_list = [] # list of sockets : server and other client.
         self.clients = {} # {socket:data}.
         self.db = manage_db.Automation_BD()
-
-    def Hash(self, input):
-        return str(sha256(input.encode('utf-8')).hexdigest())
 
     def Server_time(self): # internal function to return live time for logs.
         return datetime.datetime.now().strftime("%y-%m-%d %H:%M:%S")
@@ -31,7 +31,11 @@ class Server():
                 return True
 
         elif key == 'normal_user': # I want to login with normal_user
-            return False
+            data = self.db.Get_attrib_user(usr, passwd)
+            if data == False:
+                return False
+            elif data[1] == usr and data[2] == passwd:
+                return True
 
     def Receive_Message(self, receiver_socket): # internal function to receive messages.
         try:
@@ -81,8 +85,8 @@ class Server():
                                 # Server check user/pass and if this user/pass exist on db, return True.
                                 self.Send_Message(client_socket, 'authentication complete')
                                 # If Authentication() return True, server send a message to client with client_socket.
-                                self.db.Record_login_log(f"authentication complete, from {client_address[0]}:{client_address[1]} to server", user_pass['data'][0]) # record log on db.
-                                print(f"{self.Server_time()} authentication complete, from '{user_pass['data'][0]}' with {client_address[0]}:{client_address[1]} to server")  # log
+                                self.db.Record_login_log(f"authentication complete from {client_address[0]}:{client_address[1]} to server", user_pass['data'][0]) # record log on db.
+                                print(f"{self.Server_time()} authentication complete from '{user_pass['data'][0]}' with {client_address[0]}:{client_address[1]} to server")  # log
 
                                 self.sockets_list.append(client_socket) # After authentication I add client socket to socket_list.
                                 self.clients[client_socket] = user_pass['data'] # clients={client_socket: username}, ...}.
@@ -91,8 +95,8 @@ class Server():
                             else:
                                 self.Send_Message(client_socket, 'authentication failed')
                                 # If Authentication() return False, server send message to client with client_socket.
-                                self.db.Record_login_log(f"authentication failed, from {client_address[0]}:{client_address[1]} to server", user_pass['data'][0]) # record log on db.
-                                print(f"{self.Server_time()} authentication failed, from '{user_pass['data'][0]}' with {client_address[0]}:{client_address[1]} to server") # log
+                                self.db.Record_login_log(f"authentication failed from {client_address[0]}:{client_address[1]} to server", user_pass['data'][0]) # record log on db.
+                                print(f"{self.Server_time()} authentication failed from '{user_pass['data'][0]}' with {client_address[0]}:{client_address[1]} to server") # log
 
                     ################################ for second time we check client that send message to server and  client want to receive acknowledge from server.################################
                     else:
@@ -122,5 +126,9 @@ class Server():
                     del self.clients[notified_socket]
 
 if __name__ == "__main__":
-    server = Server("127.0.0.1", 4444)
-    server.Run_Server()
+    db = manage_db.Automation_BD()
+    attrib_list = db.Get_attrib_server('automation', Hash('123456'))
+    db.Close_connection()
+    if attrib_list != False:
+        server = Server(attrib_list[4], attrib_list[5])
+        server.Run_Server()
