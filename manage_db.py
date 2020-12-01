@@ -131,6 +131,58 @@ class Automation_BD:
         else:
             return False
 
+    ################################## Server Section ##################################
+    def Insert_server(self, hostname, password, domain, ip, port):
+        data = {
+            'hostname': hostname,
+            'password': password,
+            'domain': domain,
+            'ip': ip,
+            'port': port
+        }
+        if self.server_coll.insert_one(data).acknowledged == True:
+            return 'New server created successfully'
+        else:
+            return 'Operation failed, please try again'
+
+    def Delete_server(self, hostname, password):
+        data = {
+            'hostname': hostname
+        }
+        if self.Get_attrib_server(hostname, password) != False:
+            if self.server_coll.delete_one(data).acknowledged == True:
+                return 'Server deleted successfully'
+            else:
+                return 'Operation failed, please try again'
+        else:
+            return f'Server not found with this hostname: {hostname}'
+
+    def Update_server(self, hostname, password, attrib, new_value):
+        data = {
+            attrib: new_value
+        }
+        if self.Get_attrib_server(hostname, password) != False:
+            if self.server_coll.update_one({'hostname': hostname}, {'$set': data}).acknowledged == True:
+                return 'Operation complete'
+            else:
+                return 'Operation failed, please try again'
+        else:
+            return f'Server not found with this hostname: {hostname}'
+
+    def Get_attrib_server(self, hostname, password):
+        data = {
+            'hostname': hostname,
+            'password': password
+        }
+        if self.server_coll.find_one(data):
+            all_attribs = self.server_coll.find_one(data)
+            result = []
+            for key in all_attribs:
+                result.append(all_attribs[key])
+            return result
+        else:
+            return False
+
     ################################## Login log Section ##################################
     def Record_login_log(self, content, username):
         data = {
