@@ -20,7 +20,7 @@ class Server():
     def Instruction_Handler(self, cmd, client_socket): # internal function to check contain of messages that have keyword.
         if (cmd == "exit"):
             self.Send_Message(client_socket, 'Connection closed')
-            self.db.Record_action_log(f"action {cmd} from {self.clients[client_socket][0]}", self.clients[client_socket][0])
+            self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket][0]}", self.clients[client_socket][0])
 
     def Authenticate(self, usr, passwd, key): # internal function to authenticate users that want login to server.
         if key == 'admin':  # I want to login with admin
