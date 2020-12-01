@@ -54,7 +54,31 @@ class Admin():
     def User_find(self, username, password):
         report = self.db.Get_attrib_user(username, self.C.Hash(password))
         if report == False:
-            return f'Admin not found with this username: {username}'
+            return f'User not found with this username: {username}'
+        else:
+            return report
+
+    ########################################## Server management section ############# status: implemented ######################
+    def Server_add(self, hostname, password, domain, ip, port):
+        report = self.db.Insert_server(hostname, self.C.Hash(password), domain, ip, port)
+        return report
+
+    def Server_del(self, hostname, password):
+        report = self.db.Delete_server(hostname, self.C.Hash(password))
+        return report
+
+    def Server_update(self, hostname, password, attrib, new_value):
+        if attrib == 'password':
+            hash_pass = self.C.Hash(new_value)
+            report = self.db.Update_server(hostname, self.C.Hash(password), attrib, hash_pass)
+        else:
+            report = self.db.Update_server(hostname, self.C.Hash(password), attrib, new_value)
+        return report
+
+    def Server_find(self, hostname, password):
+        report = self.db.Get_attrib_server(hostname, self.C.Hash(password))
+        if report == False:
+            return f'Server not found with this hostname: {hostname}'
         else:
             return report
 
@@ -134,6 +158,11 @@ if __name__ == "__main__":
     # print(A.Action_log('username', 'mixtape'))
 
     # print(A.User_add('Jax', '123', 'jack', 'mark', '1987', '1', '1', 'jack@gmail.com', '0935', False))
+    # print(A.User_update('Jax', '123', 'password', '1234'))
     # print(A.User_del('Jax', '123'))
-    # print(A.User_update('Jax', '123', 'first_name', 'jackal'))
     # print(A.User_find('Jax', '123'))
+
+    # print(A.Server_add('automation', '123456', 'automation.com', '127.0.0.1', 4444))
+    # print(A.Server_update('automation', '123456', 'ip', '127.0.0.1'))
+    # print(A.Server_del('automation', '123456'))
+    # print(A.Server_find('automation', '123456'))
