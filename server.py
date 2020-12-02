@@ -55,12 +55,14 @@ class Server():
             return False
 
     def Run_Server(self):
-
-        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # socket.AF_INET = create a ipv4 socket, socket.SOCK_STREAM = this socket work with TCP-IP.
-        server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # initial socket.
-        server_socket.bind((self.IP, self.PORT))  # bind ip and port on socket.
-        server_socket.listen()  # socket should be lister on IP:PORT because I am server :D.
-        self.sockets_list.append(server_socket)
+        try:
+            server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # socket.AF_INET = create a ipv4 socket, socket.SOCK_STREAM = this socket work with TCP-IP.
+            server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # initial socket.
+            server_socket.bind((self.IP, self.PORT))  # bind ip and port on socket.
+            server_socket.listen()  # socket should be lister on IP:PORT because I am server :D.
+            self.sockets_list.append(server_socket)
+        except Exception:
+            return "internal error" # if ip/port cannot bind to server, server return "internal error" to Start_server on admin.py.
 
         while True:
             try: # when server start to work, try to accept requests from clients, authenticate them and add client_sockets to lists.
