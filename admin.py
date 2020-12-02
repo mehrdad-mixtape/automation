@@ -1,5 +1,6 @@
 import manage_db
 import client
+import server
 
 class Admin():
     def __init__(self):
@@ -81,6 +82,14 @@ class Admin():
             return f'Server not found with this hostname: {hostname}'
         else:
             return report
+
+    def Start_server(self, hostname, password, ip, port):
+        report = self.db.Get_attrib_server(hostname, self.C.Hash(password)) # authenticate server
+        if report == False:
+            return report
+        else:
+            S = server.Server(ip, port)
+            S.Run_Server()
 
     ########################################## Script management section ############# status: none ######################
     def Run_script(self, script_name):
@@ -170,3 +179,4 @@ class Admin():
     # print(A.Server_update('automation', '123456', 'ip', '127.0.0.1'))
     # print(A.Server_del('automation', '123456'))
     # print(A.Server_find('automation', '123456'))
+    # print(A.Start_server('automation', '123456', '127.0.0.1', 4444))
