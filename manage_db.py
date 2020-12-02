@@ -193,7 +193,8 @@ class Automation_BD:
             'minute': datetime.now().strftime("%M"),
             'second': datetime.now().strftime("%S"),
             'content': content,
-            'username': username
+            'username': username,
+            'workspace': 'ws_auto' + username
         }
         if self.login_log_coll.insert_one(data).acknowledged == True:
             return True
@@ -217,7 +218,8 @@ class Automation_BD:
             'minute': datetime.now().strftime("%M"),
             'second': datetime.now().strftime("%S"),
             'content': content,
-            'username': username
+            'username': username,
+            'workspace': 'ws_auto' + username
         }
         if self.action_log_coll.insert_one(data).acknowledged == True:
             return True

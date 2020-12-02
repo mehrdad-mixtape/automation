@@ -101,6 +101,7 @@ class Admin():
                           list(dict.values())[4] + ':' + list(dict.values())[5] + ':' + list(dict.values())[6]
             log['content'] = list(dict.values())[7] + ':'
             log['user'] = list(dict.values())[8]
+            log['workspace'] = list(dict.values())[9]
             log_list.append(log)
         return log_list
 
@@ -112,6 +113,7 @@ class Admin():
                           list(dict.values())[4] + ':' + list(dict.values())[5] + ':' + list(dict.values())[6]
             log['content'] = list(dict.values())[7] + ':'
             log['user'] = list(dict.values())[8]
+            log['workspace'] = list(dict.values())[9]
             log_list.append(log)
         return log_list
 
@@ -123,6 +125,7 @@ class Admin():
                           list(dict.values())[4] + ':' + list(dict.values())[5] + ':' + list(dict.values())[6]
             log['content'] = list(dict.values())[7] + ':'
             log['user'] = list(dict.values())[8]
+            log['workspace'] = list(dict.values())[9]
             log_list.append(log)
         return log_list
 
@@ -134,6 +137,7 @@ class Admin():
                           list(dict.values())[4] + ':' + list(dict.values())[5] + ':' + list(dict.values())[6]
             log['content'] = list(dict.values())[7] + ':'
             log['user'] = list(dict.values())[8]
+            log['workspace'] = list(dict.values())[9]
             log_list.append(log)
         return log_list
 
@@ -145,8 +149,8 @@ class Admin():
     def SSH(self, username, ip_address):
         pass
 
-if __name__ == "__main__":
-    A = Admin()
+# if __name__ == "__main__":
+#     A = Admin()
     # print(A.Admin_add('alex2', '1234', 'alex', 'D', '1990', '6', '5', 'alex@gmail.com', '0933'))
     # print(A.Admin_update('mixtape', '123', 'password', '12345'))
     # print(A.Admin_del('alex2', '1234'))
