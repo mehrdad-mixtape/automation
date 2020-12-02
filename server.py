@@ -2,9 +2,6 @@ import socket, select, datetime, sys# use for socket.
 import manage_db
 from hashlib import sha256
 
-def Hash(input):
-    return str(sha256(input.encode('utf-8')).hexdigest())
-
 class Server():
     def __init__(self, ip, port):
         self.HEADER_LENGTH = 10 # size packets.
@@ -81,7 +78,7 @@ class Server():
                             continue
 
                         else:
-                            if self.Authenticate(user_pass['data'][0], user_pass['data'][1], user_pass['data'][2]) == True: # user_pass = {'header' : message_header, 'data' : ['username', 'hash']}.
+                            if self.Authenticate(user_pass['data'][0], user_pass['data'][1], user_pass['data'][2]) == True: # user_pass = {'header' : message_header, 'data' : ['username', 'hash', key]}.
                                 # Server check user/pass and if this user/pass exist on db, return True.
                                 self.Send_Message(client_socket, 'authentication complete')
                                 # If Authentication() return True, server send a message to client with client_socket.
@@ -124,11 +121,3 @@ class Server():
                 for notified_socket in self.sockets_list:
                     self.sockets_list.remove(notified_socket)
                     del self.clients[notified_socket]
-
-if __name__ == "__main__":
-    db = manage_db.Automation_BD()
-    attrib_list = db.Get_attrib_server('automation', Hash('123456'))
-    db.Close_connection()
-    if attrib_list != False:
-        server = Server(attrib_list[4], attrib_list[5])
-        server.Run_Server()
