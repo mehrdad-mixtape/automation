@@ -164,17 +164,17 @@ class Ui_Login_Window():
                 Admin = admin.Admin()
                 report = Admin.Login(ip, int(port), username, passwd1 + passwd2, 'admin') # passwd2 is not empty
                 if report == False: # if server shuts down or cannot give service this line can help me.
-                    self.Show_notify_fail_login(1)
+                    self.Show_notify_fail_login("1")
                 elif report == 'Connection closed': # if user send 'exit' to server, server send me Connection closed and I can see a notify.
-                    self.Show_notify_fail_login(2)
+                    self.Show_notify_fail_login("2")
 
             elif self.password2_lineEdit.isReadOnly() == True:
                 User = normal_user.Normal_user()
                 report = User.Login(ip, int(port), username, passwd1, 'normal_user') # passwd2 is empty
                 if report == False: # if server shuts down or cannot give service this line can help me.
-                    self.Show_notify_fail_login(1)
+                    self.Show_notify_fail_login("1")
                 elif report == 'Connection closed': # if user send 'exit' to server, server send me Connection closed and I can see a notify.
-                    self.Show_notify_fail_login(2)
+                    self.Show_notify_fail_login("2")
 
     def Close_Button(self):
         Login_Window.close()
@@ -190,7 +190,7 @@ class Ui_Login_Window():
         self.status_bar.showMessage('status: ok')
 
     def Show_notify_fail_login(self, flag): # Internal function
-        if flag == 1:
+        if flag == "1":
             self.status_bar.showMessage("status: login error")
             msg = QMessageBox()
             msg.setWindowTitle("Notify")
@@ -201,7 +201,7 @@ class Ui_Login_Window():
             msg.setDetailedText("Please check your username/password or ip/port or server maybe shutdown, please try again")
             msg.buttonClicked.connect(lambda: Login_Window.show())
             msg.exec_()
-        elif flag == 2:
+        elif flag == "2":
             msg = QMessageBox()
             msg.setWindowTitle("Notify")
             msg.setText("You are Logout from server goodbye :)")
