@@ -85,11 +85,11 @@ class Admin():
 
     def Start_server(self, hostname, password, ip, port):
         report = self.db.Get_attrib_server(hostname, self.C.Hash(password)) # authenticate server
-        if report == False:
+        if report == False: # if authentication operation was failed, server return False and run_server_form.py can handle it.
             return report
         else:
             S = server.Server(ip, port)
-            S.Run_Server()
+            return S.Run_Server() # if ip/port cannot bind to server, server return "internal error" and run_server_form can handle it.
 
     ########################################## Script management section ############# status: none ######################
     def Run_script(self, script_name):

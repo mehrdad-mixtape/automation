@@ -163,7 +163,7 @@ class Ui_Login_Window():
             if self.password2_lineEdit.isReadOnly() == False:
                 Admin = admin.Admin()
                 report = Admin.Login(ip, int(port), username, passwd1 + passwd2, 'admin') # passwd2 is not empty
-                if report == False: # if server shuts down or cannot give service this line can help me.
+                if report == False: # if server shuts down or cannot give service or authentication was failed this line can help me.
                     self.Show_notify_fail_login("1")
                 elif report == 'Connection closed': # if user send 'exit' to server, server send me Connection closed and I can see a notify.
                     self.Show_notify_fail_login("2")
@@ -171,7 +171,7 @@ class Ui_Login_Window():
             elif self.password2_lineEdit.isReadOnly() == True:
                 User = normal_user.Normal_user()
                 report = User.Login(ip, int(port), username, passwd1, 'normal_user') # passwd2 is empty
-                if report == False: # if server shuts down or cannot give service this line can help me.
+                if report == False: # if server shuts down or cannot give service or authentication was failed this line can help me.
                     self.Show_notify_fail_login("1")
                 elif report == 'Connection closed': # if user send 'exit' to server, server send me Connection closed and I can see a notify.
                     self.Show_notify_fail_login("2")

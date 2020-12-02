@@ -4,7 +4,6 @@ from hashlib import sha256
 class Client():
     def __init__(self):
         self.HEADER_LENGTH = 10
-        self.Report = True
 
     def Get_msg(self):
         return input('>>> ')
@@ -42,29 +41,26 @@ class Client():
                 receive_message = self.Receive_Message(client_socket)
                 if receive_message != False:
                     if receive_message == 'authentication failed':
-                        self.Report = False
-                        return self.Report
+                        return False
                     else: # authentication complete
                         while True:
                             send_message = self.Get_msg()
+
                             if send_message:
                                 self.Send_Message(client_socket, send_message)
 
                             while True: # client wait to server send message.
                                 receive_message = self.Receive_Message(client_socket)
+
                                 if receive_message == 'Connection closed': # if I send 'exit' server send me this message.
-                                    self.Report = receive_message
-                                    return self.Report
+                                    return receive_message
+
                                 elif receive_message != False:
                                     print(receive_message)
                                     break
+
                                 else: # if I don't send message to server and push "enter_button", server don't send me message too and I can get out from this loop.
                                     break
 
         except Exception: # If anything happens to the server this exception can handle it.
-            self.Report = False
-            return self.Report
-
-# if __name__ == "__main__":
-#     client = Client()
-#     client.Connect_and_authenticate_to_server('127.0.0.1', 4444, 'mixtape', '123')
+            return False
