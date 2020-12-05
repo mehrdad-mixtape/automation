@@ -233,6 +233,53 @@ class Automation_BD:
         }
         return list(self.action_log_coll.find(data))
 
+    ################################## Script Section ##################################
+    def Insert_script(self, script_name, path):
+        data = {
+            'script_name': script_name,
+            'path': path
+        }
+        if self.script_coll.insert_one(data).acknowledged == True:
+            return 'New script created successfully'
+        else:
+            return 'Operation failed, please try again'
+
+    def Delete_script(self, script_name):
+        data = {
+            'script_name': script_name,
+        }
+        if self.Get_attrib_script(script_name) != False:
+            if self.script_coll.delete_one(data).acknowledged == True:
+                return 'Script deleted successfully'
+            else:
+                return 'Operation failed, please try again'
+        else:
+            return f'Script not found with this name: {script_name}'
+
+    def Update_script(self, script_name, attrib, new_value):
+        data = {
+            attrib: new_value
+        }
+        if self.Get_attrib_script(script_name) != False:
+            if self.script_coll.update_one({'script_name': script_name}, {'$set': data}).acknowledged == True:
+                return 'Operation complete'
+            else:
+                return 'Operation failed, please try again'
+        else:
+            return f'Script not found with this name: {script_name}'
+
+    def Get_attrib_script(self, script_name):
+        data = {
+            'script_name': script_name
+        }
+        if self.script_coll.find_one(data):
+            all_attribs = self.script_coll.find_one(data)
+            result = []
+            for key in all_attribs:
+                result.append(all_attribs[key])
+            return result
+        else:
+            return False
     ################################## Close Connection Section ##################################
     def Close_connection(self):
         self.connection.close()

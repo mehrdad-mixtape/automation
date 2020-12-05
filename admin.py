@@ -91,15 +91,23 @@ class Admin():
             S = server.Server(ip, port)
             return S.Run_Server() # if ip/port cannot bind to server, server return "internal error" and run_server_form can handle it.
 
-    ########################################## Script management section ############# status: none ######################
+    ########################################## Script management section ############# status: implement 70% ######################
     def Run_script(self, script_name):
-        pass
-    def Create_script(self, script_name, path):
         pass
     def Edit_script(self, script_name, path):
         pass
-    def Del_script(self, script_name, path):
-        pass
+    def Create_script(self, script_name, path):
+        report = self.db.Insert_script(script_name, path)
+        return report
+    def Del_script(self, script_name):
+        report = self.db.Delete_script(script_name)
+        return report
+    def Up_script(self, script_name, attrib, new_value):
+        report = self.db.Update_script(script_name, attrib, new_value)
+        return report
+    def Find_script(self,script_name):
+        report = self.db.Get_attrib_script(script_name)
+        return report
 
     ########################################## Log management section ############# status: implemented ######################
     def All_login_log(self):
@@ -158,8 +166,8 @@ class Admin():
     def SSH(self, username, ip_address):
         pass
 
-# if __name__ == "__main__":
-#     A = Admin()
+if __name__ == "__main__":
+    A = Admin()
     # print(A.Admin_add('alex2', '1234', 'alex', 'D', '1990', '6', '5', 'alex@gmail.com', '0933'))
     # print(A.Admin_update('mixtape', '123', 'password', '12345'))
     # print(A.Admin_del('alex2', '1234'))
@@ -180,3 +188,8 @@ class Admin():
     # print(A.Server_del('automation', '123456'))
     # print(A.Server_find('automation', '123456'))
     # print(A.Start_server('automation', '123456', '127.0.0.1', 4444))
+
+    # print(A.Create_script('alfa', "/home/mehrdad/Documents/my-git/automation/automation_scripts"))
+    # print(A.Del_script('alfa'))
+    # print(A.Up_script('alfa', 'script_name', 'alfa.py'))
+    # print(A.Find_script('alfa.py'))
