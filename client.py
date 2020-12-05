@@ -29,7 +29,7 @@ class Client():
     def Connect_and_authenticate_to_server(self, server_ip, server_port, username, password, key):
         try:  # for first time client try authentication with server than send user/pass to server.
             client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # socket.AF_INET = create a ipv4 socket, socket.SOCK_STREAM = this socket work with TCP-IP.
-            client_socket.connect((server_ip, server_port)) # I ready my socket for connect to server.
+            client_socket.connect((server_ip, server_port)) # my socket can connect to server.
             client_socket.setblocking(False) # disable blocking operation socket.
 
             user_pass = username + "ε" + self.Hash(password) + "ε" + key
