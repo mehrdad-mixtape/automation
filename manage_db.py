@@ -234,10 +234,11 @@ class Automation_BD:
         return list(self.action_log_coll.find(data))
 
     ################################## Script Section ##################################
-    def Insert_script(self, script_name, path):
+    def Insert_script(self, script_name, path, usability):
         data = {
             'script_name': script_name,
-            'path': path
+            'path': path,
+            'usability': usability
         }
         if self.script_coll.insert_one(data).acknowledged == True:
             return 'New script created successfully'
@@ -280,6 +281,7 @@ class Automation_BD:
             return result
         else:
             return False
+
     ################################## Close Connection Section ##################################
     def Close_connection(self):
         self.connection.close()
