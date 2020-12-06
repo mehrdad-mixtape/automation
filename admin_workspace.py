@@ -1,5 +1,5 @@
-import admin, normal_user
+import admin
 
 class Admin_workspace():
     def __init__(self):
-        self.A = admin.Admin()
+        self.admin = admin.Admin()
