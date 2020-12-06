@@ -10,7 +10,8 @@ class Automation_BD:
         self.admin_coll = self.automation_db['admin']
         self.user_coll = self.automation_db['user']
         self.server_coll = self.automation_db['server']
-        self.workspace_coll = self.automation_db['workspace']
+        self.admin_workspace_coll = self.automation_db['admin_workspace']
+        self.user_workspace_coll = self.automation_db['user_workspace']
         self.login_log_coll = self.automation_db['login_log']
         self.action_log_coll = self.automation_db['action_log']
         self.script_coll = self.automation_db['script']
@@ -183,6 +184,44 @@ class Automation_BD:
         else:
             return False
 
+    ################################## Admin workspsace Section ##################################
+    def Insert_admin_workspace(self, username):
+        data = {
+            'name': 'ws_auto' + username,
+            'owner': username,
+            'record_date': datetime.now().strftime("%y-%m-%d %H:%M:%S")
+        }
+        if self.admin_workspace_coll.insert_one(data).acknowledged == True:
+            return f'New workspace created successfully for admin: {username}'
+        else:
+            return 'Operation failed, please try again'
+
+    def Delete_admin_workspace(self, username, password):
+        pass
+    def Update_admin_workspace(self, username):
+        pass
+    def Get_attrib_admin_workspace(self, username):
+        pass
+
+    ################################## User workspsace Section ##################################
+    def Insert_user_workspace(self, username):
+        data = {
+            'name': 'ws_auto' + username,
+            'owner': username,
+            'record_date': datetime.now().strftime("%y-%m-%d %H:%M:%S")
+        }
+        if self.user_workspace_coll.insert_one(data).acknowledged == True:
+            return f'New workspace created successfully for user: {username}'
+        else:
+            return 'Operation failed, please try again'
+
+    def Delete_uesr_workspace(self, username, password):
+        pass
+    def Update_user_workspace(self, username):
+        pass
+    def Get_attrib_user_workspace(self, username):
+        pass
+
     ################################## Login log Section ##################################
     def Record_login_log(self, content, username):
         data = {
@@ -208,7 +247,7 @@ class Automation_BD:
         }
         return list(self.login_log_coll.find(data))
 
-    ################################## Login log Section ##################################
+    ################################## Action log Section ##################################
     def Record_action_log(self, content, username):
         data = {
             'year': datetime.now().strftime("%y"),
