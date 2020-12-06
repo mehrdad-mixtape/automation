@@ -8,8 +8,7 @@ class Admin():
         self.db = manage_db.Automation_BD()
 
     def Login(self, server_ip, server_port, username, password, key):
-        C = client.Client()
-        return C.Connect_and_authenticate_to_server(server_ip, server_port, username, password, key)
+        return self.C.Connect_and_authenticate_to_server(server_ip, server_port, username, password, key)
 
     ########################################## Admin management section ############# status: implimented ######################
     def Admin_add(self, username, password, first_name, last_name, birth_year, birth_month, birth_day, email, phone):
@@ -96,15 +95,18 @@ class Admin():
         pass
     def Edit_script(self, script_name, path):
         pass
-    def Create_script(self, script_name, path):
-        report = self.db.Insert_script(script_name, path)
+    def Create_script(self, script_name, path, usability):
+        report = self.db.Insert_script(script_name, path, usability)
         return report
+
     def Del_script(self, script_name):
         report = self.db.Delete_script(script_name)
         return report
+
     def Up_script(self, script_name, attrib, new_value):
         report = self.db.Update_script(script_name, attrib, new_value)
         return report
+
     def Find_script(self,script_name):
         report = self.db.Get_attrib_script(script_name)
         return report
@@ -189,7 +191,7 @@ if __name__ == "__main__":
     # print(A.Server_find('automation', '123456'))
     # print(A.Start_server('automation', '123456', '127.0.0.1', 4444))
 
-    # print(A.Create_script('alfa', "/home/mehrdad/Documents/my-git/automation/automation_scripts"))
+    # print(A.Create_script('set-ntp', "/home/mehrdad/Documents/my-git/automation/automation_scripts/", "Set ntp protocol"))
     # print(A.Del_script('alfa'))
-    # print(A.Up_script('alfa', 'script_name', 'alfa.py'))
-    # print(A.Find_script('alfa.py'))
+    # print(A.Up_script('get-interface.py', 'path', "/home/mehrdad/Documents/my-git/automation/automation_scripts/"))
+    # print(A.Find_script('get-interface.py'))
