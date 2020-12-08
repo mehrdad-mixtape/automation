@@ -6,7 +6,7 @@ class Normal_user():
         self.C = client.Client()
         self.db = manage_db.Automation_BD()
         self.name = ''
-        
+
     def Login(self, server_ip, server_port, username, password, key):
         self.name = username
         return self.C.Connect_and_authenticate_to_server(server_ip, server_port, username, password, key)

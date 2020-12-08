@@ -307,7 +307,7 @@ class Automation_BD:
             'minute': datetime.now().strftime("%M"),
             'second': datetime.now().strftime("%S"),
             'content': content,
-            'username': username,
+            'owner': username,
             'workspace': 'ws_auto' + username
         }
         if self.action_log_coll.insert_one(data).acknowledged == True:
@@ -330,9 +330,9 @@ class Automation_BD:
             'usability': usability
         }
         if self.script_coll.insert_one(data).acknowledged == True:
-            return 'New script created successfully'
+            return f'New script with script_name: {script_name} on {path} was created'
         else:
-            return 'Operation failed, please try again'
+            return f'Operation failed, for create new script {script_name} on {path}'
 
     def Delete_script(self, script_name):
         data = {
@@ -340,9 +340,9 @@ class Automation_BD:
         }
         if self.Get_attrib_script(script_name) != False:
             if self.script_coll.delete_one(data).acknowledged == True:
-                return 'Script deleted successfully'
+                return f'Script with script_name: {script_name} was deleted'
             else:
-                return 'Operation failed, please try again'
+                return f'Operation failed for delete {script_name}'
         else:
             return f'Script not found with this name: {script_name}'
 
@@ -352,9 +352,9 @@ class Automation_BD:
         }
         if self.Get_attrib_script(script_name) != False:
             if self.script_coll.update_one({'script_name': script_name}, {'$set': data}).acknowledged == True:
-                return 'Operation complete'
+                return f'Script with script_name: {script_name} was updated: {attrib}:{new_value}'
             else:
-                return 'Operation failed, please try again'
+                return f'Operation failed for update script_name: {script_name} with {attrib}:{new_value}'
         else:
             return f'Script not found with this name: {script_name}'
 

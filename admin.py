@@ -6,21 +6,23 @@ class Admin():
     def __init__(self):
         self.C = client.Client()
         self.db = manage_db.Automation_BD()
+        self.name = ''
 
     def Login(self, server_ip, server_port, username, password, key):
+        self.name = username
         return self.C.Connect_and_authenticate_to_server(server_ip, server_port, username, password, key)
 
     ########################################## Admin management section ############# status: implimented ######################
     def Admin_add(self, username, password, first_name, last_name, birth_year, birth_month, birth_day, email, phone):
         report1 = self.db.Insert_admin(username, self.C.Hash(password), first_name, last_name, birth_year, birth_month, birth_day, email, phone)
         report2 = self.db.Insert_admin_workspace(username)
-        self.db.Record_action_log(f'New admin {username} added and his workspace created', username)
+        # self.db.Record_action_log(f'New admin {username} added and his workspace created', username)
         return report1 +'\n'+ report2
 
     def Admin_del(self, username, password):
         report1 = self.db.Delete_admin(username, self.C.Hash(password))
         report2 = self.db.Delete_admin_workspace(username)
-        self.db.Record_action_log(f'Admin {username} deleted and his workspace removed', username)
+        # self.db.Record_action_log(f'Admin {username} deleted and his workspace removed', username)
         return report1 + '\n' + report2
 
     def Admin_update(self, username, password, attrib, new_value):
@@ -28,15 +30,15 @@ class Admin():
         if attrib == 'password':
             hash_pass = self.C.Hash(new_value)
             report1 = self.db.Update_admin(username, self.C.Hash(password), attrib, hash_pass)
-            self.db.Record_action_log(f'{username} password was changed', username)
+            # self.db.Record_action_log(f'{username} password was changed', username)
         elif attrib == 'username':
             report1 = self.db.Update_admin(username, self.C.Hash(password), 'username', new_value)
             report2 = self.db.Update_admin_workspace(username,'owner', new_value)
             report3 = self.db.Update_admin_workspace(new_value,'name', 'ws_auto' + new_value)
-            self.db.Record_action_log(f'{username} username was changed to {new_value}', new_value)
+            # self.db.Record_action_log(f'{username} username was changed to {new_value}', new_value)
         else:
             report1 = self.db.Update_admin(username, self.C.Hash(password), attrib, new_value)
-            self.db.Record_action_log(f'{username} {attrib} was changed to {new_value}', new_value)
+            # self.db.Record_action_log(f'{username} {attrib} was changed to {new_value}', new_value)
 
         return report1 + '\n' + report2 + '\n' + report3
 
@@ -51,13 +53,13 @@ class Admin():
     def User_add(self, username, password, first_name, last_name, birth_year, birth_month, birth_day, email, phone, permission):
         report1 = self.db.Insert_user(username, self.C.Hash(password), first_name, last_name, birth_year, birth_month, birth_day, email, phone, permission)
         report2 = self.db.Insert_user_workspace(username)
-        self.db.Record_action_log(f'New user {username} added and his workspace created', username)
+        # self.db.Record_action_log(f'New user {username} added and his workspace created', username)
         return report1 + '\n' + report2
 
     def User_del(self, username, password):
         report1 = self.db.Delete_user(username, self.C.Hash(password))
         report2 = self.db.Delete_user_workspace(username)
-        self.db.Record_action_log(f'User {username} deleted and his workspace removed', username)
+        # self.db.Record_action_log(f'User {username} deleted and his workspace removed', username)
         return report1 + '\n' + report2
 
     def User_update(self, username, password, attrib, new_value):
@@ -65,15 +67,15 @@ class Admin():
         if attrib == 'password':
             hash_pass = self.C.Hash(new_value)
             report1 = self.db.Update_user(username, self.C.Hash(password), attrib, hash_pass)
-            self.db.Record_action_log(f'{username} password was changed', username)
+            # self.db.Record_action_log(f'{username} password was changed', username)
         elif attrib == 'username':
             report1 = self.db.Update_user(username, self.C.Hash(password), 'username', new_value)
             report2 = self.db.Update_user_workspace(username,'owner', new_value)
             report3 = self.db.Update_user_workspace(new_value,'name', 'ws_auto' + new_value)
-            self.db.Record_action_log(f'{username} username was changed to {new_value}', new_value)
+            # self.db.Record_action_log(f'{username} username was changed to {new_value}', new_value)
         else:
             report1 = self.db.Update_user(username, self.C.Hash(password), attrib, new_value)
-            self.db.Record_action_log(f'{username} {attrib} was changed to {new_value}', new_value)
+            # self.db.Record_action_log(f'{username} {attrib} was changed to {new_value}', new_value)
 
         return report1 + '\n' + report2 + '\n' + report3
 
@@ -87,22 +89,22 @@ class Admin():
     ########################################## Server management section ############# status: implemented ######################
     def Server_add(self, hostname, password, domain, ip, port):
         report = self.db.Insert_server(hostname, self.C.Hash(password), domain, ip, port)
-        self.db.Record_action_log(f'New server with hostname: {hostname} and ip/port: {ip}:{port} added', hostname)
+        # self.db.Record_action_log(f'New server with hostname: {hostname} and ip/port: {ip}:{port} added', hostname)
         return report
 
     def Server_del(self, hostname, password):
         report = self.db.Delete_server(hostname, self.C.Hash(password))
-        self.db.Record_action_log(f'Server with hostname: {hostname} and ip/port: {ip}:{port} deleted', hostname)
+        # self.db.Record_action_log(f'Server with hostname: {hostname} and ip/port: {ip}:{port} deleted', hostname)
         return report
 
     def Server_update(self, hostname, password, attrib, new_value):
         if attrib == 'password':
             hash_pass = self.C.Hash(new_value)
             report = self.db.Update_server(hostname, self.C.Hash(password), attrib, hash_pass)
-            self.db.Record_action_log(f'{hostname}:server password was changed', hostname)
+            # self.db.Record_action_log(f'{hostname}:server password was changed', hostname)
         else:
             report = self.db.Update_server(hostname, self.C.Hash(password), attrib, new_value)
-            self.db.Record_action_log(f'{hostname}:server {attrib} was changed to {new_value}', new_value)
+            # self.db.Record_action_log(f'{hostname}:server {attrib} was changed to {new_value}', new_value)
         return report
 
     def Server_find(self, hostname, password):
@@ -115,10 +117,10 @@ class Admin():
     def Start_server(self, hostname, password, ip, port):
         report = self.db.Get_attrib_server(hostname, self.C.Hash(password)) # authenticate server
         if report == False: # if authentication operation was failed, server return False and run_server_form.py can handle it.
-            self.db.Record_action_log(f'{hostname}:server {ip}:{port} had problem for running', hostname)
+            # self.db.Record_action_log(f'{hostname}:server {ip}:{port} had problem for running', hostname)
             return report
         else:
-            self.db.Record_action_log(f'{hostname}:server was running with {ip}:{port}', hostname)
+            # self.db.Record_action_log(f'{hostname}:server was running with {ip}:{port}', hostname)
             S = server.Server(ip, port)
             return S.Run_Server() # if ip/port cannot bind to server, server return "internal error" and run_server_form can handle it.
 
@@ -169,14 +171,17 @@ class Admin():
         pass
     def Create_script(self, script_name, path, usability):
         report = self.db.Insert_script(script_name, path, usability)
+        # self.db.Record_action_log(report, script_name)
         return report
 
     def Del_script(self, script_name):
         report = self.db.Delete_script(script_name)
+        # self.db.Record_action_log(report, script_name)
         return report
 
     def Up_script(self, script_name, attrib, new_value):
         report = self.db.Update_script(script_name, attrib, new_value)
+        # self.db.Record_action_log(report, script_name)
         return report
 
     def Find_script(self,script_name):
@@ -262,9 +267,9 @@ if __name__ == "__main__":
     # print(A.Server_del('automation', '123456'))
     # print(A.Server_find('automation', '123456'))
     # print(A.Start_server('automation', '123456', '127.0.0.1', 4444))
-    
+
     # print(A.Create_script('set-ntp', "/home/mehrdad/Documents/my-git/automation/automation_scripts/", "Set ntp protocol"))
-    # print(A.Del_script('alfa'))
+    # print(A.Del_script('get-interface.py'))
     # print(A.Up_script('get-interface.py', 'path', "/home/mehrdad/Documents/my-git/automation/automation_scripts/"))
     # print(A.Find_script('get-interface.py'))
 
