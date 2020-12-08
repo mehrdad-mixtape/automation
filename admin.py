@@ -87,18 +87,22 @@ class Admin():
     ########################################## Server management section ############# status: implemented ######################
     def Server_add(self, hostname, password, domain, ip, port):
         report = self.db.Insert_server(hostname, self.C.Hash(password), domain, ip, port)
+        self.db.Record_action_log(f'New server with hostname: {hostname} and ip/port: {ip}:{port} added', hostname)
         return report
 
     def Server_del(self, hostname, password):
         report = self.db.Delete_server(hostname, self.C.Hash(password))
+        self.db.Record_action_log(f'Server with hostname: {hostname} and ip/port: {ip}:{port} deleted', hostname)
         return report
 
     def Server_update(self, hostname, password, attrib, new_value):
         if attrib == 'password':
             hash_pass = self.C.Hash(new_value)
             report = self.db.Update_server(hostname, self.C.Hash(password), attrib, hash_pass)
+            self.db.Record_action_log(f'{hostname}:server password was changed', hostname)
         else:
             report = self.db.Update_server(hostname, self.C.Hash(password), attrib, new_value)
+            self.db.Record_action_log(f'{hostname}:server {attrib} was changed to {new_value}', new_value)
         return report
 
     def Server_find(self, hostname, password):
@@ -111,8 +115,10 @@ class Admin():
     def Start_server(self, hostname, password, ip, port):
         report = self.db.Get_attrib_server(hostname, self.C.Hash(password)) # authenticate server
         if report == False: # if authentication operation was failed, server return False and run_server_form.py can handle it.
+            self.db.Record_action_log(f'{hostname}:server {ip}:{port} had problem for running', hostname)
             return report
         else:
+            self.db.Record_action_log(f'{hostname}:server was running with {ip}:{port}', hostname)
             S = server.Server(ip, port)
             return S.Run_Server() # if ip/port cannot bind to server, server return "internal error" and run_server_form can handle it.
 
@@ -252,11 +258,11 @@ if __name__ == "__main__":
     # print(A.User_find('Jax', '123'))
 
     # print(A.Server_add('automation', '123456', 'automation.com', '127.0.0.1', 4444))
-    # print(A.Server_update('automation', '123456', 'ip', '127.0.0.1'))
+    # print(A.Server_update('automation', '123', 'password', '123456'))
     # print(A.Server_del('automation', '123456'))
     # print(A.Server_find('automation', '123456'))
     # print(A.Start_server('automation', '123456', '127.0.0.1', 4444))
-
+    
     # print(A.Create_script('set-ntp', "/home/mehrdad/Documents/my-git/automation/automation_scripts/", "Set ntp protocol"))
     # print(A.Del_script('alfa'))
     # print(A.Up_script('get-interface.py', 'path', "/home/mehrdad/Documents/my-git/automation/automation_scripts/"))
