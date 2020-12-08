@@ -197,11 +197,43 @@ class Automation_BD:
             return 'Operation failed, please try again'
 
     def Delete_admin_workspace(self, username, password):
-        pass
-    def Update_admin_workspace(self, username):
-        pass
+        data = {
+            'name': 'ws_auto' + username,
+            'owner': username
+        }
+        if self.Get_attrib_admin(username, password) != False:
+            if self.admin_workspace_coll.delete_one(data).acknowledged == True:
+                return f'ws_auto{username} deleted successfully'
+            else:
+                return 'Operation failed, please try again'
+        else:
+            return f'Workspace not found with this name: ws_auto{username}'
+
+    def Update_admin_workspace(self, username, password, attrib, new_value):
+        data = {
+            attrib: new_value
+        }
+        if self.Get_attrib_admin(username, password) != False:
+            if self.admin_workspace_coll.update_one({'owner': username}, {'$set': data}).acknowledged == True:
+                return 'Operation complete'
+            else:
+                return 'Operation failed, please try again'
+        else:
+            return f'Workspace not found with this name: ws_auto{username}'
+
     def Get_attrib_admin_workspace(self, username):
-        pass
+        data = {
+            'name': 'ws_auto' + username,
+            'owner': username
+        }
+        if self.admin_workspace_coll.find_one(data):
+            all_attribs = self.admin_workspace_coll.find_one(data)
+            result = []
+            for key in all_attribs:
+                result.append(all_attribs[key])
+            return result
+        else:
+            return False
 
     ################################## User workspsace Section ##################################
     def Insert_user_workspace(self, username):
@@ -216,11 +248,43 @@ class Automation_BD:
             return 'Operation failed, please try again'
 
     def Delete_uesr_workspace(self, username, password):
-        pass
-    def Update_user_workspace(self, username):
-        pass
+        data = {
+            'name': 'ws_auto' + username,
+            'owner': username
+        }
+        if self.Get_attrib_user(username, password) != False:
+            if self.user_workspace_coll.delete_one(data).acknowledged == True:
+                return f'ws_auto{username} deleted successfully'
+            else:
+                return 'Operation failed, please try again'
+        else:
+            return f'Workspace not found with this name: ws_auto{username}'
+
+    def Update_user_workspace(self, username, password, attrib, new_value):
+        data = {
+            attrib: new_value
+        }
+        if self.Get_attrib_user(username, password) != False:
+            if self.user_workspace_coll.update_one({'owner': username}, {'$set': data}).acknowledged == True:
+                return 'Operation complete'
+            else:
+                return 'Operation failed, please try again'
+        else:
+            return f'Workspace not found with this name: ws_auto{username}'
+
     def Get_attrib_user_workspace(self, username):
-        pass
+        data = {
+            'name': 'ws_auto' + username,
+            'owner': username
+        }
+        if self.user_workspace_coll.find_one(data):
+            all_attribs = self.user_workspace_coll.find_one(data)
+            result = []
+            for key in all_attribs:
+                result.append(all_attribs[key])
+            return result
+        else:
+            return False
 
     ################################## Login log Section ##################################
     def Record_login_log(self, content, username):
