@@ -14,19 +14,31 @@ class Admin():
     def Admin_add(self, username, password, first_name, last_name, birth_year, birth_month, birth_day, email, phone):
         report1 = self.db.Insert_admin(username, self.C.Hash(password), first_name, last_name, birth_year, birth_month, birth_day, email, phone)
         report2 = self.db.Insert_admin_workspace(username)
+        self.db.Record_action_log(f'New admin {username} added and his workspace created', username)
         return report1 +'\n'+ report2
 
     def Admin_del(self, username, password):
-        report = self.db.Delete_admin(username, self.C.Hash(password))
-        return report
+        report1 = self.db.Delete_admin(username, self.C.Hash(password))
+        report2 = self.db.Delete_admin_workspace(username)
+        self.db.Record_action_log(f'Admin {username} deleted and his workspace removed', username)
+        return report1 + '\n' + report2
 
     def Admin_update(self, username, password, attrib, new_value):
+        report1, report2, report3 = '', '', ''
         if attrib == 'password':
             hash_pass = self.C.Hash(new_value)
-            report = self.db.Update_admin(username, self.C.Hash(password), attrib, hash_pass)
+            report1 = self.db.Update_admin(username, self.C.Hash(password), attrib, hash_pass)
+            self.db.Record_action_log(f'{username} password was changed', username)
+        elif attrib == 'username':
+            report1 = self.db.Update_admin(username, self.C.Hash(password), 'username', new_value)
+            report2 = self.db.Update_admin_workspace(username,'owner', new_value)
+            report3 = self.db.Update_admin_workspace(new_value,'name', 'ws_auto' + new_value)
+            self.db.Record_action_log(f'{username} username was changed to {new_value}', new_value)
         else:
-            report = self.db.Update_admin(username, self.C.Hash(password), attrib, new_value)
-        return report
+            report1 = self.db.Update_admin(username, self.C.Hash(password), attrib, new_value)
+            self.db.Record_action_log(f'{username} {attrib} was changed to {new_value}', new_value)
+
+        return report1 + '\n' + report2 + '\n' + report3
 
     def Admin_find(self, username, password):
         report = self.db.Get_attrib_admin(username, self.C.Hash(password))
@@ -37,20 +49,33 @@ class Admin():
 
     ########################################## User management section ############# status: implemented ######################
     def User_add(self, username, password, first_name, last_name, birth_year, birth_month, birth_day, email, phone, permission):
-        report = self.db.Insert_user(username, self.C.Hash(password), first_name, last_name, birth_year, birth_month, birth_day, email, phone, permission)
-        return report
+        report1 = self.db.Insert_user(username, self.C.Hash(password), first_name, last_name, birth_year, birth_month, birth_day, email, phone, permission)
+        report2 = self.db.Insert_user_workspace(username)
+        self.db.Record_action_log(f'New user {username} added and his workspace created', username)
+        return report1 + '\n' + report2
 
     def User_del(self, username, password):
-        report = self.db.Delete_user(username, self.C.Hash(password))
-        return report
+        report1 = self.db.Delete_user(username, self.C.Hash(password))
+        report2 = self.db.Delete_user_workspace(username)
+        self.db.Record_action_log(f'User {username} deleted and his workspace removed', username)
+        return report1 + '\n' + report2
 
     def User_update(self, username, password, attrib, new_value):
+        report1, report2, report3 = '', '', ''
         if attrib == 'password':
             hash_pass = self.C.Hash(new_value)
-            report = self.db.Update_user(username, self.C.Hash(password), attrib, hash_pass)
+            report1 = self.db.Update_user(username, self.C.Hash(password), attrib, hash_pass)
+            self.db.Record_action_log(f'{username} password was changed', username)
+        elif attrib == 'username':
+            report1 = self.db.Update_user(username, self.C.Hash(password), 'username', new_value)
+            report2 = self.db.Update_user_workspace(username,'owner', new_value)
+            report3 = self.db.Update_user_workspace(new_value,'name', 'ws_auto' + new_value)
+            self.db.Record_action_log(f'{username} username was changed to {new_value}', new_value)
         else:
-            report = self.db.Update_user(username, self.C.Hash(password), attrib, new_value)
-        return report
+            report1 = self.db.Update_user(username, self.C.Hash(password), attrib, new_value)
+            self.db.Record_action_log(f'{username} {attrib} was changed to {new_value}', new_value)
+
+        return report1 + '\n' + report2 + '\n' + report3
 
     def User_find(self, username, password):
         report = self.db.Get_attrib_user(username, self.C.Hash(password))
@@ -96,12 +121,12 @@ class Admin():
         report = self.db.Insert_admin_workspace(username)
         return report
 
-    def Admin_workspace_del(self, username, password):
-        report = self.db.Delete_admin_workspace(username, self.C.Hash(password))
+    def Admin_workspace_del(self, username):
+        report = self.db.Delete_admin_workspace(username)
         return report
 
-    def Admin_workspace_update(self, username, password, attrib, new_value):
-        report = self.db.Update_admin_workspace(username, self.C.Hash(password), attrib, new_value)
+    def Admin_workspace_update(self, username, attrib, new_value):
+        report = self.db.Update_admin_workspace(username, attrib, new_value)
         return report
 
     def Admin_workspace_find(self, username):
@@ -116,12 +141,12 @@ class Admin():
         report = self.db.Insert_user_workspace(username)
         return report
 
-    def User_workspace_del(self, username, password):
-        report = self.db.Delete_user_workspace(username, self.C.Hash(password))
+    def User_workspace_del(self, username):
+        report = self.db.Delete_user_workspace(username)
         return report
 
-    def User_workspace_update(self, username, password, attrib, new_value):
-        report = self.db.Update_user_workspace(username, self.C.Hash(password), attrib, new_value)
+    def User_workspace_update(self, username, attrib, new_value):
+        report = self.db.Update_user_workspace(username, attrib, new_value)
         return report
 
     def User_workspace_find(self, username):
@@ -211,19 +236,19 @@ class Admin():
 
 if __name__ == "__main__":
     A = Admin()
-    # print(A.Admin_add('alex2', '1234', 'alex', 'D', '1990', '6', '5', 'alex@gmail.com', '0933'))
-    # print(A.Admin_update('mixtape', '123', 'password', '12345'))
+    # print(A.Admin_add('maxi', '1234', 'max', 'G', '1994', '8', '5', 'maxi@gmail.com', '0933'))
+    # print(A.Admin_update('MAXI', '123', 'phone', '0954'))
     # print(A.Admin_del('alex2', '1234'))
-    # print(A.Admin_find('alex2', '1234'))
+    # print(A.Admin_find('MAXI', '123'))
 
     # print(A.All_login_log())
     # print(A.Login_log('username', 'alex2'))
     # print(A.All_action_log())
     # print(A.Action_log('username', 'mixtape'))
 
-    # print(A.User_add('Jax', '123', 'jack', 'mark', '1987', '1', '1', 'jack@gmail.com', '0935', False))
-    # print(A.User_update('Jax', '123', 'password', '1234'))
-    # print(A.User_del('Jax', '123'))
+    # print(A.User_add('Bob', '123', 'bob', 'pat', '1989', '3', '1', 'bob@gmail.com', '0905', False))
+    # print(A.User_update('JAX', '12345', 'phone', '0987'))
+    # print(A.User_del('Bob', '123'))
     # print(A.User_find('Jax', '123'))
 
     # print(A.Server_add('automation', '123456', 'automation.com', '127.0.0.1', 4444))

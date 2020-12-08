@@ -104,7 +104,7 @@ class Automation_BD:
             else:
                 return 'Operation failed, please try again'
         else:
-            return f'Admin not found with this username: {username}'
+            return f'User not found with this username: {username}'
 
     def Update_user(self, username, password, attrib, new_value):
         data = {
@@ -196,29 +196,23 @@ class Automation_BD:
         else:
             return 'Operation failed, please try again'
 
-    def Delete_admin_workspace(self, username, password):
+    def Delete_admin_workspace(self, username):
         data = {
-            'name': 'ws_auto' + username,
+            'name': 'ws_auto' + username
         }
-        if self.Get_attrib_admin(username, password) != False:
-            if self.admin_workspace_coll.delete_one(data).acknowledged == True:
-                return f'ws_auto{username} deleted successfully'
-            else:
-                return 'Operation failed, please try again'
+        if self.admin_workspace_coll.delete_one(data).acknowledged == True:
+            return f'ws_auto{username} deleted successfully'
         else:
-            return f'Workspace not found with this name: ws_auto{username}'
+            return 'Operation failed, please try again'
 
-    def Update_admin_workspace(self, username, password, attrib, new_value):
+    def Update_admin_workspace(self, username, attrib, new_value):
         data = {
             attrib: new_value
         }
-        if self.Get_attrib_admin(username, password) != False:
-            if self.admin_workspace_coll.update_one({'owner': username}, {'$set': data}).acknowledged == True:
-                return 'Operation complete'
-            else:
-                return 'Operation failed, please try again'
+        if self.admin_workspace_coll.update_one({'owner': username}, {'$set': data}).acknowledged == True:
+            return 'Operation complete'
         else:
-            return f'Workspace not found with this name: ws_auto{username}'
+            return 'Operation failed, please try again'
 
     def Get_attrib_admin_workspace(self, username):
         data = {
@@ -246,29 +240,23 @@ class Automation_BD:
         else:
             return 'Operation failed, please try again'
 
-    def Delete_user_workspace(self, username, password):
+    def Delete_user_workspace(self, username):
         data = {
-            'name': 'ws_auto' + username,
+            'name': 'ws_auto' + username
         }
-        if self.Get_attrib_user(username, password) != False:
-            if self.user_workspace_coll.delete_one(data).acknowledged == True:
-                return f'ws_auto{username} deleted successfully'
-            else:
-                return 'Operation failed, please try again'
+        if self.user_workspace_coll.delete_one(data).acknowledged == True:
+            return f'ws_auto{username} deleted successfully'
         else:
-            return f'Workspace not found with this name: ws_auto{username}'
+            return 'Operation failed, please try again'
 
-    def Update_user_workspace(self, username, password, attrib, new_value):
+    def Update_user_workspace(self, username, attrib, new_value):
         data = {
             attrib: new_value
         }
-        if self.Get_attrib_user(username, password) != False:
-            if self.user_workspace_coll.update_one({'owner': username}, {'$set': data}).acknowledged == True:
-                return 'Operation complete'
-            else:
-                return 'Operation failed, please try again'
+        if self.user_workspace_coll.update_one({'owner': username}, {'$set': data}).acknowledged == True:
+            return 'Operation complete'
         else:
-            return f'Workspace not found with this name: ws_auto{username}'
+            return 'Operation failed, please try again'
 
     def Get_attrib_user_workspace(self, username):
         data = {
