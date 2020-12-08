@@ -5,7 +5,10 @@ class Normal_user():
     def __init__(self):
         self.C = client.Client()
         self.db = manage_db.Automation_BD()
+        self.name = ''
+        
     def Login(self, server_ip, server_port, username, password, key):
+        self.name = username
         return self.C.Connect_and_authenticate_to_server(server_ip, server_port, username, password, key)
 
     ########################################## User management section ############# status: implement 70% ######################
