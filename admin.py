@@ -12,8 +12,9 @@ class Admin():
 
     ########################################## Admin management section ############# status: implimented ######################
     def Admin_add(self, username, password, first_name, last_name, birth_year, birth_month, birth_day, email, phone):
-        report = self.db.Insert_admin(username, self.C.Hash(password), first_name, last_name, birth_year, birth_month, birth_day, email, phone)
-        return report
+        report1 = self.db.Insert_admin(username, self.C.Hash(password), first_name, last_name, birth_year, birth_month, birth_day, email, phone)
+        report2 = self.db.Insert_admin_workspace(username)
+        return report1 +'\n'+ report2
 
     def Admin_del(self, username, password):
         report = self.db.Delete_admin(username, self.C.Hash(password))
@@ -89,6 +90,46 @@ class Admin():
         else:
             S = server.Server(ip, port)
             return S.Run_Server() # if ip/port cannot bind to server, server return "internal error" and run_server_form can handle it.
+
+    ########################################## Admin workspace management section ############# status: implemented ######################
+    def Admin_workspace_add(self, username):
+        report = self.db.Insert_admin_workspace(username)
+        return report
+
+    def Admin_workspace_del(self, username, password):
+        report = self.db.Delete_admin_workspace(username, self.C.Hash(password))
+        return report
+
+    def Admin_workspace_update(self, username, password, attrib, new_value):
+        report = self.db.Update_admin_workspace(username, self.C.Hash(password), attrib, new_value)
+        return report
+
+    def Admin_workspace_find(self, username):
+        report = self.db.Get_attrib_admin_workspace(username)
+        if report == False:
+            return f'Workspace not found for this username: {username}'
+        else:
+            return report
+
+    ########################################## User workspace management section ############# status: implemented ######################
+    def User_workspace_add(self, username):
+        report = self.db.Insert_user_workspace(username)
+        return report
+
+    def User_workspace_del(self, username, password):
+        report = self.db.Delete_user_workspace(username, self.C.Hash(password))
+        return report
+
+    def User_workspace_update(self, username, password, attrib, new_value):
+        report = self.db.Update_user_workspace(username, self.C.Hash(password), attrib, new_value)
+        return report
+
+    def User_workspace_find(self, username):
+        report = self.db.Get_attrib_user_workspace(username)
+        if report == False:
+            return f'Workspace not found for this username: {username}'
+        else:
+            return report
 
     ########################################## Script management section ############# status: implement 70% ######################
     def Run_script(self, script_name):
@@ -195,3 +236,12 @@ if __name__ == "__main__":
     # print(A.Del_script('alfa'))
     # print(A.Up_script('get-interface.py', 'path', "/home/mehrdad/Documents/my-git/automation/automation_scripts/"))
     # print(A.Find_script('get-interface.py'))
+
+    # print(A.Admin_workspace_add('mixtape'))
+    # print(A.User_workspace_add('Jax'))
+    # print(A.Admin_workspace_update('mixtape', '12345', 'owner', 'Mixtape'))
+    # print(A.User_workspace_update('Jax', '1234', 'owner', 'JAX'))
+    # print(A.Admin_workspace_del('mixtape', '12345'))
+    # print(A.User_workspace_del('Jax', '1234'))
+    # print(A.Admin_workspace_find('mixtape'))
+    # print(A.User_workspace_find('Jax'))

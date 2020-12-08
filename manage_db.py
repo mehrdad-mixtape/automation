@@ -199,7 +199,6 @@ class Automation_BD:
     def Delete_admin_workspace(self, username, password):
         data = {
             'name': 'ws_auto' + username,
-            'owner': username
         }
         if self.Get_attrib_admin(username, password) != False:
             if self.admin_workspace_coll.delete_one(data).acknowledged == True:
@@ -247,10 +246,9 @@ class Automation_BD:
         else:
             return 'Operation failed, please try again'
 
-    def Delete_uesr_workspace(self, username, password):
+    def Delete_user_workspace(self, username, password):
         data = {
             'name': 'ws_auto' + username,
-            'owner': username
         }
         if self.Get_attrib_user(username, password) != False:
             if self.user_workspace_coll.delete_one(data).acknowledged == True:
