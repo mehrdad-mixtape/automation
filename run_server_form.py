@@ -1,7 +1,8 @@
-from PyQt5 import QtCore, QtGui, QtWidgets # PyQt5 have 620 class and 6000 method
+# PyQt5 have 620 class and 6000 method
 # QtCore use for working with files, directories, URL protocols, ...
 # QtGui use for working with graphical content like font-size, sentence-size, ...
 # QtWidgets for working with widgets_UI like buttons, labels, combobox, ...
+from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox, QApplication, QMainWindow
 import sys
 import admin

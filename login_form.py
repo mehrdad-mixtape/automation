@@ -1,7 +1,8 @@
-from PyQt5 import QtCore, QtGui, QtWidgets # PyQt5 have 620 class and 6000 method
+# PyQt5 have 620 class and 6000 method
 # QtCore use for working with files, directories, URL protocols, ...
 # QtGui use for working with graphical content like font-size, sentence-size, ...
 # QtWidgets for working with widgets_UI like buttons, labels, combobox, ...
+from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox, QApplication, QMainWindow
 import sys
 import admin, normal_user
@@ -254,10 +255,10 @@ class Ui_Login_Window():
             msg.buttonClicked.connect(lambda: Login_Window.show())
             msg.exec_()
 
-if __name__ == "__main__":
-    app = QApplication(sys.argv)  # create a application and get it system argument.
-    Login_Window = QMainWindow()  # create a main window.
-    ui = Ui_Login_Window()
-    ui.SetupUi(Login_Window)
-    Login_Window.show()
-    sys.exit(app.exec_())  # OS can know my app.
+# if __name__ == "__main__":
+#     app = QApplication(sys.argv)  # create a application and get it system argument.
+#     Login_Window = QMainWindow()  # create a main window.
+#     ui = Ui_Login_Window()
+#     ui.SetupUi(Login_Window)
+#     Login_Window.show()
+#     sys.exit(app.exec_())  # OS can know my app.

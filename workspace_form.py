@@ -1,8 +1,14 @@
+# PyQt5 have 620 class and 6000 method
+# QtCore use for working with files, directories, URL protocols, ...
+# QtGui use for working with graphical content like font-size, sentence-size, ...
+# QtWidgets for working with widgets_UI like buttons, labels, combobox, ...
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox, QApplication, QMainWindow
 import sys
+import admin, normal_user
 
 class Ui_WorkSpace_window(object):
+
     def SetupUi(self, WorkSpace_window):
         WorkSpace_window.setObjectName("WorkSpace_window")
         WorkSpace_window.resize(1000, 700)
@@ -510,10 +516,10 @@ class Ui_WorkSpace_window(object):
 
         self.actionConnection.setText(_translate("WorkSpace_window", "Close Connection"))
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)  # create a application and get it system argument.
-    workspace_Window = QMainWindow()  # create a main window.
-    ui = Ui_WorkSpace_window()
-    ui.SetupUi(workspace_Window)
-    workspace_Window.show()
-    sys.exit(app.exec_())  # OS can know my app.
+# if __name__ == '__main__':
+#     app = QApplication(sys.argv)  # create a application and get it system argument.
+#     workspace_window = QMainWindow()  # create a main window.
+#     ui = Ui_WorkSpace_window()
+#     ui.SetupUi(workspace_window)
+#     workspace_window.show()
+#     sys.exit(app.exec_())  # OS can know my app.
