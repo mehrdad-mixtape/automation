@@ -20,7 +20,7 @@ class Normal_user():
             return report # return False
 
     ########################################## Script management section ############# status: implement 70% ######################
-    def Run_script(self, script_name):
+    def Launch_script(self, script_name):
         pass
 
     def Edit_script(self, script_name, path, permission):
