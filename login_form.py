@@ -11,7 +11,7 @@ class Ui_Login_Window():
     def SetupUi(self, Login_Window):
         Login_Window.setObjectName("Login_Window")
         Login_Window.setEnabled(True)
-        Login_Window.setGeometry(700, 300, 490, 370)
+        Login_Window.setGeometry(700, 300, 490, 420)
         Login_Window.setMaximumSize(QtCore.QSize(490, 420))
         Login_Window.setMinimumSize(QtCore.QSize(490, 420))
 
@@ -19,6 +19,10 @@ class Ui_Login_Window():
         font.setPointSize(12)
         Login_Window.setFont(font)
         Login_Window.setToolTip("")
+
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("icon/2252295991582004497-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        Login_Window.setWindowIcon(icon)
 
         self.centralwidget = QtWidgets.QWidget(Login_Window)
         self.centralwidget.setObjectName("centralwidget")

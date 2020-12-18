@@ -11,7 +11,7 @@ class Ui_Run_server_Window():
     def SetupUi(self, Run_server_Window):
         Run_server_Window.setObjectName("Run_server_Window")
         Run_server_Window.setEnabled(True)
-        Run_server_Window.setGeometry(700, 300, 490, 370)
+        Run_server_Window.setGeometry(700, 300, 490, 420)
         Run_server_Window.setMaximumSize(QtCore.QSize(490, 420))
         Run_server_Window.setMinimumSize(QtCore.QSize(490, 420))
 
@@ -19,6 +19,10 @@ class Ui_Run_server_Window():
         font.setPointSize(12)
         Run_server_Window.setFont(font)
         Run_server_Window.setToolTip("")
+
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("icon/2252295991582004497-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        Run_server_Window.setWindowIcon(icon)
 
         self.centralwidget = QtWidgets.QWidget(Run_server_Window)
         self.centralwidget.setObjectName("centralwidget")
@@ -165,16 +169,6 @@ class Ui_Run_server_Window():
 
     def Close_Button(self):
         Run_server_Window.close()
-
-    # def Admin_radiobutton(self):
-    #     if self.password2_lineEdit.isReadOnly() == True:
-    #         self.password2_lineEdit.setReadOnly(False)
-    #     self.status_bar.showMessage('status: please fill the Administration password')
-    #
-    # def User_radiobutton(self):
-    #     if self.password2_lineEdit.isReadOnly() == False:
-    #         self.password2_lineEdit.setReadOnly(True)
-    #     self.status_bar.showMessage('status: ok')
 
     def Show_notify_fail_run(self, flag): # Internal function
         if flag == "1":
