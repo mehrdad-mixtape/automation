@@ -682,6 +682,113 @@ class Ui_WorkSpace_window(object):
 
         self.actionConnection.setText(_translate("WorkSpace_window", "Close Connection"))
 
+    def Login_Button(self):
+        username = self.username_lineEdit.text()
+        passwd1 = self.password1_lineEdit.text()
+        passwd2 = self.password2_lineEdit.text()
+        ip = self.server_address_lineEdit.text()
+        port = self.server_port_lineEdit.text()
+        # login_page can handle input : username, password, ip, port
+        if (username == "") or (passwd1 == ""):
+            self.Show_notify_bad_input("1")
+        elif (len(ip) < 7) or (len(ip) >= 16) or (ip == ""):
+            self.Show_notify_bad_input("2")
+        elif port == "":
+            self.Show_notify_bad_input("3")
+        elif int(port) <= 0 or int(port) > 65536:
+            self.Show_notify_bad_input("3")
+        elif (passwd2 == "") and (self.password2_lineEdit.isReadOnly() == False):
+            self.Show_notify_bad_input("4")
+        else: # ok admin want's to login or normal user?.
+            if self.password2_lineEdit.isReadOnly() == False:
+                Admin = admin.Admin()
+                report = Admin.Login(ip, int(port), username, passwd1 + passwd2, 'admin') # passwd2 is not empty
+                if report == False: # if server shuts down or cannot give service or authentication was failed this line can help me.
+                    self.Show_notify_fail_login("1")
+                elif report == 'Connection closed': # if user send 'exit' to server, server send me Connection closed and I can see a notify.
+                    self.Show_notify_fail_login("2")
+
+            elif self.password2_lineEdit.isReadOnly() == True:
+                User = normal_user.User()
+                report = User.Login(ip, int(port), username, passwd1, 'normal_user') # passwd2 is empty
+                if report == False: # if server shuts down or cannot give service or authentication was failed this line can help me.
+                    self.Show_notify_fail_login("1")
+                elif report == 'Connection closed': # if user send 'exit' to server, server send me Connection closed and I can see a notify.
+                    self.Show_notify_fail_login("2")
+
+    def Close_Button(self):
+        workspace_window.close()
+
+    def Admin_radiobutton(self):
+        if self.password2_lineEdit.isReadOnly() == True:
+            self.password2_lineEdit.setReadOnly(False)
+        self.statusbar.showMessage('status: please fill the Administration password')
+
+    def User_radiobutton(self):
+        if self.password2_lineEdit.isReadOnly() == False:
+            self.password2_lineEdit.setReadOnly(True)
+        self.statusbar.showMessage('status: ok')
+
+    def Show_notify_fail_login(self, flag): # Internal function
+        if flag == "1":
+            self.statusbar.showMessage("status: login error")
+            msg = QMessageBox()
+            msg.setWindowTitle("Notify")
+            msg.setText("Login failed")
+            msg.setIcon(QMessageBox.Warning)
+            msg.setStandardButtons(QMessageBox.Retry)
+            msg.setDefaultButton(QMessageBox.Retry)
+            msg.setDetailedText("Please check your username/password or ip/port or server maybe shutdown, please try again")
+            #msg.buttonClicked.connect(lambda: Login_Window.show())
+            msg.exec_()
+        elif flag == "2":
+            msg = QMessageBox()
+            msg.setWindowTitle("Notify")
+            msg.setText("You are Logout from server goodbye :)")
+            msg.setIcon(QMessageBox.Information)
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.setDefaultButton(QMessageBox.Ok)
+            msg.exec_()
+
+    def Show_notify_bad_input(self, flag):
+        self.statusbar.showMessage("status: empty field error")
+        if flag == "1": # username or password
+            msg = QMessageBox()
+            msg.setWindowTitle("Notify")
+            msg.setText("Please fill username or password field!")
+            msg.setIcon(QMessageBox.Warning)
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.setDefaultButton(QMessageBox.Ok)
+            # msg.buttonClicked.connect(lambda: Login_Window.show())
+            msg.exec_()
+        elif flag == "2": # ip
+            msg = QMessageBox()
+            msg.setWindowTitle("Notify")
+            msg.setText("Ip Address format is wrong!")
+            msg.setIcon(QMessageBox.Warning)
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.setDefaultButton(QMessageBox.Ok)
+            # msg.buttonClicked.connect(lambda: Login_Window.show())
+            msg.exec_()
+        elif flag == "3": # port
+            msg = QMessageBox()
+            msg.setWindowTitle("Notify")
+            msg.setText("Port have invalid range!")
+            msg.setIcon(QMessageBox.Warning)
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.setDefaultButton(QMessageBox.Ok)
+            # msg.buttonClicked.connect(lambda: Login_Window.show())
+            msg.exec_()
+        if flag == "4": # administration password
+            msg = QMessageBox()
+            msg.setWindowTitle("Notify")
+            msg.setText("Please fill Administration password field!")
+            msg.setIcon(QMessageBox.Warning)
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.setDefaultButton(QMessageBox.Ok)
+            # msg.buttonClicked.connect(lambda: Login_Window.show())
+            msg.exec_()
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)  # create a application and get it system argument.
     workspace_window = QMainWindow()  # create a main window.
