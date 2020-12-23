@@ -20,8 +20,24 @@ class Ui_WorkSpace_window(object):
         font.setItalic(False)
         font.setWeight(50)
         WorkSpace_window.setFont(font)
+
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("icon/2252295991582004497-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap("icon/7774226221582004489-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap("icon/469704211582004494-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3 = QtGui.QIcon()
+        icon3.addPixmap(QtGui.QPixmap("icon/1388560951582004484-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4 = QtGui.QIcon()
+        icon4.addPixmap(QtGui.QPixmap("icon/18070417311582004489-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon5 = QtGui.QIcon()
+        icon5.addPixmap(QtGui.QPixmap("icon/4609047631582004492-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon6 = QtGui.QIcon()
+        icon6.addPixmap(QtGui.QPixmap("icon/8474278001582004491-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon7 = QtGui.QIcon()
+        icon7.addPixmap(QtGui.QPixmap("icon/12355707351582004488-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
         WorkSpace_window.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(WorkSpace_window)
         self.centralwidget.setObjectName("centralwidget")
@@ -34,25 +50,158 @@ class Ui_WorkSpace_window(object):
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
         self.gridLayout.setObjectName("gridLayout")
 
+        ################################ Tabs ################################################
         self.tabWidget = QtWidgets.QTabWidget(self.gridLayoutWidget)
-
         font = QtGui.QFont()
         font.setBold(False)
         font.setItalic(True)
         font.setWeight(50)
         self.tabWidget.setFont(font)
-        self.tabWidget.setToolTip("")
         self.tabWidget.setObjectName("tabWidget")
+        #-------------------------------- Login Tab -----------------------------------------#
+        self.login_tab = QtWidgets.QWidget()
+        self.login_tab.setObjectName("login_tab")
+
+        font = QtGui.QFont()
+        font.setPointSize(32)
+        font.setBold(True)
+        font.setItalic(False)
+        font.setWeight(75)
+        self.automation_label = QtWidgets.QLabel(self.login_tab)
+        self.automation_label.setGeometry(QtCore.QRect(20, 90, 936, 80))
+        self.automation_label.setFont(font)
+        self.automation_label.setFrameShape(QtWidgets.QFrame.WinPanel)
+        self.automation_label.setObjectName("automation_label")
+
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.username = QtWidgets.QLabel(self.login_tab)
+        self.username.setGeometry(QtCore.QRect(290, 190, 91, 22))
+        self.username.setFont(font)
+        self.username.setObjectName("username")
+
+        self.username_lineEdit = QtWidgets.QLineEdit(self.login_tab)
+        self.username_lineEdit.setGeometry(QtCore.QRect(400, 190, 221, 36))
+        self.username_lineEdit.setFrame(True)
+        self.username_lineEdit.setObjectName("username_lineEdit")
+        self.username_lineEdit.setPlaceholderText("Enter your username")
+
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.password = QtWidgets.QLabel(self.login_tab)
+        self.password.setGeometry(QtCore.QRect(290, 230, 81, 22))
+        self.password.setFont(font)
+        self.password.setObjectName("Password")
+
+        self.password1_lineEdit = QtWidgets.QLineEdit(self.login_tab)
+        self.password1_lineEdit.setGeometry(QtCore.QRect(400, 230, 221, 36))
+        self.password1_lineEdit.setFrame(True)
+        self.password1_lineEdit.setObjectName("password_lineEdit")
+        self.password1_lineEdit.setPlaceholderText("Enter your password")
+        self.password1_lineEdit.setEchoMode(QtWidgets.QLineEdit.Password)
+
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.server_port_ip1 = QtWidgets.QLabel(self.login_tab)
+        self.server_port_ip1.setGeometry(QtCore.QRect(290, 270, 81, 22))
+        self.server_port_ip1.setFont(font)
+        self.server_port_ip1.setObjectName("server_port_ip1")
+
+        self.server_port_ip2 = QtWidgets.QLabel(self.login_tab)
+        self.server_port_ip2.setGeometry(QtCore.QRect(533, 276, 10, 20))
+        self.server_port_ip2.setFont(font)
+        self.server_port_ip2.setObjectName("server_port_ip2")
+
+        self.server_address_lineEdit = QtWidgets.QLineEdit(self.login_tab)
+        self.server_address_lineEdit.setGeometry(QtCore.QRect(400, 270, 130, 36))
+        self.server_address_lineEdit.setFrame(True)
+        self.server_address_lineEdit.setObjectName("server_address_lineEdit")
+        self.server_address_lineEdit.setPlaceholderText("127.0.0.1")
+
+        self.server_port_lineEdit = QtWidgets.QLineEdit(self.login_tab)
+        self.server_port_lineEdit.setGeometry(QtCore.QRect(540, 270, 81, 36))
+        self.server_port_lineEdit.setFrame(True)
+        self.server_port_lineEdit.setObjectName("server_port_lineEdit")
+        self.server_port_lineEdit.setPlaceholderText("Port")
+
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.admin_radioButton = QtWidgets.QRadioButton(self.login_tab)
+        self.admin_radioButton.setGeometry(QtCore.QRect(400, 310, 165, 28))
+        self.admin_radioButton.setObjectName("admin_radioButton")
+        self.admin_radioButton.setIcon(icon2)
+        self.admin_radioButton.setFont(font)
+        # self.admin_radioButton.setChecked(True or False)
+        # self.admin_radioButton.setIconSize(QtCore.QSize(40,40))
+        self.admin_radioButton.toggled.connect(lambda: self.Admin_radiobutton())
+
+        self.user_radioButton = QtWidgets.QRadioButton(self.login_tab)
+        self.user_radioButton.setGeometry(QtCore.QRect(400, 330, 160, 28))
+        self.user_radioButton.setObjectName("user_radioButton")
+        self.user_radioButton.setIcon(icon3)
+        self.user_radioButton.setFont(font)
+        self.user_radioButton.setChecked(True)
+        self.user_radioButton.toggled.connect(lambda: self.User_radiobutton())
+
+        self.password2_lineEdit = QtWidgets.QLineEdit(self.login_tab)
+        self.password2_lineEdit.setGeometry(QtCore.QRect(400, 360, 221, 36))
+        self.password2_lineEdit.setFrame(True)
+        self.password2_lineEdit.setObjectName("password_lineEdit")
+        self.password2_lineEdit.setPlaceholderText("Administration password")
+        self.password2_lineEdit.setEchoMode(QtWidgets.QLineEdit.Password)
+        self.password2_lineEdit.setReadOnly(True)
+
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.login_Button = QtWidgets.QPushButton(self.login_tab)
+        self.login_Button.setObjectName("login_Button")
+        self.login_Button.setIcon(icon1)
+        self.login_Button.setFont(font)
+        self.login_Button.setGeometry(QtCore.QRect(350, 420, 110, 38))
+        ################### login_Button Signal #####################
+        self.login_Button.clicked.connect(lambda: self.Login_Button())
+
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.close_Button = QtWidgets.QPushButton(self.login_tab)
+        self.close_Button.setObjectName("close_Button")
+        self.close_Button.setIcon(icon7)
+        self.close_Button.setFont(font)
+        self.close_Button.setGeometry(QtCore.QRect(470, 420, 110, 38))
+        ################### close_Button Signal #####################
+        self.close_Button.clicked.connect(lambda: self.Close_Button())
+
+        self.tabWidget.addTab(self.login_tab, "")
+        #------------------------------------------------------------------------------------#
+        #-------------------------------- Monitoring Tab ------------------------------------#
         self.monitoring_tab = QtWidgets.QWidget()
         self.monitoring_tab.setObjectName("monitoring_tab")
-        self.groupBox_logging = QtWidgets.QGroupBox(self.monitoring_tab)
-        self.groupBox_logging.setGeometry(QtCore.QRect(410, 10, 561, 571))
 
         font = QtGui.QFont()
         font.setPointSize(13)
         font.setBold(True)
         font.setItalic(False)
         font.setWeight(75)
+        self.groupBox_logging = QtWidgets.QGroupBox(self.monitoring_tab)
+        self.groupBox_logging.setGeometry(QtCore.QRect(410, 10, 561, 571))
         self.groupBox_logging.setFont(font)
         self.groupBox_logging.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         self.groupBox_logging.setMouseTracking(False)
@@ -109,8 +258,7 @@ class Ui_WorkSpace_window(object):
         font.setBold(True)
         font.setItalic(False)
         font.setWeight(75)
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("icon/7774226221582004489-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
         self.pushButton_show_log.setFont(font)
         self.pushButton_show_log.setIcon(icon1)
         self.pushButton_show_log.setObjectName("pushButton_show_log")
@@ -215,7 +363,8 @@ class Ui_WorkSpace_window(object):
         self.label_net_band.setObjectName("label_net_band")
 
         self.tabWidget.addTab(self.monitoring_tab, "")
-
+        # -------------------------------------------------------------------------------#
+        # ------------------------------- Script Tab ------------------------------------#
         self.script_tab = QtWidgets.QWidget()
         self.script_tab.setObjectName("script_tab")
 
@@ -294,9 +443,11 @@ class Ui_WorkSpace_window(object):
         self.progressBar_process.setObjectName("progressBar_process")
 
         self.tabWidget.addTab(self.script_tab, "")
+        #-------------------------------------------------------------------------------#
+
         self.gridLayout.addWidget(self.tabWidget, 0, 0, 1, 1)
         WorkSpace_window.setCentralWidget(self.centralwidget)
-
+        # ------------------------------- Menu bar -------------------------------------#
         self.menubar = QtWidgets.QMenuBar(WorkSpace_window)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1000, 34))
         self.menubar.setObjectName("menubar")
@@ -317,17 +468,6 @@ class Ui_WorkSpace_window(object):
         self.menuConnection.setObjectName("menuConnection")
 
         WorkSpace_window.setMenuBar(self.menubar)
-
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("icon/469704211582004494-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap("icon/1388560951582004484-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap("icon/18070417311582004489-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap("icon/4609047631582004492-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap("icon/8474278001582004491-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 
         self.actionNew_admin = QtWidgets.QAction(WorkSpace_window)
         self.actionNew_admin.setIcon(icon2)
@@ -394,7 +534,7 @@ class Ui_WorkSpace_window(object):
         self.menubar.addAction(self.menuServer.menuAction())
         self.menubar.addAction(self.menuRemote.menuAction())
         self.menubar.addAction(self.menuConnection.menuAction())
-
+        # ------------------------------- Status bar ------------------------------------#
         self.statusbar = QtWidgets.QStatusBar(WorkSpace_window)
         self.statusbar.setObjectName("statusbar")
         WorkSpace_window.setStatusBar(self.statusbar)
@@ -406,6 +546,32 @@ class Ui_WorkSpace_window(object):
     def RetranslateUi(self, WorkSpace_window):
         _translate = QtCore.QCoreApplication.translate
         WorkSpace_window.setWindowTitle(_translate("WorkSpace_window", "Workspace"))
+
+        self.login_Button.setToolTip(_translate("WorkSpace_window", "login button"))
+        self.login_Button.setText(_translate("WorkSpace_window", "Login"))
+
+        self.close_Button.setToolTip(_translate("WorkSpace_window", "Close button"))
+        self.close_Button.setText(_translate("WorkSpace_window", "Close"))
+
+        self.username.setText(_translate("WorkSpace_window", "Username:"))
+        self.username_lineEdit.setToolTip(_translate("WorkSpace_window", "Enter your username"))
+
+        self.password.setText(_translate("WorkSpace_window", "Password:"))
+        self.password1_lineEdit.setToolTip(_translate("WorkSpace_window", "Enter your password"))
+        self.password2_lineEdit.setToolTip(_translate("WorkSpace_window", "Administration password"))
+
+        self.server_address_lineEdit.setToolTip(_translate("WorkSpace_window", "Enter IP Address of server"))
+        self.server_port_lineEdit.setToolTip(_translate("WorkSpace_window", "Enter Port of server"))
+
+        self.automation_label.setText(_translate("WorkSpace_window", "                     Login Tab Welcome!                     "))
+
+        self.server_port_ip1.setText(_translate("WorkSpace_window", "Ip : Port"))
+        self.server_port_ip2.setText(_translate("WorkSpace_window", ":"))
+
+        self.admin_radioButton.setText(_translate("WorkSpace_window", "I'm Administrator"))
+        self.user_radioButton.setText(_translate("WorkSpace_window", "I'm Normal user"))
+
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.login_tab), _translate("WorkSpace_window", "Login"))
 
         self.groupBox_logging.setToolTip(_translate("WorkSpace_window", "Logging status section"))
         self.groupBox_logging.setTitle(_translate("WorkSpace_window", "  Logging Status"))
@@ -516,10 +682,10 @@ class Ui_WorkSpace_window(object):
 
         self.actionConnection.setText(_translate("WorkSpace_window", "Close Connection"))
 
-# if __name__ == '__main__':
-#     app = QApplication(sys.argv)  # create a application and get it system argument.
-#     workspace_window = QMainWindow()  # create a main window.
-#     ui = Ui_WorkSpace_window()
-#     ui.SetupUi(workspace_window)
-#     workspace_window.show()
-#     sys.exit(app.exec_())  # OS can know my app.
+if __name__ == '__main__':
+    app = QApplication(sys.argv)  # create a application and get it system argument.
+    workspace_window = QMainWindow()  # create a main window.
+    ui = Ui_WorkSpace_window()
+    ui.SetupUi(workspace_window)
+    workspace_window.show()
+    sys.exit(app.exec_())  # OS can know my app.

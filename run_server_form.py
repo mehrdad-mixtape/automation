@@ -23,6 +23,11 @@ class Ui_Run_server_Window():
 
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("icon/2252295991582004497-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap("icon/7774226221582004489-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap("icon/12355707351582004488-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+
         Run_server_Window.setWindowIcon(icon)
 
         self.centralwidget = QtWidgets.QWidget(Run_server_Window)
@@ -36,20 +41,17 @@ class Ui_Run_server_Window():
         self.automation_label.setFrameShape(QtWidgets.QFrame.WinPanel)
         self.automation_label.setObjectName("automation_label")
 
-        self.log_label = QtWidgets.QLabel(self.centralwidget)
-        self.log_label.setGeometry(QtCore.QRect(167, 310, 311, 51))
-        self.log_label.setText("")
-        self.log_label.setObjectName("log_label")
-
         self.run_Button = QtWidgets.QPushButton(self.centralwidget)
         self.run_Button.setGeometry(QtCore.QRect(127, 340, 110, 38))
         self.run_Button.setObjectName("run_Button")
+        self.run_Button.setIcon(icon1)
         ################### login_Button Signal #####################
         self.run_Button.clicked.connect(lambda: self.Run_Button())
 
         self.close_Button = QtWidgets.QPushButton(self.centralwidget)
         self.close_Button.setGeometry(QtCore.QRect(247, 340, 110, 38))
         self.close_Button.setObjectName("close_Button")
+        self.close_Button.setIcon(icon2)
         ################### close_Button Signal #####################
         self.close_Button.clicked.connect(lambda: self.Close_Button())
 

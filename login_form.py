@@ -255,10 +255,10 @@ class Ui_Login_Window():
             msg.buttonClicked.connect(lambda: Login_Window.show())
             msg.exec_()
 
-# if __name__ == "__main__":
-#     app = QApplication(sys.argv)  # create a application and get it system argument.
-#     Login_Window = QMainWindow()  # create a main window.
-#     ui = Ui_Login_Window()
-#     ui.SetupUi(Login_Window)
-#     Login_Window.show()
-#     sys.exit(app.exec_())  # OS can know my app.
+if __name__ == "__main__":
+    app = QApplication(sys.argv)  # create a application and get it system argument.
+    Login_Window = QMainWindow()  # create a main window.
+    ui = Ui_Login_Window()
+    ui.SetupUi(Login_Window)
+    Login_Window.show()
+    sys.exit(app.exec_())  # OS can know my app.
