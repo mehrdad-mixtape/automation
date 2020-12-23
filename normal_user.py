@@ -1,7 +1,7 @@
 import manage_db
 import client
 
-class Normal_user():
+class User():
     def __init__(self):
         self.C = client.Client()
         self.db = manage_db.Automation_BD()
