@@ -123,12 +123,12 @@ class Normal_user():
     def SSH(self, username, ip_address, permission):
         pass
 
-if __name__ == "__main__":
-    N = Normal_user()
-    # print(N.Find_script('get-interface.py', True))
-    # print(N.Del_script('set-eigrp', True))
-    # print(N.Create_script('set-eigrp.py', "/home/mehrdad/Documents/my-git/automation/automation_scripts/", 'Set eigrp configuration', True))
-    # print(N.Up_script('put-interface', 'script_name', 'put-interface.py', True))
+# if __name__ == "__main__":
+#     N = Normal_user()
+#     print(N.Find_script('get-interface.py', True))
+#     print(N.Del_script('set-eigrp', True))
+#     print(N.Create_script('set-eigrp.py', "/home/mehrdad/Documents/my-git/automation/automation_scripts/", 'Set eigrp configuration', True))
+#     print(N.Up_script('put-interface', 'script_name', 'put-interface.py', True))
 
     # print(N.All_login_log(True))
     # print(N.All_action_log(True))
