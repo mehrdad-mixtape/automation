@@ -195,6 +195,7 @@ class Ui_WorkSpace_window(object):
         #-------------------------------- Monitoring Tab ------------------------------------#
         self.monitoring_tab = QtWidgets.QWidget()
         self.monitoring_tab.setObjectName("monitoring_tab")
+        self.monitoring_tab.setDisabled(True)
 
         font = QtGui.QFont()
         font.setPointSize(13)
@@ -368,6 +369,7 @@ class Ui_WorkSpace_window(object):
         # ------------------------------- Script Tab ------------------------------------#
         self.script_tab = QtWidgets.QWidget()
         self.script_tab.setObjectName("script_tab")
+        self.script_tab.setDisabled(True)
 
         self.label_script = QtWidgets.QLabel(self.script_tab)
         self.label_script.setGeometry(QtCore.QRect(20, 20, 67, 31))
@@ -513,6 +515,8 @@ class Ui_WorkSpace_window(object):
         self.actionConnection = QtWidgets.QAction(WorkSpace_window)
         self.actionConnection.setIcon(icon6)
         self.actionConnection.setObjectName("actionConnection")
+        ######################## actionConnection trigger ##########################
+        self.actionConnection.triggered.connect(lambda: self.AcConnection())
 
         self.menuAdmin.addAction(self.actionNew_admin)
         self.menuAdmin.addAction(self.actionNew_user)
@@ -535,6 +539,8 @@ class Ui_WorkSpace_window(object):
         self.menubar.addAction(self.menuServer.menuAction())
         self.menubar.addAction(self.menuRemote.menuAction())
         self.menubar.addAction(self.menuConnection.menuAction())
+
+        self.menubar.setDisabled(True)
         # ------------------------------- Status bar ------------------------------------#
         self.statusbar = QtWidgets.QStatusBar(WorkSpace_window)
         self.statusbar.setObjectName("statusbar")
@@ -706,6 +712,12 @@ class Ui_WorkSpace_window(object):
                 report = self.user.Login(ip, int(port), username, passwd1 + passwd2, 'admin') # passwd2 is not empty
                 if report == False: # if server shuts down or cannot give service or authentication was failed this line can help me.
                     self.Show_notify_fail_login("1")
+                else:
+                    self.login_Button.setDisabled(True)
+                    self.monitoring_tab.setDisabled(False)
+                    self.script_tab.setDisabled(False)
+                    self.menubar.setDisabled(False)
+                    self.statusbar.showMessage(f'status: {username}, you login to the server successfully')
                 # elif report == 'Connection closed': # if user send 'exit' to server, server send me Connection closed and I can see a notify.
                 #     self.Show_notify_fail_login("2")
 
@@ -714,12 +726,16 @@ class Ui_WorkSpace_window(object):
                 report = self.user.Login(ip, int(port), username, passwd1, 'normal_user') # passwd2 is empty
                 if report == False: # if server shuts down or cannot give service or authentication was failed this line can help me.
                     self.Show_notify_fail_login("1")
+                else:
+                    self.login_Button.setDisabled(True)
+                    self.monitoring_tab.setDisabled(False)
+                    self.script_tab.setDisabled(False)
+                    self.menubar.setDisabled(False)
+                    self.statusbar.showMessage(f'status: {username}, you login to the server successfully')
                 # elif report == 'Connection closed': # if user send 'exit' to server, server send me Connection closed and I can see a notify.
                 #     self.Show_notify_fail_login("2")
 
     def Close_Button(self):
-        self.user.Send_msg('exit')
-        self.Show_notify_fail_login("2")
         workspace_window.close()
 
     def Admin_radiobutton(self):
@@ -732,6 +748,11 @@ class Ui_WorkSpace_window(object):
             self.password2_lineEdit.setReadOnly(True)
         self.statusbar.showMessage('status: ok')
 
+    def AcConnection(self):
+        self.user.Send_msg('exit')
+        self.Show_notify_fail_login("2")
+        workspace_window.close()
+
     def Show_notify_fail_login(self, flag): # Internal function
         if flag == "1":
             self.statusbar.showMessage("status: login error")
@@ -742,7 +763,6 @@ class Ui_WorkSpace_window(object):
             msg.setStandardButtons(QMessageBox.Retry)
             msg.setDefaultButton(QMessageBox.Retry)
             msg.setDetailedText("Please check your username/password or ip/port or server maybe shutdown, please try again")
-            #msg.buttonClicked.connect(lambda: Login_Window.show())
             msg.exec_()
         elif flag == "2":
             msg = QMessageBox()
@@ -762,7 +782,6 @@ class Ui_WorkSpace_window(object):
             msg.setIcon(QMessageBox.Warning)
             msg.setStandardButtons(QMessageBox.Ok)
             msg.setDefaultButton(QMessageBox.Ok)
-            # msg.buttonClicked.connect(lambda: Login_Window.show())
             msg.exec_()
         elif flag == "2": # ip
             msg = QMessageBox()
@@ -771,7 +790,6 @@ class Ui_WorkSpace_window(object):
             msg.setIcon(QMessageBox.Warning)
             msg.setStandardButtons(QMessageBox.Ok)
             msg.setDefaultButton(QMessageBox.Ok)
-            # msg.buttonClicked.connect(lambda: Login_Window.show())
             msg.exec_()
         elif flag == "3": # port
             msg = QMessageBox()
@@ -780,7 +798,6 @@ class Ui_WorkSpace_window(object):
             msg.setIcon(QMessageBox.Warning)
             msg.setStandardButtons(QMessageBox.Ok)
             msg.setDefaultButton(QMessageBox.Ok)
-            # msg.buttonClicked.connect(lambda: Login_Window.show())
             msg.exec_()
         if flag == "4": # administration password
             msg = QMessageBox()
@@ -789,7 +806,6 @@ class Ui_WorkSpace_window(object):
             msg.setIcon(QMessageBox.Warning)
             msg.setStandardButtons(QMessageBox.Ok)
             msg.setDefaultButton(QMessageBox.Ok)
-            # msg.buttonClicked.connect(lambda: Login_Window.show())
             msg.exec_()
 
 if __name__ == '__main__':
