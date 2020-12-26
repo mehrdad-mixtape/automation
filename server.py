@@ -105,6 +105,7 @@ class Server():
                         if message is False: # if client disconnect or send 'exit' message, server remove that client_socket from socket_list[] & clients{}
                             self.db.Record_login_log(f"Logout from server", self.clients[notified_socket][0]) # record log on db.
                             print(f"{self.Server_time()} connection closed from '{self.clients[notified_socket][0]}'") # log
+                            notified_socket.close()
                             self.sockets_list.remove(notified_socket)
                             del self.clients[notified_socket]
                             continue
@@ -116,6 +117,7 @@ class Server():
                         print(f"{self.Server_time()} message from '{user[0]}':  {message['data'][0]}")  # log
 
                 for notified_socket in exception_sockets: # if each client_socket exist on exception_socket, server remove it.
+                    notified_socket.close()
                     self.sockets_list.remove(notified_socket)
                     del self.clients[notified_socket]
 
