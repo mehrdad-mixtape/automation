@@ -14,6 +14,9 @@ class Admin():
     def Send_msg(self, msg):
         self.C.Send_Message(self.C.client_socket, msg)
 
+    def Recv_msg(self):
+        return self.C.Receive_Message(self.C.client_socket)
+
     ########################################## Admin management section ############# status: implimented ######################
     def Admin_add(self, username, password, first_name, last_name, birth_year, birth_month, birth_day, email, phone):
         report1 = self.db.Insert_admin(username, self.C.Hash(password), first_name, last_name, birth_year, birth_month, birth_day, email, phone)
@@ -201,6 +204,7 @@ class Admin():
             log['user'] = list(dict.values())[8]
             log['workspace'] = list(dict.values())[9]
             log_list.append(log)
+            log = {}
         return log_list
 
     def Login_log(self, attrib, value):
@@ -213,6 +217,7 @@ class Admin():
             log['user'] = list(dict.values())[8]
             log['workspace'] = list(dict.values())[9]
             log_list.append(log)
+            log = {}
         return log_list
 
     def All_action_log(self):
@@ -222,9 +227,10 @@ class Admin():
             log['date'] = list(dict.values())[1] + '-' + list(dict.values())[2] + '-' + list(dict.values())[3] + ' ' + \
                           list(dict.values())[4] + ':' + list(dict.values())[5] + ':' + list(dict.values())[6]
             log['content'] = list(dict.values())[7] + ':'
-            log['user'] = list(dict.values())[8]
+            log['owner'] = list(dict.values())[8]
             log['workspace'] = list(dict.values())[9]
             log_list.append(log)
+            log = {}
         return log_list
 
     def Action_log(self, attrib, value):
@@ -234,9 +240,10 @@ class Admin():
             log['date'] = list(dict.values())[1] + '-' + list(dict.values())[2] + '-' + list(dict.values())[3] + ' ' + \
                           list(dict.values())[4] + ':' + list(dict.values())[5] + ':' + list(dict.values())[6]
             log['content'] = list(dict.values())[7] + ':'
-            log['user'] = list(dict.values())[8]
+            log['owner'] = list(dict.values())[8]
             log['workspace'] = list(dict.values())[9]
             log_list.append(log)
+            log = {}
         return log_list
 
     ########################################## Monitor management section ############# status: none ######################
@@ -254,7 +261,7 @@ if __name__ == "__main__":
     # print(A.Admin_del('alex2', '1234'))
     # print(A.Admin_find('MAXI', '123'))
 
-    # print(A.All_login_log())
+    print(A.All_login_log())
     # print(A.Login_log('username', 'alex2'))
     # print(A.All_action_log())
     # print(A.Action_log('username', 'mixtape'))
