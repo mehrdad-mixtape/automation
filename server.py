@@ -95,7 +95,6 @@ class Server():
 
                                 self.sockets_list.append(client_socket) # After authentication I add client socket to socket_list.
                                 self.clients[client_socket] = user_pass['data'] # clients={client_socket: username}, ...}.
-                                print(self.sockets_list, '\n', self.clients)
                                 # And client_socket add to dictionary that server can recognize client_socket with client_message.
 
                             else:
@@ -123,7 +122,6 @@ class Server():
                             self.Instruction_Handler(message['data'][0], notified_socket) # Can check messages if client send keyword to server, this function can handle it.
                             self.Send_Message(notified_socket, 'ack') # When server receive message and check it with Instruction_Handler(), send 'ack' with client_socket to client, it's mean : yes I receive your message.
                             print(f"{self.Server_time()} message from '{user[0]}':  {message['data'][0]}")  # log
-                            print(self.sockets_list, '\n', self.clients)
 
                 for notified_socket in exception_sockets: # if each client_socket exist on exception_socket, server remove it.
                     notified_socket.close()
