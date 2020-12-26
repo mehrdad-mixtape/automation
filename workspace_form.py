@@ -8,7 +8,8 @@ import sys
 import admin, normal_user
 
 class Ui_WorkSpace_window(object):
-
+    def __init__(self):
+        self.user = object
     def SetupUi(self, WorkSpace_window):
         WorkSpace_window.setObjectName("WorkSpace_window")
         WorkSpace_window.resize(1000, 700)
@@ -701,22 +702,24 @@ class Ui_WorkSpace_window(object):
             self.Show_notify_bad_input("4")
         else: # ok admin want's to login or normal user?.
             if self.password2_lineEdit.isReadOnly() == False:
-                Admin = admin.Admin()
-                report = Admin.Login(ip, int(port), username, passwd1 + passwd2, 'admin') # passwd2 is not empty
+                self.user = admin.Admin()
+                report = self.user.Login(ip, int(port), username, passwd1 + passwd2, 'admin') # passwd2 is not empty
                 if report == False: # if server shuts down or cannot give service or authentication was failed this line can help me.
                     self.Show_notify_fail_login("1")
-                elif report == 'Connection closed': # if user send 'exit' to server, server send me Connection closed and I can see a notify.
-                    self.Show_notify_fail_login("2")
+                # elif report == 'Connection closed': # if user send 'exit' to server, server send me Connection closed and I can see a notify.
+                #     self.Show_notify_fail_login("2")
 
             elif self.password2_lineEdit.isReadOnly() == True:
-                User = normal_user.User()
-                report = User.Login(ip, int(port), username, passwd1, 'normal_user') # passwd2 is empty
+                self.user = normal_user.User()
+                report = self.user.Login(ip, int(port), username, passwd1, 'normal_user') # passwd2 is empty
                 if report == False: # if server shuts down or cannot give service or authentication was failed this line can help me.
                     self.Show_notify_fail_login("1")
-                elif report == 'Connection closed': # if user send 'exit' to server, server send me Connection closed and I can see a notify.
-                    self.Show_notify_fail_login("2")
+                # elif report == 'Connection closed': # if user send 'exit' to server, server send me Connection closed and I can see a notify.
+                #     self.Show_notify_fail_login("2")
 
     def Close_Button(self):
+        self.user.Send_msg('exit')
+        self.Show_notify_fail_login("2")
         workspace_window.close()
 
     def Admin_radiobutton(self):
