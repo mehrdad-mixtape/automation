@@ -1,4 +1,4 @@
-import socket, sys, login_form
+import socket, sys
 from hashlib import sha256
 
 class Client():
