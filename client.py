@@ -4,6 +4,7 @@ from hashlib import sha256
 class Client():
     def __init__(self):
         self.HEADER_LENGTH = 10
+        self.client_socket = object
 
     def Get_msg(self):
         return input('>>> ')
@@ -26,41 +27,45 @@ class Client():
     def Hash(self, input):
         return str(sha256(input.encode('utf-8')).hexdigest())
 
-    def Connect_and_authenticate_to_server(self, server_ip, server_port, username, password, key):
+    def Connect_to_server(self, server_ip, server_port):
         try:  # for first time client try authentication with server than send user/pass to server.
-            client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # socket.AF_INET = create a ipv4 socket, socket.SOCK_STREAM = this socket work with TCP-IP.
-            client_socket.connect((server_ip, server_port)) # my socket can connect to server.
-            client_socket.setblocking(False) # disable blocking operation socket.
-
-            user_pass = username + "ε" + self.Hash(password) + "ε" + key
-            user_pass = user_pass.encode('utf-8')
-            user_pass_header = f"{len(user_pass):<{self.HEADER_LENGTH}}".encode('utf-8')
-
-            client_socket.send(user_pass_header + user_pass)
-            while True: # I try receive authentication message from server.
-                receive_message = self.Receive_Message(client_socket)
-                if receive_message != False:
-                    if receive_message == 'authentication failed':
-                        return False
-                    else: # authentication complete
-                        while True:
-                            send_message = self.Get_msg()
-
-                            if send_message:
-                                self.Send_Message(client_socket, send_message)
-
-                            while True: # client wait to server send message.
-                                receive_message = self.Receive_Message(client_socket)
-
-                                if receive_message == 'Connection closed': # if I send 'exit' server send me this message.
-                                    return receive_message
-
-                                elif receive_message != False:
-                                    print(receive_message)
-                                    break
-
-                                else: # if I don't send message to server and push "enter_button", server don't send me message too and I can get out from this loop.
-                                    break
+            self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # socket.AF_INET = create a ipv4 socket, socket.SOCK_STREAM = this socket work with TCP-IP.
+            self.client_socket.connect((server_ip, server_port)) # my socket can connect to server.
+            self.client_socket.setblocking(False) # disable blocking operation socket.
 
         except Exception: # If anything happens to the server this exception can handle it.
             return False
+
+    def Authenticate_to_server(self, username, password, key):
+        user_pass = username + "ε" + self.Hash(password) + "ε" + key
+        user_pass = user_pass.encode('utf-8')
+        user_pass_header = f"{len(user_pass):<{self.HEADER_LENGTH}}".encode('utf-8')
+
+        self.client_socket.send(user_pass_header + user_pass)
+
+        while True:  # I try receive authentication message from server.
+            receive_message = self.Receive_Message(self.client_socket)
+            if receive_message != False:
+                if receive_message == 'authentication failed':
+                    return False
+                else:  # authentication complete
+                    return True
+                    #
+                    # while True:
+                    #     send_message = self.Get_msg()
+                    #
+                    #     if send_message:
+                    #         self.Send_Message(client_socket, send_message)
+                    #
+                    #     while True: # client wait to server send message.
+                    #         receive_message = self.Receive_Message(client_socket)
+                    #
+                    #         if receive_message == 'Connection closed': # if I send 'exit' server send me this message.
+                    #             return receive_message
+                    #
+                    #         elif receive_message != False:
+                    #             print(receive_message)
+                    #             break
+                    #
+                    #         else: # if I don't send message to server and push "enter_button", server don't send me message too and I can get out from this loop.
+                    #             break
