@@ -215,9 +215,12 @@ class Ui_WorkSpace_window(object):
         self.comboBox_log_category = QtWidgets.QComboBox(self.groupBox_logging)
         self.comboBox_log_category.setGeometry(QtCore.QRect(230, 50, 221, 36))
         self.comboBox_log_category.setObjectName("comboBox_log_category")
+        self.comboBox_log_category.addItems(['Login','Action'])
+
         self.comboBox_log_filter = QtWidgets.QComboBox(self.groupBox_logging)
         self.comboBox_log_filter.setGeometry(QtCore.QRect(230, 90, 221, 36))
         self.comboBox_log_filter.setObjectName("comboBox_log_filter")
+        self.comboBox_log_filter.addItems(['year','mouth','day','hour','owner', 'username','workspace'])
 
         self.label_log_category = QtWidgets.QLabel(self.groupBox_logging)
         self.label_log_category.setGeometry(QtCore.QRect(80, 51, 111, 31))
@@ -231,17 +234,19 @@ class Ui_WorkSpace_window(object):
         font.setStrikeOut(False)
         self.label_log_category.setFont(font)
         self.label_log_category.setObjectName("label_log_category")
-        self.listView_logs = QtWidgets.QListView(self.groupBox_logging)
-        self.listView_logs.setGeometry(QtCore.QRect(10, 221, 541, 341))
 
         font = QtGui.QFont()
         font.setPointSize(11)
         font.setBold(False)
         font.setItalic(False)
         font.setWeight(50)
+
+        self.listView_logs = QtWidgets.QListWidget(self.groupBox_logging)
+        self.listView_logs.setGeometry(QtCore.QRect(10, 221, 541, 341))
         self.listView_logs.setFont(font)
         self.listView_logs.viewport().setProperty("cursor", QtGui.QCursor(QtCore.Qt.ArrowCursor))
         self.listView_logs.setObjectName("listView_logs")
+
         self.label_log_filter = QtWidgets.QLabel(self.groupBox_logging)
         self.label_log_filter.setGeometry(QtCore.QRect(80, 91, 91, 31))
 
@@ -252,8 +257,9 @@ class Ui_WorkSpace_window(object):
         font.setWeight(50)
         self.label_log_filter.setFont(font)
         self.label_log_filter.setObjectName("label_log_filter")
-        self.pushButton_show_log = QtWidgets.QPushButton(self.groupBox_logging)
-        self.pushButton_show_log.setGeometry(QtCore.QRect(230, 170, 221, 38))
+
+        self.lineEdit_filter = QtWidgets.QLineEdit(self.groupBox_logging)
+        self.lineEdit_filter.setGeometry(QtCore.QRect(230, 130, 221, 36))
 
         font = QtGui.QFont()
         font.setPointSize(11)
@@ -261,11 +267,13 @@ class Ui_WorkSpace_window(object):
         font.setItalic(False)
         font.setWeight(75)
 
+        self.pushButton_show_log = QtWidgets.QPushButton(self.groupBox_logging)
+        self.pushButton_show_log.setGeometry(QtCore.QRect(230, 170, 221, 38))
         self.pushButton_show_log.setFont(font)
         self.pushButton_show_log.setIcon(icon1)
         self.pushButton_show_log.setObjectName("pushButton_show_log")
-        self.lineEdit_filter = QtWidgets.QLineEdit(self.groupBox_logging)
-        self.lineEdit_filter.setGeometry(QtCore.QRect(230, 130, 221, 36))
+        ################### pushButton_show_log Signal #####################
+        self.pushButton_show_log.clicked.connect(lambda: self.Show_log_Button())
 
         font = QtGui.QFont()
         font.setPointSize(10)
@@ -714,6 +722,7 @@ class Ui_WorkSpace_window(object):
                     self.Show_notify_fail_login("1")
                 else:
                     self.login_Button.setDisabled(True)
+                    self.close_Button.setDisabled(True)
                     self.monitoring_tab.setDisabled(False)
                     self.script_tab.setDisabled(False)
                     self.menubar.setDisabled(False)
@@ -728,21 +737,51 @@ class Ui_WorkSpace_window(object):
                     self.Show_notify_fail_login("1")
                 else:
                     self.login_Button.setDisabled(True)
+                    self.close_Button.setDisabled(True)
                     self.monitoring_tab.setDisabled(False)
                     self.script_tab.setDisabled(False)
                     self.menubar.setDisabled(False)
                     self.statusbar.showMessage(f'status: {username}, you login to the server successfully')
                 # elif report == 'Connection closed': # if user send 'exit' to server, server send me Connection closed and I can see a notify.
                 #     self.Show_notify_fail_login("2")
-
     def Close_Button(self):
         workspace_window.close()
+    def Show_log_Button(self):
+        if self.comboBox_log_category.currentText() == 'Login':
+            log_list = self.user.Login_log(self.comboBox_log_filter.currentText(), self.lineEdit_filter.text())
+            self.listView_logs.clear()
+            for dict in log_list:
+                for key in dict:
+                    if key == 'date':
+                        self.listView_logs.insertItem(0, f'Date: {dict[key]}')
+                    elif key == 'content':
+                        self.listView_logs.insertItem(1, f'Content: {dict[key]}')
+                    elif key == 'user':
+                        self.listView_logs.insertItem(2, f'User: {dict[key]}')
+                    elif key == 'workspace':
+                        self.listView_logs.insertItem(3, f'Workspace: {dict[key]}')
+                        self.listView_logs.insertItem(4, '\n')
+
+
+        elif self.comboBox_log_category.currentText() == 'Action':
+            log_list = self.user.Action_log(self.comboBox_log_filter.currentText(), self.lineEdit_filter.text())
+            self.listView_logs.clear()
+            for dict in log_list:
+                for key in dict:
+                    if key == 'date':
+                        self.listView_logs.insertItem(0, f'Date: {dict[key]}')
+                    elif key == 'content':
+                        self.listView_logs.insertItem(1, f'Content: {dict[key]}')
+                    elif key == 'user':
+                        self.listView_logs.insertItem(2, f'User: {dict[key]}')
+                    elif key == 'workspace':
+                        self.listView_logs.insertItem(3, f'Workspace: {dict[key]}')
+                        self.listView_logs.insertItem(4, '\n')
 
     def Admin_radiobutton(self):
         if self.password2_lineEdit.isReadOnly() == True:
             self.password2_lineEdit.setReadOnly(False)
         self.statusbar.showMessage('status: please fill the Administration password')
-
     def User_radiobutton(self):
         if self.password2_lineEdit.isReadOnly() == False:
             self.password2_lineEdit.setReadOnly(True)
@@ -752,6 +791,26 @@ class Ui_WorkSpace_window(object):
         self.user.Send_msg('exit')
         self.Show_notify_fail_login("2")
         workspace_window.close()
+    def AcNew_Admin(self):
+        pass
+    def AcEdit_Admin(self):
+        pass
+    def AcDel_Admin(self):
+        pass
+    def AcNew_User(self):
+        pass
+    def AcEdit_User(self):
+        pass
+    def AcDel_User(self):
+        pass
+    def AcNew_Server(self):
+        pass
+    def AcEdit_Server(self):
+        pass
+    def AcDel_Server(self):
+        pass
+    def AcRemote(self):
+        pass
 
     def Show_notify_fail_login(self, flag): # Internal function
         if flag == "1":
