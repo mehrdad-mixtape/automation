@@ -25,6 +25,19 @@ class Server():
             self.sockets_list.remove(client_socket)
             del self.clients[client_socket]
 
+        elif (cmd == "show login log"): # we have problem here
+            log = {}
+            log_list = []
+            for dict in self.db.Show_login_log(attrib, value):
+                log['date'] = list(dict.values())[1] + '-' + list(dict.values())[2] + '-' + list(dict.values())[3] + ' ' + \
+                              list(dict.values())[4] + ':' + list(dict.values())[5] + ':' + list(dict.values())[6]
+                log['content'] = list(dict.values())[7] + ':'
+                log['user'] = list(dict.values())[8]
+                log['workspace'] = list(dict.values())[9]
+                log_list.append(log)
+                log = {}
+
+
     def Authenticate(self, usr, passwd, key): # internal function to authenticate users that want login to server.
         if key == 'admin':  # I want to login with admin
             data = self.db.Get_attrib_admin(usr, passwd)
