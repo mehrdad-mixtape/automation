@@ -175,25 +175,25 @@ class Ui_Run_server_Window():
 
     def Show_notify_fail_run(self, flag): # Internal function
         if flag == "1":
-            self.status_bar.showMessage("status: running error")
+            self.status_bar.showMessage("status: Running Error")
             msg = QMessageBox()
             msg.setWindowTitle("Notify")
             msg.setText("running operation failed")
             msg.setIcon(QMessageBox.Warning)
             msg.setStandardButtons(QMessageBox.Retry)
             msg.setDefaultButton(QMessageBox.Retry)
-            msg.setDetailedText("Please check your hostname/password or ip/port, please try again")
+            msg.setDetailedText("Please check your <hostname/password> or <ip/port>, Try again")
             msg.buttonClicked.connect(lambda: Run_server_Window.show())
             msg.exec_()
         if flag == "2":
-            self.status_bar.showMessage("status: running error")
+            self.status_bar.showMessage("status: Running Error")
             msg = QMessageBox()
             msg.setWindowTitle("Notify")
             msg.setText("running operation failed")
             msg.setIcon(QMessageBox.Warning)
             msg.setStandardButtons(QMessageBox.Retry)
             msg.setDefaultButton(QMessageBox.Retry)
-            msg.setDetailedText("ip/port cannot bind to server, please change it")
+            msg.setDetailedText("ip/port cannot bind to server, Please change them")
             msg.buttonClicked.connect(lambda: Run_server_Window.show())
             msg.exec_()
 

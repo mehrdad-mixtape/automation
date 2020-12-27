@@ -10,6 +10,8 @@ class Server():
         self.sockets_list = [] # list of sockets : server and other client.
         self.clients = {} # {socket:data}.
         self.db = manage_db.Automation_BD()
+        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # socket.AF_INET = create a ipv4 socket, socket.SOCK_STREAM = this socket work with TCP-IP.
 
     def Server_time(self): # internal function to return live time for logs.
         return datetime.datetime.now().strftime("%y-%m-%d %H:%M:%S")
@@ -75,11 +77,10 @@ class Server():
 
     def Run_Server(self):
         try:
-            server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # socket.AF_INET = create a ipv4 socket, socket.SOCK_STREAM = this socket work with TCP-IP.
-            server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # initial socket.
-            server_socket.bind((self.IP, self.PORT))  # bind ip and port on socket.
-            server_socket.listen()  # socket should be lister on IP:PORT because I am server :D.
-            self.sockets_list.append(server_socket)
+            self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # initial socket.
+            self.server_socket.bind((self.IP, self.PORT))  # bind ip and port on socket.
+            self.server_socket.listen()  # socket should be lister on IP:PORT because I am server :D.
+            self.sockets_list.append(self.server_socket)
         except Exception:
             return "internal error" # if ip/port cannot bind to server, server return "internal error" to Start_server on admin.py.
 
@@ -87,13 +88,12 @@ class Server():
             try: # when server start to work, try to accept requests from clients, authenticate them and add client_sockets to lists.
                 read_sockets, _, exception_sockets = select.select(self.sockets_list, [], self.sockets_list) # manage multi client sockets, server give it socket_list, [] empty, socket_list, for what?
                 # first: read all sockets from list, second: write sockets to [], third: write exception_sockets to this list, each time I read socket list if new client connect to my server and check it.
-
                 for notified_socket in read_sockets: # search in read_sockets.
 
                     ################################ for first time we check server socket for client that connect and authenticate.################################
-                    if notified_socket == server_socket: # server socket is always first socket that give me notify because client connect to my server.
+                    if notified_socket == self.server_socket: # server socket is always first socket that give me notify because client connect to my server.
 
-                        client_socket, client_address = server_socket.accept() # when client connect to my server I accept it and get IP:PORT from it. I get client_socket and client address=[IP, PORT]
+                        client_socket, client_address = self.server_socket.accept() # when client connect to my server I accept it and get IP:PORT from it. I get client_socket and client address=[IP, PORT]
                         user_pass = self.Receive_Message(client_socket) # I call my def to receive message from client. this def return a dictionary that contain message_header and data, data for first time is username of client.
                         if user_pass is False:
                             continue
@@ -109,7 +109,6 @@ class Server():
                                 self.sockets_list.append(client_socket) # After authentication I add client socket to socket_list.
                                 self.clients[client_socket] = user_pass['data'] # clients={client_socket: username}, ...}.
                                 # And client_socket add to dictionary that server can recognize client_socket with client_message.
-
                             else:
                                 self.Send_Message(client_socket, 'authentication failed')
                                 # If Authentication() return False, server send message to client with client_socket.
