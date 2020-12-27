@@ -10,7 +10,8 @@ import admin, normal_user
 class Ui_WorkSpace_window(object):
     def __init__(self):
         self.user = object
-    def SetupUi(self, WorkSpace_window):
+
+    def SetupUi_workspace(self, WorkSpace_window):
         WorkSpace_window.setObjectName("WorkSpace_window")
         WorkSpace_window.resize(1000, 700)
         WorkSpace_window.setGeometry(490, 170, 1000, 700)
@@ -554,11 +555,11 @@ class Ui_WorkSpace_window(object):
         self.statusbar.setObjectName("statusbar")
         WorkSpace_window.setStatusBar(self.statusbar)
 
-        self.RetranslateUi(WorkSpace_window)
+        self.RetranslateUi_workspace(WorkSpace_window)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(WorkSpace_window)
 
-    def RetranslateUi(self, WorkSpace_window):
+    def RetranslateUi_workspace(self, WorkSpace_window):
         _translate = QtCore.QCoreApplication.translate
         WorkSpace_window.setWindowTitle(_translate("WorkSpace_window", "Workspace"))
 
@@ -717,33 +718,37 @@ class Ui_WorkSpace_window(object):
         else: # ok admin want's to login or normal user?.
             if self.password2_lineEdit.isReadOnly() == False:
                 self.user = admin.Admin()
+
                 report = self.user.Login(ip, int(port), username, passwd1 + passwd2, 'admin') # passwd2 is not empty
-                if report == False: # if server shuts down or cannot give service or authentication was failed this line can help me.
+                if report == 'C_F': # if server shuts down or cannot give service or authentication was failed this line can help me.
                     self.Show_notify_fail_login("1")
-                else:
+                elif report == 'A_F':
+                    self.Show_notify_fail_login("2")
+                elif report == 'A_S':
+                    self.Show_notify_fail_login("4")
                     self.login_Button.setDisabled(True)
                     self.close_Button.setDisabled(True)
                     self.monitoring_tab.setDisabled(False)
                     self.script_tab.setDisabled(False)
                     self.menubar.setDisabled(False)
                     self.statusbar.showMessage(f'status: {username}, you login to the server successfully')
-                # elif report == 'Connection closed': # if user send 'exit' to server, server send me Connection closed and I can see a notify.
-                #     self.Show_notify_fail_login("2")
 
             elif self.password2_lineEdit.isReadOnly() == True:
                 self.user = normal_user.User()
                 report = self.user.Login(ip, int(port), username, passwd1, 'normal_user') # passwd2 is empty
-                if report == False: # if server shuts down or cannot give service or authentication was failed this line can help me.
+                if report == 'C_F':  # if server shuts down or cannot give service or authentication was failed this line can help me.
                     self.Show_notify_fail_login("1")
-                else:
+                elif report == 'A_F':
+                    self.Show_notify_fail_login("2")
+                elif report == 'A_S':
+                    self.Show_notify_fail_login("4")
                     self.login_Button.setDisabled(True)
                     self.close_Button.setDisabled(True)
                     self.monitoring_tab.setDisabled(False)
                     self.script_tab.setDisabled(False)
                     self.menubar.setDisabled(False)
                     self.statusbar.showMessage(f'status: {username}, you login to the server successfully')
-                # elif report == 'Connection closed': # if user send 'exit' to server, server send me Connection closed and I can see a notify.
-                #     self.Show_notify_fail_login("2")
+
     def Close_Button(self):
         workspace_window.close()
     def Show_log_Button(self):
@@ -789,7 +794,7 @@ class Ui_WorkSpace_window(object):
 
     def AcConnection(self):
         self.user.Send_msg('exit')
-        self.Show_notify_fail_login("2")
+        self.Show_notify_fail_login("3")
         workspace_window.close()
     def AcNew_Admin(self):
         pass
@@ -814,19 +819,37 @@ class Ui_WorkSpace_window(object):
 
     def Show_notify_fail_login(self, flag): # Internal function
         if flag == "1":
-            self.statusbar.showMessage("status: login error")
+            self.statusbar.showMessage("status: Connection Error")
             msg = QMessageBox()
             msg.setWindowTitle("Notify")
-            msg.setText("Login failed")
+            msg.setText("Connection failed")
             msg.setIcon(QMessageBox.Warning)
             msg.setStandardButtons(QMessageBox.Retry)
             msg.setDefaultButton(QMessageBox.Retry)
-            msg.setDetailedText("Please check your username/password or ip/port or server maybe shutdown, please try again")
+            msg.setDetailedText("Please check your <internet connection> or <Server maybe is shutdown>, Try Again")
             msg.exec_()
         elif flag == "2":
+            self.statusbar.showMessage("status: Authentication Error")
             msg = QMessageBox()
             msg.setWindowTitle("Notify")
-            msg.setText("You are Logout from server goodbye :)")
+            msg.setText("Authentication failed")
+            msg.setIcon(QMessageBox.Warning)
+            msg.setStandardButtons(QMessageBox.Retry)
+            msg.setDefaultButton(QMessageBox.Retry)
+            msg.setDetailedText("Please check your <username/password> or <ip/port>, Try again")
+            msg.exec_()
+        elif flag == "3":
+            msg = QMessageBox()
+            msg.setWindowTitle("Notify")
+            msg.setText("You are Logout from the server successfully, bye")
+            msg.setIcon(QMessageBox.Information)
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.setDefaultButton(QMessageBox.Ok)
+            msg.exec_()
+        elif flag == "4":
+            msg = QMessageBox()
+            msg.setWindowTitle("Notify")
+            msg.setText("You are login to the server successfully")
             msg.setIcon(QMessageBox.Information)
             msg.setStandardButtons(QMessageBox.Ok)
             msg.setDefaultButton(QMessageBox.Ok)
@@ -871,6 +894,6 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)  # create a application and get it system argument.
     workspace_window = QMainWindow()  # create a main window.
     ui = Ui_WorkSpace_window()
-    ui.SetupUi(workspace_window)
+    ui.SetupUi_workspace(workspace_window)
     workspace_window.show()
     sys.exit(app.exec_())  # OS can know my app.
