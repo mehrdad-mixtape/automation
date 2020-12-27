@@ -718,16 +718,15 @@ class Ui_WorkSpace_window(object):
         else: # ok admin want's to login or normal user?.
             if self.password2_lineEdit.isReadOnly() == False:
                 self.user = admin.Admin()
-
                 report = self.user.Login(ip, int(port), username, passwd1 + passwd2, 'admin') # passwd2 is not empty
+
                 if report == 'C_F': # if server shuts down or cannot give service or authentication was failed this line can help me.
                     self.Show_notify_fail_login("1")
                 elif report == 'A_F':
                     self.Show_notify_fail_login("2")
                 elif report == 'A_S':
                     self.Show_notify_fail_login("4")
-                    self.login_Button.setDisabled(True)
-                    self.close_Button.setDisabled(True)
+                    self.login_tab.setDisabled(True)
                     self.monitoring_tab.setDisabled(False)
                     self.script_tab.setDisabled(False)
                     self.menubar.setDisabled(False)
@@ -736,14 +735,14 @@ class Ui_WorkSpace_window(object):
             elif self.password2_lineEdit.isReadOnly() == True:
                 self.user = normal_user.User()
                 report = self.user.Login(ip, int(port), username, passwd1, 'normal_user') # passwd2 is empty
+
                 if report == 'C_F':  # if server shuts down or cannot give service or authentication was failed this line can help me.
                     self.Show_notify_fail_login("1")
                 elif report == 'A_F':
                     self.Show_notify_fail_login("2")
                 elif report == 'A_S':
                     self.Show_notify_fail_login("4")
-                    self.login_Button.setDisabled(True)
-                    self.close_Button.setDisabled(True)
+                    self.login_tab.setDisabled(True)
                     self.monitoring_tab.setDisabled(False)
                     self.script_tab.setDisabled(False)
                     self.menubar.setDisabled(False)
