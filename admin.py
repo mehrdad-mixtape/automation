@@ -8,14 +8,23 @@ class Admin():
         self.db = manage_db.Automation_BD()
 
     def Login(self, server_ip, server_port, username, password, key):
-        self.C.Connect_to_server(server_ip, server_port)
-        return self.C.Authenticate_to_server(username, password, key)
+        if self.C.Connect_to_server(server_ip, server_port) == 'C_F':
+            return 'C_F'
+        else:
+            if self.C.Authenticate_to_server(username, password, key) == 'A_S':
+                return 'A_S'
+            else:
+                return 'A_F'
 
     def Send_msg(self, msg):
         self.C.Send_Message(self.C.client_socket, msg)
 
     def Recv_msg(self):
-        return self.C.Receive_Message(self.C.client_socket)
+        while True:
+            if self.C.Receive_Message(self.C.client_socket) == False:
+                return False
+            else:
+                return self.C.Receive_Message(self.C.client_socket)
 
     ########################################## Admin management section ############# status: implimented ######################
     def Admin_add(self, username, password, first_name, last_name, birth_year, birth_month, birth_day, email, phone):
@@ -254,14 +263,14 @@ class Admin():
     def SSH(self, username, ip_address):
         pass
 
-if __name__ == "__main__":
-    A = Admin()
+# if __name__ == "__main__":
+#     A = Admin()
     # print(A.Admin_add('maxi', '1234', 'max', 'G', '1994', '8', '5', 'maxi@gmail.com', '0933'))
     # print(A.Admin_update('MAXI', '123', 'phone', '0954'))
     # print(A.Admin_del('alex2', '1234'))
     # print(A.Admin_find('MAXI', '123'))
 
-    print(A.All_login_log())
+    # print(A.All_login_log())
     # print(A.Login_log('username', 'alex2'))
     # print(A.All_action_log())
     # print(A.Action_log('username', 'mixtape'))

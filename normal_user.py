@@ -7,8 +7,13 @@ class User():
         self.db = manage_db.Automation_BD()
 
     def Login(self, server_ip, server_port, username, password, key):
-        self.C.Connect_to_server(server_ip, server_port)
-        return self.C.Authenticate_to_server(username, password, key)
+        if self.C.Connect_to_server(server_ip, server_port) == 'C_F':
+            return 'C_F'
+        else:
+            if self.C.Authenticate_to_server(username, password, key) == 'A_S':
+                return 'A_S'
+            else:
+                return 'A_F'
 
     def Send_msg(self, msg):
         self.C.Send_Message(self.C.client_socket, msg)
@@ -68,6 +73,7 @@ class User():
                 log['user'] = list(dict.values())[8]
                 log['workspace'] = list(dict.values())[9]
                 log_list.append(log)
+                log = {}
             return log_list
         else:
             return "Access denied! You have no any permission to see login logs"
@@ -83,6 +89,7 @@ class User():
                 log['user'] = list(dict.values())[8]
                 log['workspace'] = list(dict.values())[9]
                 log_list.append(log)
+                log = {}
             return log_list
         else:
             return f"Access denied! You have no any permission to see log: {attrib}:{value}"
@@ -98,6 +105,7 @@ class User():
                 log['user'] = list(dict.values())[8]
                 log['workspace'] = list(dict.values())[9]
                 log_list.append(log)
+                log = {}
             return log_list
         else:
             return "Access denied! You have no any permission to see action logs"
@@ -113,6 +121,7 @@ class User():
                 log['user'] = list(dict.values())[8]
                 log['workspace'] = list(dict.values())[9]
                 log_list.append(log)
+                log = {}
             return log_list
         else:
             return f"Access denied! You have no any permission to see log: {attrib}:{value}"
