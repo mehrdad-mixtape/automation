@@ -145,6 +145,7 @@ class Ui_WorkSpace_window(object):
         self.admin_radioButton.setObjectName("admin_radioButton")
         self.admin_radioButton.setIcon(icon2)
         self.admin_radioButton.setFont(font)
+        self.admin_radioButton.setChecked(True)
         # self.admin_radioButton.setChecked(True or False)
         # self.admin_radioButton.setIconSize(QtCore.QSize(40,40))
         self.admin_radioButton.toggled.connect(lambda: self.Admin_radiobutton())
@@ -154,7 +155,6 @@ class Ui_WorkSpace_window(object):
         self.user_radioButton.setObjectName("user_radioButton")
         self.user_radioButton.setIcon(icon3)
         self.user_radioButton.setFont(font)
-        self.user_radioButton.setChecked(True)
         self.user_radioButton.toggled.connect(lambda: self.User_radiobutton())
 
         self.password2_lineEdit = QtWidgets.QLineEdit(self.login_tab)
@@ -190,6 +190,20 @@ class Ui_WorkSpace_window(object):
         self.close_Button.setGeometry(QtCore.QRect(470, 420, 110, 38))
         ################### close_Button Signal #####################
         self.close_Button.clicked.connect(lambda: self.Close_Button())
+
+        ######################################
+        ######################################
+        ######################################
+        ######################################
+        self.username_lineEdit.setText('MixTape')
+        self.password1_lineEdit.setText('123')
+        self.password2_lineEdit.setText('45')
+        self.server_address_lineEdit.setText('127.0.0.1')
+        self.server_port_lineEdit.setText('4444')
+        ######################################
+        ######################################
+        ######################################
+        ######################################
 
         self.tabWidget.addTab(self.login_tab, "")
         #------------------------------------------------------------------------------------#
@@ -261,6 +275,15 @@ class Ui_WorkSpace_window(object):
 
         self.lineEdit_filter = QtWidgets.QLineEdit(self.groupBox_logging)
         self.lineEdit_filter.setGeometry(QtCore.QRect(230, 130, 221, 36))
+        ######################################
+        ######################################
+        ######################################
+        ######################################
+        self.lineEdit_filter.setText('20')
+        ######################################
+        ######################################
+        ######################################
+        ######################################
 
         font = QtGui.QFont()
         font.setPointSize(11)
@@ -704,7 +727,7 @@ class Ui_WorkSpace_window(object):
         passwd2 = self.password2_lineEdit.text()
         ip = self.server_address_lineEdit.text()
         port = self.server_port_lineEdit.text()
-        # login_page can handle input : username, password, ip, port
+        # login_tab can handle input : username, password, ip, port
         if (username == "") or (passwd1 == ""):
             self.Show_notify_bad_input("1")
         elif (len(ip) < 7) or (len(ip) >= 16) or (ip == ""):
@@ -716,7 +739,7 @@ class Ui_WorkSpace_window(object):
         elif (passwd2 == "") and (self.password2_lineEdit.isReadOnly() == False):
             self.Show_notify_bad_input("4")
         else: # ok admin want's to login or normal user?.
-            if self.password2_lineEdit.isReadOnly() == False:
+            if self.password2_lineEdit.isReadOnly() == True:
                 self.user = admin.Admin()
                 report = self.user.Login(ip, int(port), username, passwd1 + passwd2, 'admin') # passwd2 is not empty
 
@@ -732,7 +755,7 @@ class Ui_WorkSpace_window(object):
                     self.menubar.setDisabled(False)
                     self.statusbar.showMessage(f'status: {username}, you login to the server successfully')
 
-            elif self.password2_lineEdit.isReadOnly() == True:
+            elif self.password2_lineEdit.isReadOnly() == False:
                 self.user = normal_user.User()
                 report = self.user.Login(ip, int(port), username, passwd1, 'normal_user') # passwd2 is empty
 
@@ -752,23 +775,39 @@ class Ui_WorkSpace_window(object):
         workspace_window.close()
     def Show_log_Button(self):
         if self.comboBox_log_category.currentText() == 'Login':
-            log_list = self.user.Login_log(self.comboBox_log_filter.currentText(), self.lineEdit_filter.text())
-            self.listView_logs.clear()
-            for dict in log_list:
-                for key in dict:
-                    if key == 'date':
-                        self.listView_logs.insertItem(0, f'Date: {dict[key]}')
-                    elif key == 'content':
-                        self.listView_logs.insertItem(1, f'Content: {dict[key]}')
-                    elif key == 'user':
-                        self.listView_logs.insertItem(2, f'User: {dict[key]}')
-                    elif key == 'workspace':
-                        self.listView_logs.insertItem(3, f'Workspace: {dict[key]}')
-                        self.listView_logs.insertItem(4, '\n')
 
+            msg = 'show ' + 'login-log ' + self.comboBox_log_filter.currentText() + f' {self.lineEdit_filter.text()}'
+
+            self.user.Send_msg(msg)
+
+            while True:
+                log_list = self.user.Recv_msg()
+                if log_list == False:
+                    pass  # Authentication Failed
+                else:  # authentication complete
+                    break  # Authentication Successful
+
+            self.listView_logs.clear()
+            if log_list != False:
+                log_list = list(log_list)
+                for dict in log_list:
+                    for key in dict:
+                        if key == 'date':
+                            self.listView_logs.insertItem(0, f'Date: {dict[key]}')
+                        elif key == 'content':
+                            self.listView_logs.insertItem(1, f'Content: {dict[key]}')
+                        elif key == 'user':
+                            self.listView_logs.insertItem(2, f'User: {dict[key]}')
+                        elif key == 'workspace':
+                            self.listView_logs.insertItem(3, f'Workspace: {dict[key]}')
+                            self.listView_logs.insertItem(4, '\n')
+            else:
+                self.listView_logs.insertItem(0, 'nothing !')
 
         elif self.comboBox_log_category.currentText() == 'Action':
+
             log_list = self.user.Action_log(self.comboBox_log_filter.currentText(), self.lineEdit_filter.text())
+
             self.listView_logs.clear()
             for dict in log_list:
                 for key in dict:
@@ -896,3 +935,5 @@ if __name__ == '__main__':
     ui.SetupUi_workspace(workspace_window)
     workspace_window.show()
     sys.exit(app.exec_())  # OS can know my app.
+
+

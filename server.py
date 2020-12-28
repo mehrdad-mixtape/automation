@@ -1,4 +1,4 @@
-import socket, select, datetime, sys# use for socket.
+import socket, select, datetime, sys, pickle, time# use for socket.
 import manage_db
 from hashlib import sha256
 
@@ -17,7 +17,8 @@ class Server():
         return datetime.datetime.now().strftime("%y-%m-%d %H:%M:%S")
 
     def Instruction_Handler(self, cmd, client_socket): # internal function to check contain of messages that have keyword.
-        if (cmd == "exit"):
+        command = cmd.split(' ')
+        if (command == "exit"):
             self.Send_Message(client_socket, 'Connection closed')
             self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket][0]}", self.clients[client_socket][0])
             self.db.Record_login_log(f"Logout from server", self.clients[client_socket][0]) # record log on db.
@@ -27,18 +28,33 @@ class Server():
             self.sockets_list.remove(client_socket)
             del self.clients[client_socket]
 
-        elif (cmd == "show login log"): # we have problem here
-            log = {}
-            log_list = []
-            for dict in self.db.Show_login_log(attrib, value):
-                log['date'] = list(dict.values())[1] + '-' + list(dict.values())[2] + '-' + list(dict.values())[3] + ' ' + \
-                              list(dict.values())[4] + ':' + list(dict.values())[5] + ':' + list(dict.values())[6]
-                log['content'] = list(dict.values())[7] + ':'
-                log['user'] = list(dict.values())[8]
-                log['workspace'] = list(dict.values())[9]
-                log_list.append(log)
+        elif (command[0] == "show"):
+            if (command[1] == "login-log"):
                 log = {}
+                log_list = []
+                for dict in self.db.Show_login_log(command[2], command[3]):
+                    log['date'] = list(dict.values())[1] + '-' + list(dict.values())[2] + '-' + list(dict.values())[3] + ' ' + \
+                                  list(dict.values())[4] + ':' + list(dict.values())[5] + ':' + list(dict.values())[6]
+                    log['content'] = list(dict.values())[7] + ':'
+                    log['user'] = list(dict.values())[8]
+                    log['workspace'] = list(dict.values())[9]
+                    log_list.append(log)
+                    time.sleep(0.5)
+                    self.Send_Big_Message(client_socket, pickle.dumps(log))
+                    log = {}
 
+            elif (command[1] == "action-log"):
+                log = {}
+                log_list = []
+                for dict in self.db.Show_action_log(command[2], command[3]):
+                    log['date'] = list(dict.values())[1] + '-' + list(dict.values())[2] + '-' + list(dict.values())[
+                        3] + ' ' + \
+                                  list(dict.values())[4] + ':' + list(dict.values())[5] + ':' + list(dict.values())[6]
+                    log['content'] = list(dict.values())[7] + ':'
+                    log['user'] = list(dict.values())[8]
+                    log['workspace'] = list(dict.values())[9]
+                    log_list.append(log)
+                    log = {}
 
     def Authenticate(self, usr, passwd, key): # internal function to authenticate users that want login to server.
         if key == 'admin':  # I want to login with admin
@@ -73,6 +89,15 @@ class Server():
             sender_socket.send(msg_header + msg)
             return 'ack'
         except:
+            return False
+
+    def Send_Big_Message(self, sender_socket, message):
+        try:
+            msg_header = bytes(f"{len(message):<{self.HEADER_LENGTH}}", 'utf-8') # server calculate length of message to allocated it for sending.
+            sender_socket.send(msg_header + message)
+            print(msg_header + message)
+            return 'ack'
+        except Exception:
             return False
 
     def Run_Server(self):
@@ -118,6 +143,7 @@ class Server():
                     ################################ for second time we check client that send message to server and  client want to receive acknowledge from server.################################
                     else:
                         message = self.Receive_Message(notified_socket) # my notify_socket is client_socket.
+                        # print(message)
                         # Server receive messages from clients.
 
                         if message is False: # if client disconnect or send 'exit' message, server remove that client_socket from socket_list[] & clients{}
@@ -132,7 +158,6 @@ class Server():
                             user = self.clients[notified_socket] # I access to {"header": message_header, "data": client_socket.recv(message_length)}.
                             # I get username that saved with socket in clients{}.
                             self.Instruction_Handler(message['data'][0], notified_socket) # Can check messages if client send keyword to server, this function can handle it.
-                            self.Send_Message(notified_socket, 'ack') # When server receive message and check it with Instruction_Handler(), send 'ack' with client_socket to client, it's mean : yes I receive your message.
                             print(f"{self.Server_time()} message from '{user[0]}':  {message['data'][0]}")  # log
 
                 for notified_socket in exception_sockets: # if each client_socket exist on exception_socket, server remove it.
@@ -147,4 +172,5 @@ class Server():
 
 if __name__ == "__main__":
     S = Server('127.0.0.1', 4444)
+    # S.Instruction_Handler('show login-log username MixTape', object)
     S.Run_Server()
