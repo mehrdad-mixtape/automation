@@ -4,7 +4,7 @@
 # QtWidgets for working with widgets_UI like buttons, labels, combobox, ...
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox, QApplication, QMainWindow
-import sys
+import sys, time
 import admin, normal_user
 
 class Ui_WorkSpace_window(object):
@@ -775,20 +775,19 @@ class Ui_WorkSpace_window(object):
         workspace_window.close()
     def Show_log_Button(self):
         if self.comboBox_log_category.currentText() == 'Login':
-
             msg = 'show ' + 'login-log ' + self.comboBox_log_filter.currentText() + f' {self.lineEdit_filter.text()}'
-
             self.user.Send_msg(msg)
-
-            while True:
-                log_list = self.user.Recv_msg()
-                if log_list == False:
-                    pass  # Authentication Failed
-                else:  # authentication complete
-                    break  # Authentication Successful
+            while True: # I try to get logs from server
+                report = self.user.Recv_B_msg()
+                if report != False:
+                    log_list = report
+                    break
+                else:
+                    pass
 
             self.listView_logs.clear()
-            if log_list != False:
+
+            if log_list != []:
                 log_list = list(log_list)
                 for dict in log_list:
                     for key in dict:
@@ -802,24 +801,37 @@ class Ui_WorkSpace_window(object):
                             self.listView_logs.insertItem(3, f'Workspace: {dict[key]}')
                             self.listView_logs.insertItem(4, '\n')
             else:
-                self.listView_logs.insertItem(0, 'nothing !')
+                self.listView_logs.insertItem(0, 'Your query have no result, please try again')
 
         elif self.comboBox_log_category.currentText() == 'Action':
 
-            log_list = self.user.Action_log(self.comboBox_log_filter.currentText(), self.lineEdit_filter.text())
+            msg = 'show ' + 'action-log ' + self.comboBox_log_filter.currentText() + f' {self.lineEdit_filter.text()}'
+            self.user.Send_msg(msg)
+            while True:  # I try to get logs from server
+                report = self.user.Recv_B_msg()
+                if report != False:
+                    log_list = report
+                    break
+                else:
+                    pass
 
             self.listView_logs.clear()
-            for dict in log_list:
-                for key in dict:
-                    if key == 'date':
-                        self.listView_logs.insertItem(0, f'Date: {dict[key]}')
-                    elif key == 'content':
-                        self.listView_logs.insertItem(1, f'Content: {dict[key]}')
-                    elif key == 'user':
-                        self.listView_logs.insertItem(2, f'User: {dict[key]}')
-                    elif key == 'workspace':
-                        self.listView_logs.insertItem(3, f'Workspace: {dict[key]}')
-                        self.listView_logs.insertItem(4, '\n')
+
+            if log_list != []:
+                log_list = list(log_list)
+                for dict in log_list:
+                    for key in dict:
+                        if key == 'date':
+                            self.listView_logs.insertItem(0, f'Date: {dict[key]}')
+                        elif key == 'content':
+                            self.listView_logs.insertItem(1, f'Content: {dict[key]}')
+                        elif key == 'user':
+                            self.listView_logs.insertItem(2, f'User: {dict[key]}')
+                        elif key == 'workspace':
+                            self.listView_logs.insertItem(3, f'Workspace: {dict[key]}')
+                            self.listView_logs.insertItem(4, '\n')
+            else:
+                self.listView_logs.insertItem(0, 'Your query have no result, please try again')
 
     def Admin_radiobutton(self):
         if self.password2_lineEdit.isReadOnly() == True:
