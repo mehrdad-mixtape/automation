@@ -18,13 +18,11 @@ class User():
     def Send_msg(self, msg):
         self.C.Send_Message(self.C.client_socket, msg)
 
-    ########################################## User management section ############# status: implement 70% ######################
-    def Show_profile(self, username, password):
-        report = self.db.Get_attrib_user(username, password) # report[9] = permission
-        if report != False:
-            return report # return information of user
-        else:
-            return report # return False
+    def Recv_msg(self):
+        return self.C.Receive_Message(self.C.client_socket)
+
+    def Recv_B_msg(self):
+        return self.C.Receive_Big_Message(self.C.client_socket)
 
     ########################################## Script management section ############# status: implement 70% ######################
     def Launch_script(self, script_name):
