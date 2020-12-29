@@ -1,5 +1,4 @@
 import manage_db, client, server
-import pickle
 
 class Admin():
     def __init__(self):
@@ -20,6 +19,9 @@ class Admin():
 
     def Recv_msg(self):
         return self.C.Receive_Message(self.C.client_socket)
+
+    def Recv_B_msg(self):
+        return self.C.Receive_Big_Message(self.C.client_socket)
 
     ########################################## Admin management section ############# status: implimented ######################
     def Admin_add(self, username, password, first_name, last_name, birth_year, birth_month, birth_day, email, phone):
