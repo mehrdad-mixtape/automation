@@ -199,6 +199,9 @@ class Admin():
         report = self.db.Get_attrib_script(script_name)
         return report
 
+    def Load_script(self):
+        return self.db.Show_all_script()
+
     ########################################## Log management section ############# status: implemented ######################
     def All_login_log(self):
         log = {}
@@ -260,8 +263,8 @@ class Admin():
     def SSH(self, username, ip_address):
         pass
 
-# if __name__ == "__main__":
-#     A = Admin()
+if __name__ == "__main__":
+    A = Admin()
     # print(A.Admin_add('maxi', '1234', 'max', 'G', '1994', '8', '5', 'maxi@gmail.com', '0933'))
     # print(A.Admin_update('MAXI', '123', 'phone', '0954'))
     # print(A.Admin_del('alex2', '1234'))
@@ -275,7 +278,7 @@ class Admin():
     # print(A.User_add('Bob', '123', 'bob', 'pat', '1989', '3', '1', 'bob@gmail.com', '0905', False))
     # print(A.User_update('JAX', '12345', 'phone', '0987'))
     # print(A.User_del('Bob', '123'))
-    # print(A.User_find('Jax', '123'))
+    # print(A.User_find('JAX', '12345'))
 
     # print(A.Server_add('automation', '123456', 'automation.com', '127.0.0.1', 4444))
     # print(A.Server_update('automation', '123', 'password', '123456'))
@@ -286,7 +289,8 @@ class Admin():
     # print(A.Create_script('set-ntp', "/home/mehrdad/Documents/my-git/automation/automation_scripts/", "Set ntp protocol"))
     # print(A.Del_script('get-interface.py'))
     # print(A.Up_script('get-interface.py', 'path', "/home/mehrdad/Documents/my-git/automation/automation_scripts/"))
-    # print(A.Find_script('get-interface.py'))
+    # print(A.Find_script('put-interface.py'))
+    # print(A.Load_script())
 
     # print(A.Admin_workspace_add('mixtape'))
     # print(A.User_workspace_add('Jax'))
@@ -294,5 +298,5 @@ class Admin():
     # print(A.User_workspace_update('Jax', '1234', 'owner', 'JAX'))
     # print(A.Admin_workspace_del('mixtape', '12345'))
     # print(A.User_workspace_del('Jax', '1234'))
-    # print(A.Admin_workspace_find('mixtape'))
-    # print(A.User_workspace_find('Jax'))
+    # print(A.Admin_workspace_find('MixTape'))
+    # print(A.User_workspace_find('JAX'))
