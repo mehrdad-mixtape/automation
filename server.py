@@ -19,7 +19,7 @@ class Server():
         command = cmd.split(' ')
 
         ####################### cmd exit #######################
-        if (command == "exit"):
+        if command == 'exit':
             self.Send_Message(client_socket, 'Connection closed')
             self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket][0]}", self.clients[client_socket][0])
             self.db.Record_login_log(f"Logout from server", self.clients[client_socket][0]) # record log on db.
@@ -30,9 +30,9 @@ class Server():
             del self.clients[client_socket]
 
         ####################### cmd show #######################
-        elif (command[0] == "show"):
+        elif command[0] == 'show':
             ####################### cmd login-log #######################
-            if (command[1] == "login-log"):
+            if command[1] == 'login-log':
                 log = {}
                 log_list = []
                 for dict in self.db.Show_login_log(command[2], command[3]):
@@ -46,7 +46,7 @@ class Server():
                 self.Send_Big_Message(client_socket, pickle.dumps(log_list))
                 self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket]}", self.clients[client_socket])
             ####################### cmd action-log #######################
-            elif (command[1] == "action-log"):
+            elif command[1] == 'action-log':
                 log = {}
                 log_list = []
                 for dict in self.db.Show_action_log(command[2], command[3]):
@@ -60,12 +60,59 @@ class Server():
                 self.Send_Big_Message(client_socket, pickle.dumps(log_list))
                 self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket]}", self.clients[client_socket])
             ####################### cmd all-script #######################
-            elif (command[1] == "all-script"):
+            elif command[1] == 'all-script':
                 script_list = self.db.Show_all_script()
                 self.Send_Big_Message(client_socket, pickle.dumps(script_list))
                 self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket]}", self.clients[client_socket])
+            ####################### cmd script-path #######################
+            elif command[1] == 'script-path':
+                script_data = self.db.Get_attrib_script(command[2])
+                self.Send_Message(client_socket, script_data['path'])
 
+        ####################### cmd edit #######################
+        elif command[0] == 'edit':
+            ####################### cmd script #######################
+            if command[1] == 'script':
+                pass
+            ####################### cmd admin #######################
+            elif command[1] == 'admin':
+                pass
+            ####################### cmd user #######################
+            elif command[1] == 'user':
+                pass
+            ####################### cmd server #######################
+            elif command[1] == 'server':
+                pass
 
+        ####################### cmd new #######################
+        elif command[0] == 'new':
+            ####################### cmd script #######################
+            if command[1] == 'script':
+                pass
+            ####################### cmd admin #######################
+            elif command[1] == 'admin':
+                pass
+            ####################### cmd user #######################
+            elif command[1] == 'user':
+                pass
+            ####################### cmd server #######################
+            elif command[1] == 'server':
+                pass
+
+        ####################### cmd del #######################
+        elif command[0] == 'del':
+            ####################### cmd script #######################
+            if command[1] == 'script':
+                pass
+            ####################### cmd admin #######################
+            elif command[1] == 'admin':
+                pass
+            ####################### cmd user #######################
+            elif command[1] == 'user':
+                pass
+            ####################### cmd server #######################
+            elif command[1] == 'server':
+                pass
 
     def Authenticate(self, usr, passwd, key): # internal function to authenticate users that want login to server.
         if key == 'admin':  # I want to login with admin
