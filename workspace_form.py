@@ -440,26 +440,36 @@ class Ui_WorkSpace_window(object):
         self.pushButton_create_script.setGeometry(QtCore.QRect(860, 540, 99, 38))
         self.pushButton_create_script.setFont(font)
         self.pushButton_create_script.setObjectName("pushButton_create_script")
+        ##################### create_script Signal #####################
+        self.pushButton_create_script.clicked.connect(lambda: self.Create_script_Button())
 
         self.pushButton_edit_script = QtWidgets.QPushButton(self.script_tab)
         self.pushButton_edit_script.setGeometry(QtCore.QRect(750, 540, 99, 38))
         self.pushButton_edit_script.setFont(font)
         self.pushButton_edit_script.setObjectName("pushButton_edit_script")
+        ##################### edit_script Signal #####################
+        self.pushButton_edit_script.clicked.connect(lambda: self.Edit_script_Button())
 
         self.pushButton_delete_script = QtWidgets.QPushButton(self.script_tab)
         self.pushButton_delete_script.setGeometry(QtCore.QRect(640, 540, 99, 38))
         self.pushButton_delete_script.setFont(font)
         self.pushButton_delete_script.setObjectName("pushButton_delete_script")
+        ##################### delete_script Signal #####################
+        self.pushButton_delete_script.clicked.connect(lambda: self.Delete_script_Button())
 
         self.pushButton_update_script = QtWidgets.QPushButton(self.script_tab)
         self.pushButton_update_script.setGeometry(QtCore.QRect(530, 540, 99, 38))
         self.pushButton_update_script.setFont(font)
         self.pushButton_update_script.setObjectName("pushButton_update_script")
+        ##################### update_script Signal #####################
+        self.pushButton_update_script.clicked.connect(lambda: self.Update_script_Button())
 
         self.pushButton_launch_script = QtWidgets.QPushButton(self.script_tab)
         self.pushButton_launch_script.setGeometry(QtCore.QRect(10, 540, 99, 38))
         self.pushButton_launch_script.setFont(font)
         self.pushButton_launch_script.setObjectName("pushButton_launch_script")
+        ##################### launch_script Signal #####################
+        self.pushButton_launch_script.clicked.connect(lambda: self.Launch_script_Button())
 
         font = QtGui.QFont()
         font.setBold(True)
@@ -768,7 +778,6 @@ class Ui_WorkSpace_window(object):
                     self.menubar.setDisabled(False)
                     self.statusbar.showMessage(f'status: {username}, you login to the server successfully')
                     self.Load_combobox_script()
-
     def Close_Button(self):
         workspace_window.close()
     def Show_log_Button(self):
@@ -844,10 +853,16 @@ class Ui_WorkSpace_window(object):
             for key in dict:
                 if key == 'script_name':
                     self.comboBox_script.addItem(dict[key])
-
     def Load_path_script(self):
-        script_data = self.user.Find_script(self.comboBox_script.currentText())
-        self.lineEdit_path_script.setText(script_data['path'])
+        msg = 'show ' + 'script-path ' + self.comboBox_script.currentText()
+        self.user.Send_msg(msg)
+        while True:  # I try to get script data from server
+            report = self.user.Recv_msg()
+            if report != False:
+                self.lineEdit_path_script.setText(report + self.comboBox_script.currentText())
+                break
+            else:
+                pass
 
     def Admin_radiobutton(self):
         if self.password2_lineEdit.isReadOnly() == True:
@@ -920,7 +935,6 @@ class Ui_WorkSpace_window(object):
             msg.setStandardButtons(QMessageBox.Ok)
             msg.setDefaultButton(QMessageBox.Ok)
             msg.exec_()
-
     def Show_notify_bad_input(self, flag):
         self.statusbar.showMessage("status: empty field error")
         if flag == "1": # username or password
