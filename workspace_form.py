@@ -145,6 +145,7 @@ class Ui_WorkSpace_window(object):
         self.admin_radioButton.setObjectName("admin_radioButton")
         self.admin_radioButton.setIcon(icon2)
         self.admin_radioButton.setFont(font)
+        ###################### remember place setChecked on user_radiobutton #############
         self.admin_radioButton.setChecked(True)
         # self.admin_radioButton.setChecked(True or False)
         # self.admin_radioButton.setIconSize(QtCore.QSize(40,40))
@@ -275,15 +276,6 @@ class Ui_WorkSpace_window(object):
 
         self.lineEdit_filter = QtWidgets.QLineEdit(self.groupBox_logging)
         self.lineEdit_filter.setGeometry(QtCore.QRect(230, 130, 221, 36))
-        ######################################
-        ######################################
-        ######################################
-        ######################################
-        self.lineEdit_filter.setText('20')
-        ######################################
-        ######################################
-        ######################################
-        ######################################
 
         font = QtGui.QFont()
         font.setPointSize(11)
@@ -414,6 +406,8 @@ class Ui_WorkSpace_window(object):
         self.comboBox_script = QtWidgets.QComboBox(self.script_tab)
         self.comboBox_script.setGeometry(QtCore.QRect(90, 20, 201, 36))
         self.comboBox_script.setObjectName("comboBox_script")
+        ########################### comboBox_script Signal ###########################
+        self.comboBox_script.activated.connect(lambda: self.Load_path_script())
 
         self.label_path_script = QtWidgets.QLabel(self.script_tab)
         self.label_path_script.setGeometry(QtCore.QRect(310, 20, 41, 31))
@@ -754,6 +748,9 @@ class Ui_WorkSpace_window(object):
                     self.script_tab.setDisabled(False)
                     self.menubar.setDisabled(False)
                     self.statusbar.showMessage(f'status: {username}, you login to the server successfully')
+                    self.Load_combobox_script()
+
+
 
             elif self.password2_lineEdit.isReadOnly() == False:
                 self.user = normal_user.User()
@@ -770,6 +767,7 @@ class Ui_WorkSpace_window(object):
                     self.script_tab.setDisabled(False)
                     self.menubar.setDisabled(False)
                     self.statusbar.showMessage(f'status: {username}, you login to the server successfully')
+                    self.Load_combobox_script()
 
     def Close_Button(self):
         workspace_window.close()
@@ -788,7 +786,6 @@ class Ui_WorkSpace_window(object):
             self.listView_logs.clear()
 
             if log_list != []:
-                log_list = list(log_list)
                 for dict in log_list:
                     for key in dict:
                         if key == 'date':
@@ -818,7 +815,6 @@ class Ui_WorkSpace_window(object):
             self.listView_logs.clear()
 
             if log_list != []:
-                log_list = list(log_list)
                 for dict in log_list:
                     for key in dict:
                         if key == 'date':
@@ -832,6 +828,26 @@ class Ui_WorkSpace_window(object):
                             self.listView_logs.insertItem(4, '\n')
             else:
                 self.listView_logs.insertItem(0, 'Your query have no result, please try again')
+
+    def Load_combobox_script(self):
+        msg = 'show ' + 'all-script'
+        self.user.Send_msg(msg)
+        while True:  # I try to get script data from server
+            report = self.user.Recv_B_msg()
+            if report != False:
+                script_list = report
+                break
+            else:
+                pass
+
+        for dict in script_list:
+            for key in dict:
+                if key == 'script_name':
+                    self.comboBox_script.addItem(dict[key])
+
+    def Load_path_script(self):
+        script_data = self.user.Find_script(self.comboBox_script.currentText())
+        self.lineEdit_path_script.setText(script_data['path'])
 
     def Admin_radiobutton(self):
         if self.password2_lineEdit.isReadOnly() == True:
@@ -947,5 +963,3 @@ if __name__ == '__main__':
     ui.SetupUi_workspace(workspace_window)
     workspace_window.show()
     sys.exit(app.exec_())  # OS can know my app.
-
-
