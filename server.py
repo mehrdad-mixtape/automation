@@ -18,6 +18,7 @@ class Server():
 
     def Instruction_Handler(self, cmd, client_socket): # internal function to check contain of messages that have keyword.
         command = cmd.split(' ')
+
         if (command == "exit"):
             self.Send_Message(client_socket, 'Connection closed')
             self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket][0]}", self.clients[client_socket][0])
@@ -39,22 +40,21 @@ class Server():
                     log['user'] = list(dict.values())[8]
                     log['workspace'] = list(dict.values())[9]
                     log_list.append(log)
-                    time.sleep(0.5)
-                    self.Send_Big_Message(client_socket, pickle.dumps(log))
                     log = {}
+                self.Send_Big_Message(client_socket, pickle.dumps(log_list))
 
             elif (command[1] == "action-log"):
                 log = {}
                 log_list = []
                 for dict in self.db.Show_action_log(command[2], command[3]):
-                    log['date'] = list(dict.values())[1] + '-' + list(dict.values())[2] + '-' + list(dict.values())[
-                        3] + ' ' + \
+                    log['date'] = list(dict.values())[1] + '-' + list(dict.values())[2] + '-' + list(dict.values())[3] + ' ' + \
                                   list(dict.values())[4] + ':' + list(dict.values())[5] + ':' + list(dict.values())[6]
                     log['content'] = list(dict.values())[7] + ':'
                     log['user'] = list(dict.values())[8]
                     log['workspace'] = list(dict.values())[9]
                     log_list.append(log)
                     log = {}
+                self.Send_Big_Message(client_socket, pickle.dumps(log_list))
 
     def Authenticate(self, usr, passwd, key): # internal function to authenticate users that want login to server.
         if key == 'admin':  # I want to login with admin
@@ -79,7 +79,7 @@ class Server():
             message_length = int(message_header.decode("utf-8").strip()) # server should decode received message to utf-8 and calculate length to can receive message_data.
             message_data = receiver_socket.recv(message_length).decode('utf-8').split("ε") # "username password".split("ε") for an other messages don't split.
             return {"header": message_header, "data": message_data} # we can receive message from each client with new header_length size.
-        except:
+        except Exception:
             return False
 
     def Send_Message(self, sender_socket, message): # internal function to send messages.
@@ -87,16 +87,13 @@ class Server():
             msg = message.encode('utf-8') # server encode message.
             msg_header = f"{len(msg):<{self.HEADER_LENGTH}}".encode("utf-8") # server calculate length of message to allocated it for sending.
             sender_socket.send(msg_header + msg)
-            return 'ack'
-        except:
+        except Exception:
             return False
 
     def Send_Big_Message(self, sender_socket, message):
         try:
-            msg_header = bytes(f"{len(message):<{self.HEADER_LENGTH}}", 'utf-8') # server calculate length of message to allocated it for sending.
+            msg_header = f"{len(message):<{self.HEADER_LENGTH}}".encode("utf-8") # server calculate length of message to allocated it for sending.
             sender_socket.send(msg_header + message)
-            print(msg_header + message)
-            return 'ack'
         except Exception:
             return False
 
