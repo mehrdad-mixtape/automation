@@ -66,7 +66,11 @@ class Automation_BD:
             'password': password
         }
         if self.admin_coll.find_one(data):
-            return self.admin_coll.find_one(data)
+            all_attribs = self.admin_coll.find_one(data)
+            result = []
+            for key in all_attribs:
+                result.append(all_attribs[key])
+            return result
         else:
             return False
 
@@ -120,7 +124,11 @@ class Automation_BD:
             'password': password
         }
         if self.user_coll.find_one(data):
-            return self.user_coll.find_one(data)
+            all_attribs = self.user_coll.find_one(data)
+            result = []
+            for key in all_attribs:
+                result.append(all_attribs[key])
+            return result
         else:
             return False
 
@@ -168,7 +176,11 @@ class Automation_BD:
             'password': password
         }
         if self.server_coll.find_one(data):
-            return self.server_coll.find_one(data)
+            all_attribs = self.server_coll.find_one(data)
+            result = []
+            for key in all_attribs:
+                result.append(all_attribs[key])
+            return result
         else:
             return False
 
@@ -208,7 +220,11 @@ class Automation_BD:
             'owner': username
         }
         if self.admin_workspace_coll.find_one(data):
-            return self.admin_workspace_coll.find_one(data)
+            all_attribs = self.admin_workspace_coll.find_one(data)
+            result = []
+            for key in all_attribs:
+                result.append(all_attribs[key])
+            return result
         else:
             return False
 
@@ -248,7 +264,11 @@ class Automation_BD:
             'owner': username
         }
         if self.user_workspace_coll.find_one(data):
-            return self.user_workspace_coll.find_one(data)
+            all_attribs = self.user_workspace_coll.find_one(data)
+            result = []
+            for key in all_attribs:
+                result.append(all_attribs[key])
+            return result
         else:
             return False
 
