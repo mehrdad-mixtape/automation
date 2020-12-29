@@ -1,5 +1,4 @@
-import socket, select, datetime, sys, pickle, time# use for socket.
-import manage_db
+import socket, select, pickle, manage_db, datetime
 from hashlib import sha256
 
 class Server():
@@ -45,7 +44,7 @@ class Server():
                     log_list.append(log)
                     log = {}
                 self.Send_Big_Message(client_socket, pickle.dumps(log_list))
-                self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket][0]}", self.clients[client_socket][0])
+                self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket]}", self.clients[client_socket])
             ####################### cmd action-log #######################
             elif (command[1] == "action-log"):
                 log = {}
@@ -59,7 +58,14 @@ class Server():
                     log_list.append(log)
                     log = {}
                 self.Send_Big_Message(client_socket, pickle.dumps(log_list))
-                self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket][0]}", self.clients[client_socket][0])
+                self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket]}", self.clients[client_socket])
+            ####################### cmd all-script #######################
+            elif (command[1] == "all-script"):
+                script_list = self.db.Show_all_script()
+                self.Send_Big_Message(client_socket, pickle.dumps(script_list))
+                self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket]}", self.clients[client_socket])
+
+
 
     def Authenticate(self, usr, passwd, key): # internal function to authenticate users that want login to server.
         if key == 'admin':  # I want to login with admin
@@ -134,7 +140,8 @@ class Server():
                                 print(f"{self.Server_time()} authentication complete from '{user_pass['data'][0]}' with {client_address[0]}:{client_address[1]} to server")  # log
 
                                 self.sockets_list.append(client_socket) # After authentication I add client socket to socket_list.
-                                self.clients[client_socket] = user_pass['data'] # clients={client_socket: username}, ...}.
+                                self.clients[client_socket] = user_pass['data'][0] # clients={client_socket: username}, ...}.
+                                print(self.clients[client_socket])
                                 # And client_socket add to dictionary that server can recognize client_socket with client_message.
                             else:
                                 self.Send_Message(client_socket, 'authentication failed')
