@@ -1,4 +1,4 @@
-import socket, sys
+import socket, sys, pickle
 from hashlib import sha256
 
 class Client():
@@ -16,13 +16,27 @@ class Client():
                 return False
             message_length = int(message_header.decode("utf-8").strip()) # yes my message received XD, I should decode received message to utf-8 and calculate length.
             return receiver_socket.recv(message_length).decode('utf-8') # we can receive message from server with new header_length size.
-        except:
+        except Exception:
+            return False
+
+    def Receive_Big_Message(self, receiver_socket):
+        try:
+            message_header = receiver_socket.recv(self.HEADER_LENGTH)  # try to get first message from clients with 10 bytes.
+            if not len(message_header):  # if message_header was empty, client with to server send it
+                return False
+            message_length = int(message_header.decode("utf-8").strip()) # yes my message received XD, I should decode received message to utf-8 and calculate length.
+            return pickle.loads(receiver_socket.recv(message_length)) # we can receive message from server with new header_length size.
+        except Exception as e:
+            # print(e)
             return False
 
     def Send_Message(self, sender_socket, message):
-        msg = message.encode('utf-8')
-        msg_header = f"{len(msg):<{self.HEADER_LENGTH}}".encode("utf-8")
-        sender_socket.send(msg_header + msg)
+        try:
+            msg = message.encode('utf-8')
+            msg_header = f"{len(msg):<{self.HEADER_LENGTH}}".encode("utf-8")
+            sender_socket.send(msg_header + msg)
+        except Exception:
+            return False
 
     def Hash(self, input):
         return str(sha256(input.encode('utf-8')).hexdigest())
@@ -48,7 +62,7 @@ class Client():
                 if receive_message != False:
                     if receive_message == 'authentication failed':
                         return 'A_F' # Authentication Failed
-                    else:  # authentication complete
+                    else:
                         return 'A_S' # Authentication Successful
                         #
                         # while True:
