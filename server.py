@@ -19,6 +19,7 @@ class Server():
     def Instruction_Handler(self, cmd, client_socket): # internal function to check contain of messages that have keyword.
         command = cmd.split(' ')
 
+        ####################### cmd exit #######################
         if (command == "exit"):
             self.Send_Message(client_socket, 'Connection closed')
             self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket][0]}", self.clients[client_socket][0])
@@ -29,7 +30,9 @@ class Server():
             self.sockets_list.remove(client_socket)
             del self.clients[client_socket]
 
+        ####################### cmd show #######################
         elif (command[0] == "show"):
+            ####################### cmd login-log #######################
             if (command[1] == "login-log"):
                 log = {}
                 log_list = []
@@ -42,7 +45,8 @@ class Server():
                     log_list.append(log)
                     log = {}
                 self.Send_Big_Message(client_socket, pickle.dumps(log_list))
-
+                self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket][0]}", self.clients[client_socket][0])
+            ####################### cmd action-log #######################
             elif (command[1] == "action-log"):
                 log = {}
                 log_list = []
@@ -55,6 +59,7 @@ class Server():
                     log_list.append(log)
                     log = {}
                 self.Send_Big_Message(client_socket, pickle.dumps(log_list))
+                self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket][0]}", self.clients[client_socket][0])
 
     def Authenticate(self, usr, passwd, key): # internal function to authenticate users that want login to server.
         if key == 'admin':  # I want to login with admin
