@@ -1,4 +1,4 @@
-import socket, sys, pickle
+import socket, pickle
 from hashlib import sha256
 
 class Client():
@@ -6,8 +6,6 @@ class Client():
         self.HEADER_LENGTH = 10
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # socket.AF_INET = create a ipv4 socket, socket.SOCK_STREAM = this socket work with TCP-IP.
-    # def Get_msg(self):
-    #     return input('>>> ')
 
     def Receive_Message(self, receiver_socket):  # internal function to receive messages.
         try:
