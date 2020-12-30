@@ -4,7 +4,7 @@
 # QtWidgets for working with widgets_UI like buttons, labels, combobox, ...
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox, QApplication, QMainWindow
-import sys, time
+import sys, time, os
 import admin, normal_user
 
 class Ui_WorkSpace_window(object):
@@ -837,6 +837,35 @@ class Ui_WorkSpace_window(object):
                             self.listView_logs.insertItem(4, '\n')
             else:
                 self.listView_logs.insertItem(0, 'Your query have no result, please try again')
+    def Edit_script_Button(self):
+        self.statusbar.showMessage(f"Dear {self.username_lineEdit.text()}, please save your changes with press update button")
+        self.textEdit_script.clear()
+        self.textEdit_script.canPaste()
+        msg = 'edit ' + 'script ' + self.comboBox_script.currentText()
+        self.user.Send_msg(msg)
+        while True:  # I try to get script content from server
+            report = self.user.Recv_B_msg()
+            if report != False:
+                script_content = report
+                break
+            else:
+                pass
+        self.textEdit_script.setText(script_content)
+        os.system(f"touch /home/mehrdad/Documents/my-git/automation/client_cache/{self.comboBox_script.currentText()}")
+        self.comboBox_script.setDisabled(True)
+
+    def Update_script_Button(self):
+        ########### First save script on client. ###########
+        self.statusbar.showMessage(f"Dear {self.username_lineEdit.text()}, all changes saved on server")
+        modify_script = open(f"/home/mehrdad/Documents/my-git/automation/client_cache/{self.comboBox_script.currentText()}", mode='w+')
+        modify_script.write(self.textEdit_script.toPlainText())
+        modify_script.close()
+        self.comboBox_script.setDisabled(False)
+        ########### Second Send Script to server. ###########
+        msg = 'edit ' + 'script ' + 'update ' + self.comboBox_script.currentText()
+        self.user.Send_msg(msg)
+        script = open(f"/home/mehrdad/Documents/my-git/automation/client_cache/{self.comboBox_script.currentText()}", mode='r')
+        self.user.Send_B_msg(script.read())
 
     def Load_combobox_script(self):
         msg = 'show ' + 'all-script'
