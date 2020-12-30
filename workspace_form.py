@@ -9,7 +9,7 @@ import admin, normal_user
 
 class Ui_WorkSpace_window(object):
     def __init__(self):
-        self.user = object
+        self.user = object # this user can be Admin or normal_user
 
     def SetupUi_workspace(self, WorkSpace_window):
         WorkSpace_window.setObjectName("WorkSpace_window")
@@ -407,7 +407,7 @@ class Ui_WorkSpace_window(object):
         self.comboBox_script.setGeometry(QtCore.QRect(90, 20, 201, 36))
         self.comboBox_script.setObjectName("comboBox_script")
         ########################### comboBox_script Signal ###########################
-        self.comboBox_script.activated.connect(lambda: self.Load_path_script())
+        self.comboBox_script.activated.connect(lambda: self.Load_lineEdit_path_script())
 
         self.label_path_script = QtWidgets.QLabel(self.script_tab)
         self.label_path_script.setGeometry(QtCore.QRect(310, 20, 41, 31))
@@ -470,16 +470,6 @@ class Ui_WorkSpace_window(object):
         self.pushButton_launch_script.setObjectName("pushButton_launch_script")
         ##################### launch_script Signal #####################
         self.pushButton_launch_script.clicked.connect(lambda: self.Launch_script_Button())
-
-        font = QtGui.QFont()
-        font.setBold(True)
-        font.setItalic(True)
-        self.progressBar_process = QtWidgets.QProgressBar(self.script_tab)
-        self.progressBar_process.setGeometry(QtCore.QRect(120, 543, 401, 31))
-        self.progressBar_process.setFont(font)
-        self.progressBar_process.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
-        self.progressBar_process.setProperty("value", 24)
-        self.progressBar_process.setObjectName("progressBar_process")
 
         self.tabWidget.addTab(self.script_tab, "")
         #-------------------------------------------------------------------------------#
@@ -547,6 +537,8 @@ class Ui_WorkSpace_window(object):
         self.actionSSH = QtWidgets.QAction(WorkSpace_window)
         self.actionSSH.setIcon(icon5)
         self.actionSSH.setObjectName("actionSSH")
+        ######################## actionSSH trigger ##########################
+        self.actionSSH.triggered.connect(lambda: self.AcRemote())
 
         self.actionConnection = QtWidgets.QAction(WorkSpace_window)
         self.actionConnection.setIcon(icon6)
@@ -576,7 +568,11 @@ class Ui_WorkSpace_window(object):
         self.menubar.addAction(self.menuRemote.menuAction())
         self.menubar.addAction(self.menuConnection.menuAction())
 
-        self.menubar.setDisabled(True)
+        #self.menubar.setDisabled(True)
+        self.menuAdmin.setDisabled(True)
+        self.menuServer.setDisabled(True)
+        self.menuUser.setDisabled(True)
+        self.menuConnection.setDisabled(True)
         # ------------------------------- Status bar ------------------------------------#
         self.statusbar = QtWidgets.QStatusBar(WorkSpace_window)
         self.statusbar.setObjectName("statusbar")
@@ -697,8 +693,6 @@ class Ui_WorkSpace_window(object):
         self.pushButton_launch_script.setToolTip(_translate("WorkSpace_window", "Launch script"))
         self.pushButton_launch_script.setText(_translate("WorkSpace_window", "Launch"))
 
-        self.progressBar_process.setToolTip(_translate("WorkSpace_window", "Process"))
-
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.script_tab), _translate("WorkSpace_window", "Script"))
 
         self.menuAdmin.setTitle(_translate("WorkSpace_window", "New"))
@@ -725,6 +719,7 @@ class Ui_WorkSpace_window(object):
 
         self.actionConnection.setText(_translate("WorkSpace_window", "Close Connection"))
 
+    ################ Button ##################
     def Login_Button(self):
         username = self.username_lineEdit.text()
         passwd1 = self.password1_lineEdit.text()
@@ -756,7 +751,10 @@ class Ui_WorkSpace_window(object):
                     self.login_tab.setDisabled(True)
                     self.monitoring_tab.setDisabled(False)
                     self.script_tab.setDisabled(False)
-                    self.menubar.setDisabled(False)
+                    self.menuAdmin.setDisabled(False)
+                    self.menuServer.setDisabled(False)
+                    self.menuUser.setDisabled(False)
+                    self.menuConnection.setDisabled(False)
                     self.statusbar.showMessage(f'status: {username}, you login to the server successfully')
                     self.Load_combobox_script()
 
@@ -775,22 +773,18 @@ class Ui_WorkSpace_window(object):
                     self.login_tab.setDisabled(True)
                     self.monitoring_tab.setDisabled(False)
                     self.script_tab.setDisabled(False)
-                    self.menubar.setDisabled(False)
+                    self.menuAdmin.setDisabled(False)
+                    self.menuServer.setDisabled(False)
+                    self.menuUser.setDisabled(False)
+                    self.menuConnection.setDisabled(False)
                     self.statusbar.showMessage(f'status: {username}, you login to the server successfully')
                     self.Load_combobox_script()
     def Close_Button(self):
         workspace_window.close()
     def Show_log_Button(self):
         if self.comboBox_log_category.currentText() == 'Login':
-            msg = 'show ' + 'login-log ' + self.comboBox_log_filter.currentText() + f' {self.lineEdit_filter.text()}'
-            self.user.Send_msg(msg)
-            while True: # I try to get logs from server
-                report = self.user.Recv_B_msg()
-                if report != False:
-                    log_list = report
-                    break
-                else:
-                    pass
+
+            log_list = self.user.Get_Login_log(self.comboBox_log_filter.currentText(), self.lineEdit_filter.text())
 
             self.listView_logs.clear()
 
@@ -811,15 +805,7 @@ class Ui_WorkSpace_window(object):
 
         elif self.comboBox_log_category.currentText() == 'Action':
 
-            msg = 'show ' + 'action-log ' + self.comboBox_log_filter.currentText() + f' {self.lineEdit_filter.text()}'
-            self.user.Send_msg(msg)
-            while True:  # I try to get logs from server
-                report = self.user.Recv_B_msg()
-                if report != False:
-                    log_list = report
-                    break
-                else:
-                    pass
+            log_list = self.user.Get_Action_log(self.comboBox_log_filter.currentText(), self.lineEdit_filter.text())
 
             self.listView_logs.clear()
 
@@ -837,62 +823,64 @@ class Ui_WorkSpace_window(object):
                             self.listView_logs.insertItem(4, '\n')
             else:
                 self.listView_logs.insertItem(0, 'Your query have no result, please try again')
+    def Create_script_Button(self):
+        self.textEdit_script.clear()
+        self.textEdit_script.canPaste()
+        self.pushButton_edit_script.setDisabled(True)
+        self.pushButton_create_script.setDisabled(True)
+        self.pushButton_delete_script.setDisabled(True)
+        self.pushButton_update_script.setDisabled(False)
+        self.pushButton_launch_script.setDisabled(True)
+        create_script.show()
+
+        pass
     def Edit_script_Button(self):
         self.statusbar.showMessage(f"Dear {self.username_lineEdit.text()}, please save your changes with press update button")
         self.textEdit_script.clear()
         self.textEdit_script.canPaste()
-        msg = 'edit ' + 'script ' + self.comboBox_script.currentText()
-        self.user.Send_msg(msg)
-        while True:  # I try to get script content from server
-            report = self.user.Recv_B_msg()
-            if report != False:
-                script_content = report
-                break
-            else:
-                pass
-        self.textEdit_script.setText(script_content)
-        os.system(f"touch /home/mehrdad/Documents/my-git/automation/client_cache/{self.comboBox_script.currentText()}")
         self.comboBox_script.setDisabled(True)
+        self.pushButton_edit_script.setDisabled(True)
+        self.pushButton_create_script.setDisabled(True)
+        self.pushButton_delete_script.setDisabled(True)
+        self.pushButton_update_script.setDisabled(False)
+        self.pushButton_launch_script.setDisabled(True)
 
+        script_content = self.user.Edit_script(self.comboBox_script.currentText())
+        self.textEdit_script.setText(script_content)
+    def Delete_script_Button(self):
+        result = self.user.Delete_script(self.comboBox_script.currentText())
+        if result != False:
+            self.statusbar.showMessage(f"Dear {self.username_lineEdit.text()}, current script deleted")
+            self.Load_combobox_script()
+        else:
+            self.statusbar.showMessage(f"Dear {self.username_lineEdit.text()}, current script not found")
     def Update_script_Button(self):
-        ########### First save script on client. ###########
         self.statusbar.showMessage(f"Dear {self.username_lineEdit.text()}, all changes saved on server")
-        modify_script = open(f"/home/mehrdad/Documents/my-git/automation/client_cache/{self.comboBox_script.currentText()}", mode='w+')
-        modify_script.write(self.textEdit_script.toPlainText())
-        modify_script.close()
         self.comboBox_script.setDisabled(False)
-        ########### Second Send Script to server. ###########
-        msg = 'edit ' + 'script ' + 'update ' + self.comboBox_script.currentText()
-        self.user.Send_msg(msg)
-        script = open(f"/home/mehrdad/Documents/my-git/automation/client_cache/{self.comboBox_script.currentText()}", mode='r')
-        self.user.Send_B_msg(script.read())
+        self.user.Update_script(self.comboBox_script.currentText(), self.textEdit_script.toPlainText())
+        self.pushButton_edit_script.setDisabled(False)
+        self.pushButton_create_script.setDisabled(False)
+        self.pushButton_delete_script.setDisabled(False)
+        self.pushButton_update_script.setDisabled(True)
+        self.pushButton_launch_script.setDisabled(False)
+    def Launch_script_Button(self):
+        self.user.Launch_script(self.comboBox_script.currentText())
+        self.statusbar.showMessage(f"Dear {self.username_lineEdit.text()}, {self.comboBox_script.currentText()} launched successfully")
 
+    ################ Button ##################
     def Load_combobox_script(self):
-        msg = 'show ' + 'all-script'
-        self.user.Send_msg(msg)
-        while True:  # I try to get script data from server
-            report = self.user.Recv_B_msg()
-            if report != False:
-                script_list = report
-                break
-            else:
-                pass
-
-        for dict in script_list:
+        self.comboBox_script.clear()
+        for dict in self.user.Load_all_script():
             for key in dict:
                 if key == 'script_name':
                     self.comboBox_script.addItem(dict[key])
-    def Load_path_script(self):
-        msg = 'show ' + 'script-path ' + self.comboBox_script.currentText()
-        self.user.Send_msg(msg)
-        while True:  # I try to get script data from server
-            report = self.user.Recv_msg()
-            if report != False:
-                self.lineEdit_path_script.setText(report + self.comboBox_script.currentText())
-                break
-            else:
-                pass
+    def Load_lineEdit_path_script(self):
+        self.pushButton_update_script.setDisabled(True)
+        self.textEdit_script.clear()
+        report = self.user.Load_path_script(self.comboBox_script.currentText())
+        self.lineEdit_path_script.setText(report + self.comboBox_script.currentText())
 
+    ################ radio Button ##################
     def Admin_radiobutton(self):
         if self.password2_lineEdit.isReadOnly() == True:
             self.password2_lineEdit.setReadOnly(False)
@@ -902,6 +890,7 @@ class Ui_WorkSpace_window(object):
             self.password2_lineEdit.setReadOnly(True)
         self.statusbar.showMessage('status: ok')
 
+    ################ action Menubar ##################
     def AcConnection(self):
         self.user.Send_msg('exit')
         self.Show_notify_fail_login("3")
@@ -925,7 +914,7 @@ class Ui_WorkSpace_window(object):
     def AcDel_Server(self):
         pass
     def AcRemote(self):
-        pass
+        os.system('Konsole || gnome-terminal')
 
     def Show_notify_fail_login(self, flag): # Internal function
         if flag == "1":
@@ -999,10 +988,126 @@ class Ui_WorkSpace_window(object):
             msg.setDefaultButton(QMessageBox.Ok)
             msg.exec_()
 
+
+class Ui_Create_script_Window(object):
+
+    def SetupUi_create_script(self, Create_script_Window):
+        Create_script_Window.setObjectName("Create_script_Window")
+        Create_script_Window.resize(552, 182)
+        Create_script_Window.setGeometry(700, 300, 552, 182)
+        Create_script_Window.setMinimumSize(QtCore.QSize(552, 182))
+        Create_script_Window.setMaximumSize(QtCore.QSize(552, 182))
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("UI/../icon/2252295991582004497-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        Create_script_Window.setWindowIcon(icon)
+        self.centralwidget = QtWidgets.QWidget(Create_script_Window)
+        self.centralwidget.setObjectName("centralwidget")
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label.setGeometry(QtCore.QRect(10, 20, 91, 22))
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.label.setFont(font)
+        self.label.setObjectName("label")
+        self.label_2 = QtWidgets.QLabel(self.centralwidget)
+        self.label_2.setGeometry(QtCore.QRect(290, 20, 67, 22))
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_2.setFont(font)
+        self.label_2.setObjectName("label_2")
+        self.label_3 = QtWidgets.QLabel(self.centralwidget)
+        self.label_3.setGeometry(QtCore.QRect(10, 50, 67, 22))
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_3.setFont(font)
+        self.label_3.setObjectName("label_3")
+        self.lineEdit_script_name = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEdit_script_name.setGeometry(QtCore.QRect(110, 20, 171, 31))
+        font = QtGui.QFont()
+        font.setItalic(True)
+        self.lineEdit_script_name.setFont(font)
+        self.lineEdit_script_name.setObjectName("lineEdit_script_name")
+        self.lineEdit_2 = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEdit_2.setGeometry(QtCore.QRect(370, 20, 171, 31))
+        font = QtGui.QFont()
+        font.setItalic(True)
+        self.lineEdit_2.setFont(font)
+        self.lineEdit_2.setObjectName("lineEdit_2")
+        self.lineEdit_3 = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEdit_3.setGeometry(QtCore.QRect(10, 80, 531, 36))
+        font = QtGui.QFont()
+        font.setItalic(True)
+        self.lineEdit_3.setFont(font)
+        self.lineEdit_3.setObjectName("lineEdit_3")
+
+        self.pushButton_cancel = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_cancel.setGeometry(QtCore.QRect(440, 130, 99, 38))
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap("UI/../icon/12355707351582004488-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.pushButton_cancel.setIcon(icon1)
+        self.pushButton_cancel.setObjectName("pushButton_cancel")
+        ############################ Ok Signal ############################
+        self.pushButton_cancel.clicked.connect(lambda: self.Cancel_Button())
+
+        self.pushButton_ok = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_ok.setGeometry(QtCore.QRect(330, 130, 99, 38))
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap("UI/../icon/7774226221582004489-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.pushButton_ok.setIcon(icon2)
+        self.pushButton_ok.setObjectName("pushButton_ok")
+        ############################ Ok Signal ############################
+        self.pushButton_ok.clicked.connect(lambda: self.Ok_Button())
+        Create_script_Window.setCentralWidget(self.centralwidget)
+
+        self.RetranslateUi_create_script(Create_script_Window)
+        QtCore.QMetaObject.connectSlotsByName(Create_script_Window)
+
+    def RetranslateUi_create_script(self, Create_script_Window):
+        _translate = QtCore.QCoreApplication.translate
+        Create_script_Window.setWindowTitle(_translate("Create_script_Window", "Create script"))
+        Create_script_Window.setToolTip(_translate("Create_script_Window", "Create script window"))
+        self.label.setText(_translate("Create_script_Window", "Script name:"))
+        self.label_2.setText(_translate("Create_script_Window", "Usability:"))
+        self.label_3.setText(_translate("Create_script_Window", "path:"))
+        self.lineEdit_script_name.setToolTip(_translate("Create_script_Window", "Enter script_name.py"))
+        self.lineEdit_script_name.setPlaceholderText(_translate("Create_script_Window", "script name"))
+        self.lineEdit_2.setToolTip(_translate("Create_script_Window", "Enter script usability"))
+        self.lineEdit_2.setPlaceholderText(_translate("Create_script_Window", "usability"))
+        self.lineEdit_3.setToolTip(_translate("Create_script_Window", "Enter path script"))
+        self.lineEdit_3.setPlaceholderText(_translate("Create_script_Window", "path:"))
+        self.pushButton_cancel.setText(_translate("Create_script_Window", "Cancel"))
+        self.pushButton_ok.setText(_translate("Create_script_Window", "OK"))
+
+    def Ok_Button(self):
+        script_name = self.lineEdit_script_name.text()
+        usability = self.lineEdit_2.text()
+        path = self.lineEdit_3.text()
+        ui_1.pushButton_edit_script.setDisabled(False)
+        ui_1.pushButton_create_script.setDisabled(True)
+        ui_1.pushButton_delete_script.setDisabled(True)
+        ui_1.pushButton_update_script.setDisabled(True)
+        ui_1.pushButton_launch_script.setDisabled(True)
+        ui_1.user.Create_script(script_name, path, usability)
+        ui_1.Load_combobox_script()
+        ui_1.statusbar.showMessage(f"Dear {self.username_lineEdit.text()}, new {script_name} create")
+        create_script.close()
+    def Cancel_Button(self):
+        ui_1.pushButton_edit_script.setDisabled(False)
+        ui_1.pushButton_create_script.setDisabled(False)
+        ui_1.pushButton_delete_script.setDisabled(False)
+        ui_1.pushButton_update_script.setDisabled(True)
+        ui_1.pushButton_launch_script.setDisabled(False)
+        create_script.close()
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)  # create a application and get it system argument.
-    workspace_window = QMainWindow()  # create a main window.
-    ui = Ui_WorkSpace_window()
-    ui.SetupUi_workspace(workspace_window)
+    workspace_window = QMainWindow()  # create a workspace main window
+    create_script = QMainWindow()
+    ui_1 = Ui_WorkSpace_window()
+    ui_2 = Ui_Create_script_Window()
+    ui_1.SetupUi_workspace(workspace_window)
+    ui_2.SetupUi_create_script(create_script)
     workspace_window.show()
     sys.exit(app.exec_())  # OS can know my app.

@@ -1,4 +1,4 @@
-import manage_db, client, server
+import manage_db, client, server, os
 
 class Admin():
     def __init__(self):
@@ -178,85 +178,94 @@ class Admin():
         else:
             return report
 
-    ########################################## Script management section ############# status: implement 70% ######################
-    def Launch_script(self, script_name):
-        pass
-    def Edit_script(self, script_name, path):
-        pass
+    ########################################## Script management section ############# status: implement 100% ######################
     def Create_script(self, script_name, path, usability):
-        report = self.db.Insert_script(script_name, path, usability)
-        # self.db.Record_action_log(report, script_name)
+        msg = 'new ' + 'script ' + f'{script_name} ' + f'{path} ' + f'{usability}'
+        self.Send_msg(msg)
+        os.system(f"touch /home/mehrdad/Documents/my-git/automation/client_cache/{script_name}")
+
+    def Edit_script(self, script_name):
+        msg = 'edit ' + 'script ' + f'{script_name}'
+        self.Send_msg(msg)
+        while True:  # I try to get script content from server
+            report = self.Recv_B_msg()
+            if report != False:
+                break
+            else:
+                pass
+        os.system(f"touch /home/mehrdad/Documents/my-git/automation/client_cache/{script_name}")
         return report
 
-    def Del_script(self, script_name):
-        report = self.db.Delete_script(script_name)
-        # self.db.Record_action_log(report, script_name)
+    def Delete_script(self, script_name):
+        msg = 'del ' + 'script ' + f'{script_name}'
+        self.Send_msg(msg)
+        while True:  # I try to get script content from server
+            report = self.Recv_msg()
+            if report == 'not found':
+                return False
+            elif report == 'found':
+                return True
+
+    def Update_script(self, script_name, new_content):
+        ########### First save script on client. ###########
+        modify_script = open(f"/home/mehrdad/Documents/my-git/automation/client_cache/{script_name}", mode='w+')
+        modify_script.write(new_content)
+        modify_script.close()
+        ########### Second Send Script to server. ###########
+        msg = 'edit ' + 'script ' + 'update ' + f'{script_name}'
+        self.Send_msg(msg)
+        script = open(f"/home/mehrdad/Documents/my-git/automation/client_cache/{script_name}", mode='r')
+        self.Send_B_msg(script.read())
+        script.close()
+
+    def Launch_script(self, script_name):
+        msg = 'launch ' + f'{script_name}'
+        self.Send_msg(msg)
+
+    def Load_all_script(self):
+        msg = 'show ' + 'all-script'
+        self.Send_msg(msg)
+        while True:  # I try to get script data from server
+            report = self.Recv_B_msg()
+            if report != False:
+                break
+            else:
+                pass
         return report
 
-    def Up_script(self, script_name, attrib, new_value):
-        report = self.db.Update_script(script_name, attrib, new_value)
-        # self.db.Record_action_log(report, script_name)
+    def Load_path_script(self, script_name):
+        msg = 'show ' + 'script-path ' + f'{script_name}'
+        self.Send_msg(msg)
+        while True:  # I try to get script data from server
+            report = self.Recv_msg()
+            if report != False:
+                break
+            else:
+                pass
         return report
-
-    def Find_script(self,script_name):
-        report = self.db.Get_attrib_script(script_name)
-        return report
-
-    def Load_script(self):
-        return self.db.Show_all_script()
 
     ########################################## Log management section ############# status: implemented ######################
-    def All_login_log(self):
-        log = {}
-        log_list = []
-        for dict in self.db.Show_all_login_log():
-            log['date'] = list(dict.values())[1] + '-' + list(dict.values())[2] + '-' + list(dict.values())[3] + ' ' + \
-                          list(dict.values())[4] + ':' + list(dict.values())[5] + ':' + list(dict.values())[6]
-            log['content'] = list(dict.values())[7] + ':'
-            log['user'] = list(dict.values())[8]
-            log['workspace'] = list(dict.values())[9]
-            log_list.append(log)
-            log = {}
-        return log_list
+    def Get_Login_log(self, attrib, value):
+        msg = 'show ' + 'login-log ' + f'{attrib} ' + f'{value}'
+        self.Send_msg(msg)
+        while True:  # I try to get logs from server
+            report = self.Recv_B_msg()
+            if report != False:
+                break
+            else:
+                pass
+        return report
 
-    def Login_log(self, attrib, value):
-        log = {}
-        log_list = []
-        for dict in self.db.Show_login_log(attrib, value):
-            log['date'] = list(dict.values())[1] + '-' + list(dict.values())[2] + '-' + list(dict.values())[3] + ' ' + \
-                          list(dict.values())[4] + ':' + list(dict.values())[5] + ':' + list(dict.values())[6]
-            log['content'] = list(dict.values())[7] + ':'
-            log['user'] = list(dict.values())[8]
-            log['workspace'] = list(dict.values())[9]
-            log_list.append(log)
-            log = {}
-        return log_list
-
-    def All_action_log(self):
-        log = {}
-        log_list = []
-        for dict in self.db.Show_all_action_log():
-            log['date'] = list(dict.values())[1] + '-' + list(dict.values())[2] + '-' + list(dict.values())[3] + ' ' + \
-                          list(dict.values())[4] + ':' + list(dict.values())[5] + ':' + list(dict.values())[6]
-            log['content'] = list(dict.values())[7] + ':'
-            log['owner'] = list(dict.values())[8]
-            log['workspace'] = list(dict.values())[9]
-            log_list.append(log)
-            log = {}
-        return log_list
-
-    def Action_log(self, attrib, value):
-        log = {}
-        log_list = []
-        for dict in self.db.Show_action_log(attrib, value):
-            log['date'] = list(dict.values())[1] + '-' + list(dict.values())[2] + '-' + list(dict.values())[3] + ' ' + \
-                          list(dict.values())[4] + ':' + list(dict.values())[5] + ':' + list(dict.values())[6]
-            log['content'] = list(dict.values())[7] + ':'
-            log['owner'] = list(dict.values())[8]
-            log['workspace'] = list(dict.values())[9]
-            log_list.append(log)
-            log = {}
-        return log_list
+    def Get_Action_log(self, attrib, value):
+        msg = 'show ' + 'action-log ' + f'{attrib} ' + f'{value}'
+        self.Send_msg(msg)
+        while True:  # I try to get logs from server
+            report = self.Recv_B_msg()
+            if report != False:
+                break
+            else:
+                pass
+        return report
 
     ########################################## Monitor management section ############# status: none ######################
     def Monitor_server(self):
@@ -289,7 +298,7 @@ if __name__ == "__main__":
     # print(A.Server_find('automation', '123456'))
     # print(A.Start_server('automation', '123456', '127.0.0.1', 4444))
 
-    # print(A.Create_script('set-ntp', "/home/mehrdad/Documents/my-git/automation/automation_scripts/", "Set ntp protocol"))
+    # print(A.Create_script('set-ntp.py', "/home/mehrdad/Documents/my-git/automation/automation_scripts/", "Set ntp protocol"))
     # print(A.Del_script('get-interface.py'))
     # print(A.Up_script('get-interface.py', 'path', "/home/mehrdad/Documents/my-git/automation/automation_scripts/"))
     # print(A.Find_script('put-interface.py'))

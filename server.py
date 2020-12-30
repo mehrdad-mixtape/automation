@@ -1,4 +1,4 @@
-import socket, select, pickle, manage_db, datetime
+import socket, select, pickle, manage_db, datetime, os
 from hashlib import sha256
 
 class Server():
@@ -43,7 +43,7 @@ class Server():
                     log['workspace'] = list(dict.values())[9]
                     log_list.append(log)
                     log = {}
-                self.Send_Big_Message(client_socket, log_list)
+                self.Send_Big_Message(client_socket, log_list) # Server create a log_list and Send this big data to client
                 self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket]}", self.clients[client_socket])
             ####################### cmd action-log #######################
             elif command[1] == 'action-log':
@@ -57,13 +57,12 @@ class Server():
                     log['workspace'] = list(dict.values())[9]
                     log_list.append(log)
                     log = {}
-                self.Send_Big_Message(client_socket, log_list)
+                self.Send_Big_Message(client_socket, log_list) # Server create a log_list and Send this big data to client
                 self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket]}", self.clients[client_socket])
             ####################### cmd all-script #######################
             elif command[1] == 'all-script':
                 script_list = self.db.Show_all_script()
-                self.Send_Big_Message(client_socket, script_list)
-                self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket]}", self.clients[client_socket])
+                self.Send_Big_Message(client_socket, script_list)  # Server create a Script_list and Send this big data to client
             ####################### cmd script-path #######################
             elif command[1] == 'script-path':
                 script_data = self.db.Get_attrib_script(command[2])
@@ -92,16 +91,17 @@ class Server():
                 script_content = open(f"{script_data['path']}" + f"{script_data['script_name']}", mode="r")
 
                 self.Send_Big_Message(client_socket, script_content.read()) # server send script content to client.
-
                 script_content.close()
                 self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket]}", self.clients[client_socket])
 
             ####################### cmd admin #######################
             elif command[1] == 'admin':
                 pass
+
             ####################### cmd user #######################
             elif command[1] == 'user':
                 pass
+
             ####################### cmd server #######################
             elif command[1] == 'server':
                 pass
@@ -110,7 +110,10 @@ class Server():
         elif command[0] == 'new':
             ####################### cmd script #######################
             if command[1] == 'script':
-                pass
+                self.db.Insert_script(command[2], command[3], command[4:])
+                os.system(f"touch {command[3]}{command[2]}")
+                self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket]}", self.clients[client_socket])
+
             ####################### cmd admin #######################
             elif command[1] == 'admin':
                 pass
@@ -125,7 +128,13 @@ class Server():
         elif command[0] == 'del':
             ####################### cmd script #######################
             if command[1] == 'script':
-                pass
+                script_data = self.db.Get_attrib_script(command[2])
+                if script_data == False:
+                    self.Send_Message(client_socket, 'not found')
+                else:
+                    os.system(f"rm {script_data['path']}/{script_data['script_name']}")
+                    self.db.Delete_script(script_data['script_name'])
+                    self.Send_Message(client_socket, 'found')
             ####################### cmd admin #######################
             elif command[1] == 'admin':
                 pass
@@ -135,6 +144,11 @@ class Server():
             ####################### cmd server #######################
             elif command[1] == 'server':
                 pass
+
+        ####################### cmd launch #######################
+        elif command[0] == 'launch':
+            script_data = self.db.Get_attrib_script(command[1])
+            os.system(f"python3 {script_data['path']}{script_data['script_name']}")
 
     def Authenticate(self, usr, passwd, key): # internal function to authenticate users that want login to server.
         if key == 'admin':  # I want to login with admin
@@ -237,12 +251,7 @@ class Server():
 
                         if message is False: # if client disconnect or send 'exit' message, server remove that client_socket from socket_list[] & clients{}
                             pass
-                            # self.db.Record_login_log(f"Logout from server", self.clients[notified_socket][0]) # record log on db.
-                            # print(f"{self.Server_time()} connection closed from '{self.clients[notified_socket][0]}'") # log
-                            # notified_socket.close()
-                            # self.sockets_list.remove(notified_socket)
-                            # del self.clients[notified_socket]
-                            # continue
+
                         else:
                             user = self.clients[notified_socket] # I access to {"header": message_header, "data": client_socket.recv(message_length)}.
                             # I get username that saved with socket in clients{}.
@@ -261,5 +270,4 @@ class Server():
 
 if __name__ == "__main__":
     S = Server('127.0.0.1', 4444)
-    # S.Instruction_Handler('show login-log username MixTape', object)
     S.Run_Server()
