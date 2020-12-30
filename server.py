@@ -43,7 +43,7 @@ class Server():
                     log['workspace'] = list(dict.values())[9]
                     log_list.append(log)
                     log = {}
-                self.Send_Big_Message(client_socket, pickle.dumps(log_list))
+                self.Send_Big_Message(client_socket, log_list)
                 self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket]}", self.clients[client_socket])
             ####################### cmd action-log #######################
             elif command[1] == 'action-log':
@@ -57,12 +57,12 @@ class Server():
                     log['workspace'] = list(dict.values())[9]
                     log_list.append(log)
                     log = {}
-                self.Send_Big_Message(client_socket, pickle.dumps(log_list))
+                self.Send_Big_Message(client_socket, log_list)
                 self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket]}", self.clients[client_socket])
             ####################### cmd all-script #######################
             elif command[1] == 'all-script':
                 script_list = self.db.Show_all_script()
-                self.Send_Big_Message(client_socket, pickle.dumps(script_list))
+                self.Send_Big_Message(client_socket, script_list)
                 self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket]}", self.clients[client_socket])
             ####################### cmd script-path #######################
             elif command[1] == 'script-path':
@@ -72,8 +72,30 @@ class Server():
         ####################### cmd edit #######################
         elif command[0] == 'edit':
             ####################### cmd script #######################
-            if command[1] == 'script':
-                pass
+            if command[1] == 'script' and command[2] == 'update':
+                ####################### cmd update #######################
+                while True:  # I try to get modified script from client
+                    report = self.Receive_Big_Message(client_socket)
+                    print(report)
+                    if report != False:
+                        update_script_content = report
+                        break
+                    else:
+                        pass
+                orig_script_data = self.db.Get_attrib_script(command[3])
+                orig_script = open(f"{orig_script_data['path']}" + f"{orig_script_data['script_name']}", mode="w+")
+                orig_script.write(update_script_content)
+                self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket]}", self.clients[client_socket])
+            #-------------------------------------------------------------#
+            elif command[1] == 'script':
+                script_data = self.db.Get_attrib_script(command[2])
+                script_content = open(f"{script_data['path']}" + f"{script_data['script_name']}", mode="r")
+
+                self.Send_Big_Message(client_socket, script_content.read()) # server send script content to client.
+
+                script_content.close()
+                self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket]}", self.clients[client_socket])
+
             ####################### cmd admin #######################
             elif command[1] == 'admin':
                 pass
@@ -140,6 +162,16 @@ class Server():
         except Exception:
             return False
 
+    def Receive_Big_Message(self, receiver_socket):
+        try:
+            message_header = receiver_socket.recv(self.HEADER_LENGTH)  # try to get first message from clients with 10 bytes.
+            if not len(message_header):  # if message_header was empty, client with to server send it
+                return False
+            message_length = int(message_header.decode("utf-8").strip()) # yes my message received XD, I should decode received message to utf-8 and calculate length.
+            return pickle.loads(receiver_socket.recv(message_length)) # we can receive message from server with new header_length size.
+        except Exception:
+            return False
+
     def Send_Message(self, sender_socket, message): # internal function to send messages.
         try:
             msg = message.encode('utf-8') # server encode message.
@@ -150,8 +182,9 @@ class Server():
 
     def Send_Big_Message(self, sender_socket, message):
         try:
-            msg_header = f"{len(message):<{self.HEADER_LENGTH}}".encode("utf-8") # server calculate length of message to allocated it for sending.
-            sender_socket.send(msg_header + message)
+            msg = pickle.dumps(message)
+            msg_header = f"{len(msg):<{self.HEADER_LENGTH}}".encode("utf-8") # server calculate length of message to allocated it for sending.
+            sender_socket.send(msg_header +  msg)
         except Exception:
             return False
 
@@ -214,7 +247,7 @@ class Server():
                             user = self.clients[notified_socket] # I access to {"header": message_header, "data": client_socket.recv(message_length)}.
                             # I get username that saved with socket in clients{}.
                             self.Instruction_Handler(message['data'][0], notified_socket) # Can check messages if client send keyword to server, this function can handle it.
-                            print(f"{self.Server_time()} message from '{user[0]}':  {message['data'][0]}")  # log
+                            print(f"{self.Server_time()} message from '{user}':  {message['data'][0]}")  # log
 
                 for notified_socket in exception_sockets: # if each client_socket exist on exception_socket, server remove it.
                     notified_socket.close()
