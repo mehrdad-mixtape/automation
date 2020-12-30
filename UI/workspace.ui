@@ -1,0 +1,967 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>WorkSpace_window</class>
+ <widget class="QMainWindow" name="WorkSpace_window">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1000</width>
+    <height>700</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1000</width>
+    <height>700</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1000</width>
+    <height>700</height>
+   </size>
+  </property>
+  <property name="font">
+   <font>
+    <weight>50</weight>
+    <italic>false</italic>
+    <bold>false</bold>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>Workspace</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>icon/2252295991582004497-128.png</normaloff>icon/2252295991582004497-128.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="gridLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>981</width>
+      <height>621</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QTabWidget" name="tabWidget">
+       <property name="font">
+        <font>
+         <weight>50</weight>
+         <italic>true</italic>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="monitoring_tab">
+        <attribute name="title">
+         <string>Monitoring</string>
+        </attribute>
+        <widget class="QGroupBox" name="groupBox_logging">
+         <property name="geometry">
+          <rect>
+           <x>410</x>
+           <y>10</y>
+           <width>561</width>
+           <height>571</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>13</pointsize>
+           <weight>75</weight>
+           <italic>false</italic>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="cursor">
+          <cursorShape>ArrowCursor</cursorShape>
+         </property>
+         <property name="mouseTracking">
+          <bool>false</bool>
+         </property>
+         <property name="toolTip">
+          <string>Logging status section</string>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="title">
+          <string>--------------------- Logging Status ---------------------</string>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
+         </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <widget class="QComboBox" name="comboBox_log_category">
+          <property name="geometry">
+           <rect>
+            <x>230</x>
+            <y>50</y>
+            <width>221</width>
+            <height>36</height>
+           </rect>
+          </property>
+          <property name="toolTip">
+           <string>Select log category</string>
+          </property>
+         </widget>
+         <widget class="QComboBox" name="comboBox_log_filter">
+          <property name="geometry">
+           <rect>
+            <x>230</x>
+            <y>90</y>
+            <width>221</width>
+            <height>36</height>
+           </rect>
+          </property>
+          <property name="toolTip">
+           <string>Select log filter</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_log_category">
+          <property name="geometry">
+           <rect>
+            <x>80</x>
+            <y>51</y>
+            <width>111</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
+            <underline>false</underline>
+            <strikeout>false</strikeout>
+           </font>
+          </property>
+          <property name="text">
+           <string>Log Category:</string>
+          </property>
+         </widget>
+         <widget class="QListView" name="listView_logs">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>221</y>
+            <width>541</width>
+            <height>341</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="cursor" stdset="0">
+           <cursorShape>ArrowCursor</cursorShape>
+          </property>
+          <property name="toolTip">
+           <string>Log view</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_log_filter">
+          <property name="geometry">
+           <rect>
+            <x>80</x>
+            <y>91</y>
+            <width>91</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Log Filter:</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="pushButton_show_log">
+          <property name="geometry">
+           <rect>
+            <x>230</x>
+            <y>170</y>
+            <width>221</width>
+            <height>38</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+            <weight>75</weight>
+            <italic>false</italic>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="toolTip">
+           <string>Show log button</string>
+          </property>
+          <property name="text">
+           <string>Show</string>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>icon/7774226221582004489-128.png</normaloff>icon/7774226221582004489-128.png</iconset>
+          </property>
+         </widget>
+         <widget class="QLineEdit" name="lineEdit_filter">
+          <property name="geometry">
+           <rect>
+            <x>230</x>
+            <y>130</y>
+            <width>221</width>
+            <height>36</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+            <weight>50</weight>
+            <italic>true</italic>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="toolTip">
+           <string>Type your filter</string>
+          </property>
+          <property name="placeholderText">
+           <string>Type your filter ex: mixtape</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_filter">
+          <property name="geometry">
+           <rect>
+            <x>80</x>
+            <y>131</y>
+            <width>111</width>
+            <height>31</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Filter Value:</string>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QGroupBox" name="groupBox_hardware">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>10</y>
+           <width>401</width>
+           <height>571</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>13</pointsize>
+           <weight>75</weight>
+           <italic>false</italic>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="cursor">
+          <cursorShape>CrossCursor</cursorShape>
+         </property>
+         <property name="toolTip">
+          <string>Hardware status section</string>
+         </property>
+         <property name="title">
+          <string>---------------- Hardware Status ----------------</string>
+         </property>
+         <widget class="QLabel" name="label_CPU">
+          <property name="geometry">
+           <rect>
+            <x>40</x>
+            <y>110</y>
+            <width>67</width>
+            <height>22</height>
+           </rect>
+          </property>
+          <property name="toolTip">
+           <string>CPU</string>
+          </property>
+          <property name="text">
+           <string>CPU:</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_mem">
+          <property name="geometry">
+           <rect>
+            <x>40</x>
+            <y>160</y>
+            <width>81</width>
+            <height>22</height>
+           </rect>
+          </property>
+          <property name="toolTip">
+           <string>Memory</string>
+          </property>
+          <property name="text">
+           <string>Memory:</string>
+          </property>
+         </widget>
+         <widget class="QLabel" name="label_disk">
+          <property name="geometry">
+           <rect>
+            <x>40</x>
+            <y>210</y>
+            <width>67</width>
+            <height>22</height>
+           </rect>
+          </property>
+          <property name="toolTip">
+           <string>Disk</string>
+          </property>
+          <property name="text">
+           <string>Disk:</string>
+          </property>
+         </widget>
+         <widget class="QProgressBar" name="progressBar_cpu">
+          <property name="geometry">
+           <rect>
+            <x>130</x>
+            <y>110</y>
+            <width>231</width>
+            <height>24</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+            <italic>true</italic>
+           </font>
+          </property>
+          <property name="toolTip">
+           <string>Cpu usage</string>
+          </property>
+          <property name="value">
+           <number>24</number>
+          </property>
+         </widget>
+         <widget class="QProgressBar" name="progressBar_memory">
+          <property name="geometry">
+           <rect>
+            <x>130</x>
+            <y>160</y>
+            <width>231</width>
+            <height>24</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+            <italic>true</italic>
+           </font>
+          </property>
+          <property name="toolTip">
+           <string>Memory usage</string>
+          </property>
+          <property name="value">
+           <number>24</number>
+          </property>
+         </widget>
+         <widget class="QProgressBar" name="progressBar_disk">
+          <property name="geometry">
+           <rect>
+            <x>130</x>
+            <y>210</y>
+            <width>231</width>
+            <height>24</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+            <italic>true</italic>
+           </font>
+          </property>
+          <property name="toolTip">
+           <string>Disk usage</string>
+          </property>
+          <property name="value">
+           <number>24</number>
+          </property>
+         </widget>
+         <widget class="QGroupBox" name="groupBox">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>260</y>
+            <width>361</width>
+            <height>191</height>
+           </rect>
+          </property>
+          <property name="title">
+           <string>Network:</string>
+          </property>
+          <widget class="QProgressBar" name="progressBar_net_up">
+           <property name="geometry">
+            <rect>
+             <x>120</x>
+             <y>50</y>
+             <width>221</width>
+             <height>24</height>
+            </rect>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>11</pointsize>
+             <italic>true</italic>
+            </font>
+           </property>
+           <property name="toolTip">
+            <string>Network upload status</string>
+           </property>
+           <property name="value">
+            <number>24</number>
+           </property>
+          </widget>
+          <widget class="QProgressBar" name="progressBar_net_down">
+           <property name="geometry">
+            <rect>
+             <x>120</x>
+             <y>100</y>
+             <width>221</width>
+             <height>24</height>
+            </rect>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>11</pointsize>
+             <italic>true</italic>
+            </font>
+           </property>
+           <property name="toolTip">
+            <string>Network download status</string>
+           </property>
+           <property name="value">
+            <number>24</number>
+           </property>
+          </widget>
+          <widget class="QProgressBar" name="progressBar_net_band">
+           <property name="geometry">
+            <rect>
+             <x>120</x>
+             <y>150</y>
+             <width>221</width>
+             <height>24</height>
+            </rect>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>11</pointsize>
+             <italic>true</italic>
+            </font>
+           </property>
+           <property name="toolTip">
+            <string>Network bandwidth status</string>
+           </property>
+           <property name="value">
+            <number>24</number>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_net_up">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>50</y>
+             <width>67</width>
+             <height>22</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>Upload</string>
+           </property>
+           <property name="text">
+            <string>Upload:</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_net_down">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>100</y>
+             <width>91</width>
+             <height>22</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>Download</string>
+           </property>
+           <property name="text">
+            <string>Download:</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_net_band">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>150</y>
+             <width>101</width>
+             <height>22</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>Bandwidth</string>
+           </property>
+           <property name="text">
+            <string>Bandwidth:</string>
+           </property>
+          </widget>
+         </widget>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="script_tab">
+        <attribute name="title">
+         <string>Script</string>
+        </attribute>
+        <widget class="QLabel" name="label_script">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>20</y>
+           <width>67</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <italic>false</italic>
+          </font>
+         </property>
+         <property name="toolTip">
+          <string>Scripts list</string>
+         </property>
+         <property name="text">
+          <string>Scripts:</string>
+         </property>
+        </widget>
+        <widget class="QComboBox" name="comboBox_script">
+         <property name="geometry">
+          <rect>
+           <x>90</x>
+           <y>20</y>
+           <width>201</width>
+           <height>36</height>
+          </rect>
+         </property>
+         <property name="toolTip">
+          <string>Select your script</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_path_script">
+         <property name="geometry">
+          <rect>
+           <x>310</x>
+           <y>20</y>
+           <width>41</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <italic>false</italic>
+          </font>
+         </property>
+         <property name="toolTip">
+          <string>Script path</string>
+         </property>
+         <property name="text">
+          <string>path:</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="lineEdit_path_script">
+         <property name="geometry">
+          <rect>
+           <x>370</x>
+           <y>20</y>
+           <width>591</width>
+           <height>36</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+         <property name="toolTip">
+          <string>Script path</string>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+         <property name="placeholderText">
+          <string>path://</string>
+         </property>
+        </widget>
+        <widget class="QTextEdit" name="textEdit_script">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>100</y>
+           <width>951</width>
+           <height>431</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <italic>false</italic>
+          </font>
+         </property>
+         <property name="cursor" stdset="0">
+          <cursorShape>IBeamCursor</cursorShape>
+         </property>
+         <property name="toolTip">
+          <string>Text edit script</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton_create_script">
+         <property name="geometry">
+          <rect>
+           <x>860</x>
+           <y>540</y>
+           <width>99</width>
+           <height>38</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <italic>false</italic>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="toolTip">
+          <string>Create script</string>
+         </property>
+         <property name="text">
+          <string>Create</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton_edit_script">
+         <property name="geometry">
+          <rect>
+           <x>750</x>
+           <y>540</y>
+           <width>99</width>
+           <height>38</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <italic>false</italic>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="toolTip">
+          <string>Edit script</string>
+         </property>
+         <property name="text">
+          <string>Edit</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton_delete_script">
+         <property name="geometry">
+          <rect>
+           <x>640</x>
+           <y>540</y>
+           <width>99</width>
+           <height>38</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <italic>false</italic>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="toolTip">
+          <string>Delete script</string>
+         </property>
+         <property name="text">
+          <string>Delete</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton_update_script">
+         <property name="geometry">
+          <rect>
+           <x>530</x>
+           <y>540</y>
+           <width>99</width>
+           <height>38</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <italic>false</italic>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="toolTip">
+          <string>Update script</string>
+         </property>
+         <property name="text">
+          <string>Update</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton_launch_script">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>540</y>
+           <width>99</width>
+           <height>38</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <italic>false</italic>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="toolTip">
+          <string>Launch script</string>
+         </property>
+         <property name="text">
+          <string>Launch</string>
+         </property>
+        </widget>
+        <widget class="QProgressBar" name="progressBar_process">
+         <property name="geometry">
+          <rect>
+           <x>120</x>
+           <y>543</y>
+           <width>401</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <italic>true</italic>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="cursor">
+          <cursorShape>ArrowCursor</cursorShape>
+         </property>
+         <property name="toolTip">
+          <string>Process</string>
+         </property>
+         <property name="value">
+          <number>24</number>
+         </property>
+        </widget>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1000</width>
+     <height>34</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuAdmin">
+    <property name="title">
+     <string>New</string>
+    </property>
+    <addaction name="actionNew_admin"/>
+    <addaction name="actionNew_user"/>
+    <addaction name="actionNew_server"/>
+   </widget>
+   <widget class="QMenu" name="menuUser">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actionEdit_admin"/>
+    <addaction name="actionEdit_user"/>
+    <addaction name="actionEdit_server"/>
+   </widget>
+   <widget class="QMenu" name="menuServer">
+    <property name="title">
+     <string>Delete</string>
+    </property>
+    <addaction name="actionDelete_admin"/>
+    <addaction name="actionDelete_user"/>
+    <addaction name="actionDelete_server"/>
+   </widget>
+   <widget class="QMenu" name="menuRemote">
+    <property name="title">
+     <string>Remote</string>
+    </property>
+    <addaction name="actionSSH"/>
+   </widget>
+   <addaction name="menuAdmin"/>
+   <addaction name="menuUser"/>
+   <addaction name="menuServer"/>
+   <addaction name="menuRemote"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="toolTip">
+    <string>Status bar section</string>
+   </property>
+  </widget>
+  <action name="actionNew_admin">
+   <property name="icon">
+    <iconset>
+     <normaloff>icon/469704211582004494-128.png</normaloff>icon/469704211582004494-128.png</iconset>
+   </property>
+   <property name="text">
+    <string>Admin</string>
+   </property>
+  </action>
+  <action name="actionNew_user">
+   <property name="icon">
+    <iconset>
+     <normaloff>icon/1388560951582004484-128.png</normaloff>icon/1388560951582004484-128.png</iconset>
+   </property>
+   <property name="text">
+    <string>User</string>
+   </property>
+  </action>
+  <action name="actionNew_server">
+   <property name="icon">
+    <iconset>
+     <normaloff>icon/18070417311582004489-128.png</normaloff>icon/18070417311582004489-128.png</iconset>
+   </property>
+   <property name="text">
+    <string>Server</string>
+   </property>
+  </action>
+  <action name="actionShow">
+   <property name="text">
+    <string>Show</string>
+   </property>
+  </action>
+  <action name="actionEdit_admin">
+   <property name="icon">
+    <iconset>
+     <normaloff>icon/469704211582004494-128.png</normaloff>icon/469704211582004494-128.png</iconset>
+   </property>
+   <property name="text">
+    <string>Admin</string>
+   </property>
+  </action>
+  <action name="actionEdit_user">
+   <property name="icon">
+    <iconset>
+     <normaloff>icon/1388560951582004484-128.png</normaloff>icon/1388560951582004484-128.png</iconset>
+   </property>
+   <property name="text">
+    <string>User</string>
+   </property>
+  </action>
+  <action name="actionEdit_server">
+   <property name="icon">
+    <iconset>
+     <normaloff>icon/18070417311582004489-128.png</normaloff>icon/18070417311582004489-128.png</iconset>
+   </property>
+   <property name="text">
+    <string>Server</string>
+   </property>
+  </action>
+  <action name="actionShow_2">
+   <property name="text">
+    <string>Show</string>
+   </property>
+  </action>
+  <action name="actionNew_3">
+   <property name="text">
+    <string>New</string>
+   </property>
+  </action>
+  <action name="actionEdit_3">
+   <property name="text">
+    <string>Edit</string>
+   </property>
+  </action>
+  <action name="actionDelete_admin">
+   <property name="icon">
+    <iconset>
+     <normaloff>icon/469704211582004494-128.png</normaloff>icon/469704211582004494-128.png</iconset>
+   </property>
+   <property name="text">
+    <string>Admin</string>
+   </property>
+  </action>
+  <action name="actionDelete_user">
+   <property name="icon">
+    <iconset>
+     <normaloff>icon/1388560951582004484-128.png</normaloff>icon/1388560951582004484-128.png</iconset>
+   </property>
+   <property name="text">
+    <string>User</string>
+   </property>
+  </action>
+  <action name="actionDelete_server">
+   <property name="icon">
+    <iconset>
+     <normaloff>icon/18070417311582004489-128.png</normaloff>icon/18070417311582004489-128.png</iconset>
+   </property>
+   <property name="text">
+    <string>Server</string>
+   </property>
+  </action>
+  <action name="actionShow_3">
+   <property name="text">
+    <string>Show</string>
+   </property>
+  </action>
+  <action name="actionShow_4">
+   <property name="text">
+    <string>Show</string>
+   </property>
+  </action>
+  <action name="actionSSH">
+   <property name="icon">
+    <iconset>
+     <normaloff>icon/4609047631582004492-128.png</normaloff>icon/4609047631582004492-128.png</iconset>
+   </property>
+   <property name="text">
+    <string>SSH</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
