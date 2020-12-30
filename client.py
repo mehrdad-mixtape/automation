@@ -24,14 +24,21 @@ class Client():
                 return False
             message_length = int(message_header.decode("utf-8").strip()) # yes my message received XD, I should decode received message to utf-8 and calculate length.
             return pickle.loads(receiver_socket.recv(message_length)) # we can receive message from server with new header_length size.
-        except Exception as e:
-            # print(e)
+        except Exception:
             return False
 
     def Send_Message(self, sender_socket, message):
         try:
             msg = message.encode('utf-8')
             msg_header = f"{len(msg):<{self.HEADER_LENGTH}}".encode("utf-8")
+            sender_socket.send(msg_header + msg)
+        except Exception:
+            return False
+
+    def Send_Big_Message(self, sender_socket, message):
+        try:
+            msg = pickle.dumps(message)
+            msg_header = f"{len(msg):<{self.HEADER_LENGTH}}".encode("utf-8") # server calculate length of message to allocated it for sending.
             sender_socket.send(msg_header + msg)
         except Exception:
             return False
