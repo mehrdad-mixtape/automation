@@ -17,6 +17,9 @@ class Admin():
     def Send_msg(self, msg):
         self.C.Send_Message(self.C.client_socket, msg)
 
+    def Send_B_msg(self, msg):
+        self.C.Send_Big_Message(self.C.client_socket, msg)
+
     def Recv_msg(self):
         return self.C.Receive_Message(self.C.client_socket)
 
