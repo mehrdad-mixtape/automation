@@ -5,7 +5,6 @@ import json
 
 
 ip_address = '192.168.119.100'
-interface = 'loopback0'
 username = 'test'
 password = 'test'
 
@@ -23,19 +22,19 @@ def get_token():
     print('We received token: %s' % token)
     return token
 
-def get_interface(token, interface):
+def set_ntp(token):
     """
-    Retrieve interface information from router.
+    Set NTP Server for the CSR 1000V router.
     """
-    
-    url = 'https://%s:55443/api/v1/interfaces/%s' % (ip_address, interface)
-    headers={ 'Content-Type': 'application/json', 'X-auth-token': token}
+    url = 'https://%s:55443/api/v1/global/ntp/servers' % (ip_address)
+    headers={ 'Content-Type': 'application/json', 'Accept':'application/json', 'X-auth-token': token}
 
-    response = requests.get(url, headers=headers, verify=False)
-    json_data = json.loads(response.text)
-    print("Here is the interface information: \n")
-    print(json.dumps(json_data, indent=4, separators=(',', ': ')))
+    payload = {
+	"ip-address": "111.100.100.100"
+        }
 
+    response = requests.post(url, headers=headers, json=payload, verify=False)
+    print('The router responds with status code: %s ' % response.status_code)
 
 # Disable unverified HTTPS request warnings.
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -43,5 +42,5 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # Get token.
 token = get_token()
 
-# GET interface information.
-get_interface(token, interface)
+#Call Def
+set_ntp(token)
