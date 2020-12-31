@@ -32,9 +32,9 @@ class Automation_BD:
             'record_date' : datetime.now().strftime("%y-%m-%d %H:%M:%S")
         }
         if self.admin_coll.insert_one(data).acknowledged == True:
-            return 'New admin created successfully'
+            return True
         else:
-            return 'Operation failed, please try again'
+            return False
 
     def Delete_admin(self, username, password):
         data = {
@@ -42,11 +42,11 @@ class Automation_BD:
         }
         if self.Get_attrib_admin(username, password) != False:
             if self.admin_coll.delete_one(data).acknowledged == True:
-                return 'Admin deleted successfully'
+                return True
             else:
-                return 'Operation failed, please try again'
+                return False
         else:
-            return f'Admin not found with this username: {username}'
+            return False
 
     def Update_admin(self, username, password, attrib, new_value):
         data = {
@@ -54,11 +54,11 @@ class Automation_BD:
         }
         if self.Get_attrib_admin(username, password) != False:
             if self.admin_coll.update_one({'username': username}, {"$set": data}).acknowledged == True:
-                return 'Operation complete'
+                return True
             else:
-                return 'Operation failed, please try again'
+                return False
         else:
-            return f'Admin not found with this username: {username}'
+            return False
 
     def Get_attrib_admin(self, username, password):
         data = {
@@ -90,9 +90,9 @@ class Automation_BD:
             'record_date': datetime.now().strftime("%y-%m-%d %H:%M:%S")
         }
         if self.user_coll.insert_one(data).acknowledged == True:
-            return 'New User created successfully'
+            return True
         else:
-            return 'Operation failed, please try again'
+            return False
 
     def Delete_user(self, username, password):
         data = {
@@ -100,11 +100,11 @@ class Automation_BD:
         }
         if self.Get_attrib_user(username, password) != False:
             if self.user_coll.delete_one(data).acknowledged == True:
-                return 'User deleted successfully'
+                return True
             else:
-                return 'Operation failed, please try again'
+                return False
         else:
-            return f'User not found with this username: {username}'
+            return False
 
     def Update_user(self, username, password, attrib, new_value):
         data = {
@@ -112,11 +112,11 @@ class Automation_BD:
         }
         if self.Get_attrib_user(username, password) != False:
             if self.user_coll.update_one({'username': username}, {"$set": data}).acknowledged == True:
-                return 'Operation complete'
+                return True
             else:
-                return 'Operation failed, please try again'
+                return False
         else:
-            return f'User not found with this username: {username}'
+            return False
 
     def Get_attrib_user(self, username, password):
         data = {
@@ -142,9 +142,9 @@ class Automation_BD:
             'port': port
         }
         if self.server_coll.insert_one(data).acknowledged == True:
-            return 'New server created successfully'
+            return True
         else:
-            return 'Operation failed, please try again'
+            return False
 
     def Delete_server(self, hostname, password):
         data = {
@@ -152,11 +152,11 @@ class Automation_BD:
         }
         if self.Get_attrib_server(hostname, password) != False:
             if self.server_coll.delete_one(data).acknowledged == True:
-                return 'Server deleted successfully'
+                return True
             else:
-                return 'Operation failed, please try again'
+                return False
         else:
-            return f'Server not found with this hostname: {hostname}'
+            return False
 
     def Update_server(self, hostname, password, attrib, new_value):
         data = {
@@ -164,11 +164,11 @@ class Automation_BD:
         }
         if self.Get_attrib_server(hostname, password) != False:
             if self.server_coll.update_one({'hostname': hostname}, {'$set': data}).acknowledged == True:
-                return 'Operation complete'
+                return True
             else:
-                return 'Operation failed, please try again'
+                return False
         else:
-            return f'Server not found with this hostname: {hostname}'
+            return False
 
     def Get_attrib_server(self, hostname, password):
         data = {
@@ -192,27 +192,27 @@ class Automation_BD:
             'record_date': datetime.now().strftime("%y-%m-%d %H:%M:%S")
         }
         if self.admin_workspace_coll.insert_one(data).acknowledged == True:
-            return f'New workspace created successfully for admin: {username}'
+            return True
         else:
-            return 'Operation failed, please try again'
+            return False
 
     def Delete_admin_workspace(self, username):
         data = {
             'name': 'ws_auto' + username
         }
         if self.admin_workspace_coll.delete_one(data).acknowledged == True:
-            return f'ws_auto{username} deleted successfully'
+            return False
         else:
-            return 'Operation failed, please try again'
+            return True
 
     def Update_admin_workspace(self, username, attrib, new_value):
         data = {
             attrib: new_value
         }
         if self.admin_workspace_coll.update_one({'owner': username}, {'$set': data}).acknowledged == True:
-            return 'Operation complete'
+            return True
         else:
-            return 'Operation failed, please try again'
+            return False
 
     def Get_attrib_admin_workspace(self, username):
         data = {
@@ -236,27 +236,27 @@ class Automation_BD:
             'record_date': datetime.now().strftime("%y-%m-%d %H:%M:%S")
         }
         if self.user_workspace_coll.insert_one(data).acknowledged == True:
-            return f'New workspace created successfully for user: {username}'
+            return True
         else:
-            return 'Operation failed, please try again'
+            return False
 
     def Delete_user_workspace(self, username):
         data = {
             'name': 'ws_auto' + username
         }
         if self.user_workspace_coll.delete_one(data).acknowledged == True:
-            return f'ws_auto{username} deleted successfully'
+            return True
         else:
-            return 'Operation failed, please try again'
+            return False
 
     def Update_user_workspace(self, username, attrib, new_value):
         data = {
             attrib: new_value
         }
         if self.user_workspace_coll.update_one({'owner': username}, {'$set': data}).acknowledged == True:
-            return 'Operation complete'
+            return True
         else:
-            return 'Operation failed, please try again'
+            return False
 
     def Get_attrib_user_workspace(self, username):
         data = {
@@ -330,9 +330,9 @@ class Automation_BD:
             'usability': usability
         }
         if self.script_coll.insert_one(data).acknowledged == True:
-            return f'New script with script_name: {script_name} on {path} was created'
+            return True
         else:
-            return f'Operation failed, for create new script {script_name} on {path}'
+            return False
 
     def Delete_script(self, script_name):
         data = {
@@ -340,11 +340,11 @@ class Automation_BD:
         }
         if self.Get_attrib_script(script_name) != False:
             if self.script_coll.delete_one(data).acknowledged == True:
-                return f'Script with script_name: {script_name} was deleted'
+                return True
             else:
-                return f'Operation failed for delete {script_name}'
+                return False
         else:
-            return f'Script not found with this name: {script_name}'
+            return False
 
     def Update_script(self, script_name, attrib, new_value):
         data = {
@@ -352,11 +352,11 @@ class Automation_BD:
         }
         if self.Get_attrib_script(script_name) != False:
             if self.script_coll.update_one({'script_name': script_name}, {'$set': data}).acknowledged == True:
-                return f'Script with script_name: {script_name} was updated: {attrib}:{new_value}'
+                return True
             else:
-                return f'Operation failed for update script_name: {script_name} with {attrib}:{new_value}'
+                return False
         else:
-            return f'Script not found with this name: {script_name}'
+            return True
 
     def Get_attrib_script(self, script_name):
         data = {
