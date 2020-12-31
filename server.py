@@ -118,7 +118,7 @@ class Server():
             elif command[1] == 'admin':
                 self.db.Insert_admin(command[2], command[3], command[4], command[5], command[6], command[7], command[8], command[9], command[10])
                 self.db.Insert_admin_workspace(command[2])
-                self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket]}", self.clients[client_socket])
+                self.db.Record_action_log(f"action # {command[0]} {command[1]} {command[2]} # from {self.clients[client_socket]}", self.clients[client_socket])
 
             ####################### cmd user #######################
             elif command[1] == 'user':
@@ -127,12 +127,12 @@ class Server():
                 else:
                     self.db.Insert_user(command[2], command[3], command[4], command[5], command[6], command[7], command[8], command[9], command[10], False)
                 self.db.Insert_user_workspace(command[2])
-                self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket]}", self.clients[client_socket])
+                self.db.Record_action_log(f"action # {command[0]} {command[1]} {command[2]} # from {self.clients[client_socket]}", self.clients[client_socket])
 
             ####################### cmd server #######################
             elif command[1] == 'server':
                 self.db.Insert_server(command[2], command[3], command[4], command[5], command[6])
-                self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket]}", self.clients[client_socket])
+                self.db.Record_action_log(f"action # {command[0]} {command[1]} {command[2]} # from {self.clients[client_socket]}", self.clients[client_socket])
 
         ####################### cmd del #######################
         elif command[0] == 'del':
@@ -145,15 +145,36 @@ class Server():
                     os.system(f"rm {script_data['path']}/{script_data['script_name']}")
                     self.db.Delete_script(script_data['script_name'])
                     self.Send_Message(client_socket, 'found')
+                    self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket]}", self.clients[client_socket])
             ####################### cmd admin #######################
             elif command[1] == 'admin':
-                pass
+                admin_data = self.db.Get_attrib_admin(command[2], command[3])
+                if admin_data == False: # admin not found
+                    self.Send_Message(client_socket, 'False')
+                else: # admin founded
+                    self.db.Delete_admin(command[2], command[3])
+                    self.db.Delete_admin_workspace(command[2])
+                    self.Send_Message(client_socket, 'True')
+                    self.db.Record_action_log(f"action # {command[0]} {command[1]} {command[2]} # from {self.clients[client_socket]}", self.clients[client_socket])
             ####################### cmd user #######################
             elif command[1] == 'user':
-                pass
+                user_data = self.db.Get_attrib_user(command[2], command[3])
+                if user_data == False:  # user not found
+                    self.Send_Message(client_socket, 'False')
+                else:  # user founded
+                    self.db.Delete_user(command[2], command[3])
+                    self.db.Delete_user_workspace(command[2])
+                    self.Send_Message(client_socket, 'True')
+                    self.db.Record_action_log(f"action # {command[0]} {command[1]} {command[2]} # from {self.clients[client_socket]}", self.clients[client_socket])
             ####################### cmd server #######################
             elif command[1] == 'server':
-                pass
+                server_data = self.db.Get_attrib_server(command[2], command[3])
+                if server_data == False:  # server not found
+                    self.Send_Message(client_socket, 'False')
+                else:  # server founded
+                    self.db.Delete_server(command[2], command[3])
+                    self.Send_Message(client_socket, 'True')
+                    self.db.Record_action_log(f"action # {command[0]} {command[1]} {command[2]} # from {self.clients[client_socket]}", self.clients[client_socket])
 
         ####################### cmd launch #######################
         elif command[0] == 'launch':
