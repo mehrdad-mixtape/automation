@@ -28,15 +28,21 @@ class Admin():
 
     ########################################## Admin management section ############# status: implimented ######################
     def Admin_add(self, username, password, first_name, last_name, birth_year, birth_month, birth_day, email, phone):
-        passwd = self.C.Hash(password)
-        msg = 'new ' + 'admin ' + f"{username} {passwd} {first_name} {last_name} {birth_year} {birth_month} {birth_day} {email} {phone}"
+        msg = 'new ' + 'admin ' + f"{username} {self.C.Hash(password)} {first_name} {last_name} {birth_year} {birth_month} {birth_day} {email} {phone}"
         self.Send_msg(msg)
 
     def Admin_del(self, username, password):
-        report1 = self.db.Delete_admin(username, self.C.Hash(password))
-        report2 = self.db.Delete_admin_workspace(username)
-        # self.db.Record_action_log(f'Admin {username} deleted and his workspace removed', username)
-        return report1 + '\n' + report2
+        msg = 'del ' + 'admin ' + f"{username} {self.C.Hash(password)}"
+        self.Send_msg(msg)
+        while True:  # I try to get logs from server
+            report = self.Recv_msg()
+            if report != False:
+                if report == 'False':
+                    return False
+                else:
+                    return True
+            else:
+                pass
 
     def Admin_update(self, username, password, attrib, new_value):
         report1, report2, report3 = '', '', ''
@@ -64,15 +70,21 @@ class Admin():
 
     ########################################## User management section ############# status: implemented ######################
     def User_add(self, username, password, first_name, last_name, birth_year, birth_month, birth_day, email, phone, permission):
-        passwd = self.C.Hash(password)
-        msg = 'new ' + 'user ' + f"{username} {passwd} {first_name} {last_name} {birth_year} {birth_month} {birth_day} {email} {phone} {permission}"
+        msg = 'new ' + 'user ' + f"{username} {self.C.Hash(password)} {first_name} {last_name} {birth_year} {birth_month} {birth_day} {email} {phone} {permission}"
         self.Send_msg(msg)
 
     def User_del(self, username, password):
-        report1 = self.db.Delete_user(username, self.C.Hash(password))
-        report2 = self.db.Delete_user_workspace(username)
-        # self.db.Record_action_log(f'User {username} deleted and his workspace removed', username)
-        return report1 + '\n' + report2
+        msg = 'del ' + 'user ' + f"{username} {self.C.Hash(password)}"
+        self.Send_msg(msg)
+        while True:  # I try to get logs from server
+            report = self.Recv_msg()
+            if report != False:
+                if report == 'False':
+                    return False
+                else:
+                    return True
+            else:
+                pass
 
     def User_update(self, username, password, attrib, new_value):
         report1, report2, report3 = '', '', ''
@@ -100,14 +112,21 @@ class Admin():
 
     ########################################## Server management section ############# status: implemented ######################
     def Server_add(self, hostname, password, domain, ip, port):
-        passwd = self.C.Hash(password)
-        msg = 'new ' + 'server ' + f"{hostname} {passwd} {domain} {ip} {port}"
+        msg = 'new ' + 'server ' + f"{hostname} {self.C.Hash(password)} {domain} {ip} {port}"
         self.Send_msg(msg)
 
     def Server_del(self, hostname, password):
-        report = self.db.Delete_server(hostname, self.C.Hash(password))
-        # self.db.Record_action_log(f'Server with hostname: {hostname} and ip/port: {ip}:{port} deleted', hostname)
-        return report
+        msg = 'del ' + 'server ' + f"{hostname} {self.C.Hash(password)}"
+        self.Send_msg(msg)
+        while True:  # I try to get logs from server
+            report = self.Recv_msg()
+            if report != False:
+                if report == 'False':
+                    return False
+                else:
+                    return True
+            else:
+                pass
 
     def Server_update(self, hostname, password, attrib, new_value):
         if attrib == 'password':
