@@ -167,7 +167,6 @@ class Ui_Create_New_Window(object):
         self.calendar.setToolTip(_translate("Create_New_Window", "Select your Birshdate"))
         self.comboBox_target.setToolTip(_translate("Create_New_Window", "Select your target"))
 
-
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
