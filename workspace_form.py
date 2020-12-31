@@ -736,8 +736,6 @@ class Ui_WorkSpace_window(object):
                     self.statusbar.showMessage(f'status: {username}, you login to the server successfully')
                     self.Load_combobox_script()
 
-
-
             elif self.password2_lineEdit.isReadOnly() == False:
                 self.user = normal_user.User()
                 report = self.user.Login(ip, int(port), username, passwd1, 'normal_user') # passwd2 is empty
@@ -1290,7 +1288,7 @@ class Ui_Create_New_Window(object):
                     ui_1.statusbar.showMessage(f"New User {U_name} Created successfully")
                     create_new_window.close()
                 else:
-                    ui_1.user.User_add(U_name, Passwd, F_name, L_name, Y, M, D, Email, Phone)
+                    ui_1.user.User_add(U_name, Passwd, F_name, L_name, Y, M, D, Email, Phone, False)
                     ui_1.statusbar.showMessage(f"New User {U_name} Created successfully", False)
                     create_new_window.close()
     def Cancel_Button(self):
@@ -1432,6 +1430,7 @@ class Ui_New_Server_Window(object):
         self.lineEdit_Password = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEdit_Password.setGeometry(QtCore.QRect(150, 120, 211, 36))
         self.lineEdit_Password.setObjectName("lineEdit_Password")
+        self.lineEdit_Password.setEchoMode(QtWidgets.QLineEdit.Password)
         self.lineEdit_Domain = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEdit_Domain.setGeometry(QtCore.QRect(150, 160, 211, 36))
         font = QtGui.QFont()
@@ -1515,7 +1514,23 @@ class Ui_New_Server_Window(object):
     def Ok_Button(self):
         ui_1.monitoring_tab.setDisabled(False)
         ui_1.script_tab.setDisabled(False)
-        create_new_server_window.close()
+        H_name = self.lineEdit_Hostname.text()
+        Passwd = self.lineEdit_Password.text()
+        D_name = self.lineEdit_Domain.text()
+        ip = self.lineEdit_IP.text()
+        port = self.lineEdit_Port.text()
+        if (H_name == "") or (Passwd == "") or (D_name == ""):
+            ui_1.Show_notify_bad_input("5")
+        elif (len(ip) < 7) or (len(ip) >= 16) or (ip == ""):
+            ui_1.Show_notify_bad_input("2")
+        elif port == "":
+            ui_1.Show_notify_bad_input("3")
+        elif int(port) <= 0 or int(port) > 65536:
+            ui_1.Show_notify_bad_input("3")
+        else:
+            ui_1.user.Server_add(H_name, Passwd, D_name, ip, port)
+            ui_1.statusbar.showMessage(f"New server {H_name} Created successfully")
+            create_new_server_window.close()
     def Cancel_Button(self):
         ui_1.monitoring_tab.setDisabled(False)
         ui_1.script_tab.setDisabled(False)
