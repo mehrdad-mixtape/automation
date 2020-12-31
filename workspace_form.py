@@ -1304,95 +1304,6 @@ class Ui_Create_New_Window(object):
             self.radioButton_no.setDisabled(False)
             self.radioButton_yes.setDisabled(False)
 
-class Ui_Delete_Window(object):
-    def SetupUi_del(self, Delete_Window):
-        Delete_Window.setObjectName("Delete_Window")
-        Delete_Window.resize(400, 258)
-        Delete_Window.setGeometry(88, 170, 400, 700)
-        Delete_Window.setMinimumSize(QtCore.QSize(400, 258))
-        Delete_Window.setMaximumSize(QtCore.QSize(400, 258))
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("../icon/2252295991582004497-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        Delete_Window.setWindowIcon(icon)
-        self.centralwidget = QtWidgets.QWidget(Delete_Window)
-        self.centralwidget.setObjectName("centralwidget")
-        self.comboBox_target = QtWidgets.QComboBox(self.centralwidget)
-        self.comboBox_target.setGeometry(QtCore.QRect(200, 30, 171, 36))
-        self.comboBox_target.setObjectName("comboBox_target")
-
-        self.pushButton_cancel = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_cancel.setGeometry(QtCore.QRect(280, 200, 99, 38))
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("../icon/12355707351582004488-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.pushButton_cancel.setIcon(icon1)
-        self.pushButton_cancel.setObjectName("pushButton_cancel")
-        ############################ Cancel Signal ############################
-        self.pushButton_cancel.clicked.connect(lambda: self.Cancel_Button())
-
-        self.pushButton_ok = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_ok.setGeometry(QtCore.QRect(170, 200, 99, 38))
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("../icon/7774226221582004489-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.pushButton_ok.setIcon(icon2)
-        self.pushButton_ok.setObjectName("pushButton_ok")
-        ############################ Ok Signal ############################
-        self.pushButton_ok.clicked.connect(lambda: self.Ok_Button())
-
-        self.lineEdit_Username = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit_Username.setGeometry(QtCore.QRect(160, 80, 211, 36))
-        self.lineEdit_Username.setObjectName("lineEdit_Username")
-        self.lineEdit_Password = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit_Password.setGeometry(QtCore.QRect(160, 120, 211, 36))
-        self.lineEdit_Password.setObjectName("lineEdit_Password")
-        self.label_Username = QtWidgets.QLabel(self.centralwidget)
-        self.label_Username.setGeometry(QtCore.QRect(40, 90, 101, 22))
-        font = QtGui.QFont()
-        font.setBold(True)
-        font.setWeight(75)
-        self.label_Username.setFont(font)
-        self.label_Username.setObjectName("label_Username")
-        self.label_Password = QtWidgets.QLabel(self.centralwidget)
-        self.label_Password.setGeometry(QtCore.QRect(40, 130, 81, 22))
-        font = QtGui.QFont()
-        font.setBold(True)
-        font.setWeight(75)
-        self.label_Password.setFont(font)
-        self.label_Password.setObjectName("label_Password")
-        self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(10, 20, 161, 51))
-        font = QtGui.QFont()
-        font.setPointSize(20)
-        font.setBold(True)
-        font.setWeight(75)
-        self.label.setFont(font)
-        self.label.setAlignment(QtCore.Qt.AlignCenter)
-        self.label.setObjectName("label")
-        Delete_Window.setCentralWidget(self.centralwidget)
-
-        self.RetranslateUi_del(Delete_Window)
-        QtCore.QMetaObject.connectSlotsByName(Delete_Window)
-
-    def RetranslateUi_del(self, Delete_Window):
-        _translate = QtCore.QCoreApplication.translate
-        Delete_Window.setWindowTitle(_translate("Delete_Window", "Delete"))
-        self.comboBox_target.setToolTip(_translate("Delete_Window", "Select your target"))
-        self.pushButton_cancel.setText(_translate("Delete_Window", "Cancel"))
-        self.pushButton_ok.setText(_translate("Delete_Window", "OK"))
-        self.lineEdit_Username.setToolTip(_translate("Delete_Window", "Enter Username or Hostname"))
-        self.lineEdit_Password.setToolTip(_translate("Delete_Window", "Enter Password"))
-        self.label_Username.setText(_translate("Delete_Window", "User or Host:"))
-        self.label_Password.setText(_translate("Delete_Window", "Password:"))
-        self.label.setText(_translate("Delete_Window", "Delete one"))
-
-    def Ok_Button(self):
-        ui_1.monitoring_tab.setDisabled(False)
-        ui_1.script_tab.setDisabled(False)
-        delete_window.close()
-    def Cancel_Button(self):
-        ui_1.monitoring_tab.setDisabled(False)
-        ui_1.script_tab.setDisabled(False)
-        delete_window.close()
-
 class Ui_New_Server_Window(object):
     def SetupUi_newserver(self, New_Server_Window):
         New_Server_Window.setObjectName("New_Server_Window")
@@ -1653,6 +1564,119 @@ class Ui_Update_Window(object):
         ui_1.monitoring_tab.setDisabled(False)
         ui_1.script_tab.setDisabled(False)
         update_window.close()
+
+class Ui_Delete_Window(object):
+    def SetupUi_del(self, Delete_Window):
+        Delete_Window.setObjectName("Delete_Window")
+        Delete_Window.resize(400, 258)
+        Delete_Window.setGeometry(88, 170, 400, 700)
+        Delete_Window.setMinimumSize(QtCore.QSize(400, 258))
+        Delete_Window.setMaximumSize(QtCore.QSize(400, 258))
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("../icon/2252295991582004497-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        Delete_Window.setWindowIcon(icon)
+        self.centralwidget = QtWidgets.QWidget(Delete_Window)
+        self.centralwidget.setObjectName("centralwidget")
+        self.comboBox_target = QtWidgets.QComboBox(self.centralwidget)
+        self.comboBox_target.setGeometry(QtCore.QRect(200, 30, 171, 36))
+        self.comboBox_target.setObjectName("comboBox_target")
+        self.comboBox_target.addItems(['Admin', 'User', 'Server'])
+
+        self.pushButton_cancel = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_cancel.setGeometry(QtCore.QRect(280, 200, 99, 38))
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap("../icon/12355707351582004488-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.pushButton_cancel.setIcon(icon1)
+        self.pushButton_cancel.setObjectName("pushButton_cancel")
+        ############################ Cancel Signal ############################
+        self.pushButton_cancel.clicked.connect(lambda: self.Cancel_Button())
+
+        self.pushButton_ok = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_ok.setGeometry(QtCore.QRect(170, 200, 99, 38))
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap("../icon/7774226221582004489-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.pushButton_ok.setIcon(icon2)
+        self.pushButton_ok.setObjectName("pushButton_ok")
+        ############################ Ok Signal ############################
+        self.pushButton_ok.clicked.connect(lambda: self.Ok_Button())
+
+        self.lineEdit_Username = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEdit_Username.setGeometry(QtCore.QRect(160, 80, 211, 36))
+        self.lineEdit_Username.setObjectName("lineEdit_Username")
+        self.lineEdit_Password = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEdit_Password.setGeometry(QtCore.QRect(160, 120, 211, 36))
+        self.lineEdit_Password.setObjectName("lineEdit_Password")
+        self.lineEdit_Password.setEchoMode(QtWidgets.QLineEdit.Password)
+        self.label_Username = QtWidgets.QLabel(self.centralwidget)
+        self.label_Username.setGeometry(QtCore.QRect(40, 90, 101, 22))
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_Username.setFont(font)
+        self.label_Username.setObjectName("label_Username")
+        self.label_Password = QtWidgets.QLabel(self.centralwidget)
+        self.label_Password.setGeometry(QtCore.QRect(40, 130, 81, 22))
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_Password.setFont(font)
+        self.label_Password.setObjectName("label_Password")
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label.setGeometry(QtCore.QRect(10, 20, 161, 51))
+        font = QtGui.QFont()
+        font.setPointSize(20)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label.setFont(font)
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
+        self.label.setObjectName("label")
+        Delete_Window.setCentralWidget(self.centralwidget)
+
+        self.RetranslateUi_del(Delete_Window)
+        QtCore.QMetaObject.connectSlotsByName(Delete_Window)
+
+    def RetranslateUi_del(self, Delete_Window):
+        _translate = QtCore.QCoreApplication.translate
+        Delete_Window.setWindowTitle(_translate("Delete_Window", "Delete"))
+        self.comboBox_target.setToolTip(_translate("Delete_Window", "Select your target"))
+        self.pushButton_cancel.setText(_translate("Delete_Window", "Cancel"))
+        self.pushButton_ok.setText(_translate("Delete_Window", "OK"))
+        self.lineEdit_Username.setToolTip(_translate("Delete_Window", "Enter Username or Hostname"))
+        self.lineEdit_Password.setToolTip(_translate("Delete_Window", "Enter Password"))
+        self.label_Username.setText(_translate("Delete_Window", "User or Host:"))
+        self.label_Password.setText(_translate("Delete_Window", "Password:"))
+        self.label.setText(_translate("Delete_Window", "Delete one"))
+
+    def Ok_Button(self):
+        ui_1.monitoring_tab.setDisabled(False)
+        ui_1.script_tab.setDisabled(False)
+        H_or_U = self.lineEdit_Username.text()
+        Passwd = self.lineEdit_Password.text()
+        if self.comboBox_target.currentText() == 'Admin':
+            if ui_1.user.Admin_del(H_or_U, Passwd) == False:
+                ui_1.statusbar.showMessage("Admin not found !")
+            else:
+                ui_1.statusbar.showMessage(f"Admin {H_or_U} deleted successfully")
+                delete_window.close()
+
+        elif self.comboBox_target.currentText() == 'User':
+            if ui_1.user.User_del(H_or_U, Passwd) == False:
+                ui_1.statusbar.showMessage("User not found !")
+            else:
+                ui_1.statusbar.showMessage(f"User {H_or_U} deleted successfully")
+                delete_window.close()
+
+        elif self.comboBox_target.currentText() == 'Server':
+            if ui_1.user.Server_del(H_or_U, Passwd) == False:
+                ui_1.statusbar.showMessage("Server not found !")
+            else:
+                ui_1.statusbar.showMessage(f"Server {H_or_U} deleted successfully")
+                delete_window.close()
+
+    def Cancel_Button(self):
+        ui_1.monitoring_tab.setDisabled(False)
+        ui_1.script_tab.setDisabled(False)
+        delete_window.close()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)  # create a application and get it system argument.
