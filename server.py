@@ -122,13 +122,17 @@ class Server():
 
             ####################### cmd user #######################
             elif command[1] == 'user':
-                self.db.Insert_user(command[2], command[3], command[4], command[5], command[6], command[7], command[8], command[9], command[10], command[11])
+                if command[11] == "True":
+                    self.db.Insert_user(command[2], command[3], command[4], command[5], command[6], command[7], command[8], command[9], command[10], True)
+                else:
+                    self.db.Insert_user(command[2], command[3], command[4], command[5], command[6], command[7], command[8], command[9], command[10], False)
                 self.db.Insert_user_workspace(command[2])
                 self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket]}", self.clients[client_socket])
 
             ####################### cmd server #######################
             elif command[1] == 'server':
-                pass
+                self.db.Insert_server(command[2], command[3], command[4], command[5], command[6])
+                self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket]}", self.clients[client_socket])
 
         ####################### cmd del #######################
         elif command[0] == 'del':
