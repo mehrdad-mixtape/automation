@@ -156,7 +156,6 @@ class Ui_WorkSpace_window(object):
         self.admin_radioButton.setIcon(icon2)
         self.admin_radioButton.setFont(font)
         ###################### remember place setChecked on user_radiobutton #############
-        self.admin_radioButton.setChecked(True)
         # self.admin_radioButton.setChecked(True or False)
         # self.admin_radioButton.setIconSize(QtCore.QSize(40,40))
         self.admin_radioButton.toggled.connect(lambda: self.Admin_radiobutton())
@@ -166,7 +165,9 @@ class Ui_WorkSpace_window(object):
         self.user_radioButton.setObjectName("user_radioButton")
         self.user_radioButton.setIcon(icon3)
         self.user_radioButton.setFont(font)
+        self.user_radioButton.setChecked(True)
         self.user_radioButton.toggled.connect(lambda: self.User_radiobutton())
+
 
         self.password2_lineEdit = QtWidgets.QLineEdit(self.login_tab)
         self.password2_lineEdit.setGeometry(QtCore.QRect(400, 360, 221, 36))
@@ -717,7 +718,7 @@ class Ui_WorkSpace_window(object):
         elif (passwd2 == "") and (self.password2_lineEdit.isReadOnly() == False):
             self.Show_notify_bad_input("4")
         else: # ok admin want's to login or normal user?.
-            if self.password2_lineEdit.isReadOnly() == True:
+            if self.password2_lineEdit.isReadOnly() == False:
                 self.user = admin.Admin()
                 report = self.user.Login(ip, int(port), username, passwd1 + passwd2, 'admin') # passwd2 is not empty
 
@@ -737,7 +738,7 @@ class Ui_WorkSpace_window(object):
                     self.statusbar.showMessage(f'status: {username}, you login to the server successfully')
                     self.Load_combobox_script()
 
-            elif self.password2_lineEdit.isReadOnly() == False:
+            elif self.password2_lineEdit.isReadOnly() == True:
                 self.user = normal_user.User()
                 report = self.user.Login(ip, int(port), username, passwd1, 'normal_user') # passwd2 is empty
 
@@ -1085,7 +1086,7 @@ class Ui_Create_script_Window(object):
         else:
             ui_1.user.Create_script(script_name, path, usability)
             ui_1.Load_combobox_script()
-            ui_1.statusbar.showMessage(f"Dear {self.username_lineEdit.text()}, new {script_name} create")
+            ui_1.statusbar.showMessage(f"Dear {self.lineEdit_script_name.text()}, new {script_name} create")
             create_script_window.close()
     def Cancel_Button(self):
         ui_1.pushButton_edit_script.setDisabled(False)
