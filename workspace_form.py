@@ -232,11 +232,12 @@ class Ui_WorkSpace_window(object):
         self.comboBox_log_category.setGeometry(QtCore.QRect(230, 50, 221, 36))
         self.comboBox_log_category.setObjectName("comboBox_log_category")
         self.comboBox_log_category.addItems(['Login','Action'])
+        ########################### comboBox_script Signal ###########################
+        self.comboBox_log_category.activated.connect(lambda: self.Load_comboBox_log_filter())
 
         self.comboBox_log_filter = QtWidgets.QComboBox(self.groupBox_logging)
         self.comboBox_log_filter.setGeometry(QtCore.QRect(230, 90, 221, 36))
         self.comboBox_log_filter.setObjectName("comboBox_log_filter")
-        self.comboBox_log_filter.addItems(['year','mouth','day','hour','owner', 'username','workspace'])
 
         self.label_log_category = QtWidgets.QLabel(self.groupBox_logging)
         self.label_log_category.setGeometry(QtCore.QRect(80, 51, 111, 31))
@@ -844,7 +845,14 @@ class Ui_WorkSpace_window(object):
         self.user.Launch_script(self.comboBox_script.currentText())
         self.statusbar.showMessage(f"Dear {self.username_lineEdit.text()}, {self.comboBox_script.currentText()} launched successfully")
 
-    ################ Button ##################
+    ################ combobox ##################
+    def Load_comboBox_log_filter(self):
+        if self.comboBox_log_category.currentText() == 'Login':
+            self.comboBox_log_filter.clear()
+            self.comboBox_log_filter.addItems(['year', 'mouth', 'day', 'hour', 'username', 'workspace'])
+        elif self.comboBox_log_category.currentText() == 'Action':
+            self.comboBox_log_filter.clear()
+            self.comboBox_log_filter.addItems(['year', 'mouth', 'day', 'hour', 'owner', 'workspace'])
     def Load_combobox_script(self):
         self.comboBox_script.clear()
         for dict in self.user.Load_all_script():
@@ -869,12 +877,20 @@ class Ui_WorkSpace_window(object):
 
     ################ action Menu bar ##################
     def AcNew(self):
+        self.monitoring_tab.setDisabled(True)
+        self.script_tab.setDisabled(True)
         create_new_window.show()
     def AcNewserv(self):
+        self.monitoring_tab.setDisabled(True)
+        self.script_tab.setDisabled(True)
         create_new_server_window.show()
     def AcEdit(self):
+        self.monitoring_tab.setDisabled(True)
+        self.script_tab.setDisabled(True)
         update_window.show()
     def AcDel(self):
+        self.monitoring_tab.setDisabled(True)
+        self.script_tab.setDisabled(True)
         delete_window.show()
     def AcRemote(self):
         os.system('Konsole || gnome-terminal')
@@ -883,6 +899,7 @@ class Ui_WorkSpace_window(object):
         self.Show_notify_fail_login("3")
         workspace_window.close()
 
+    ################ notify ##################
     def Show_notify_fail_login(self, flag): # Internal function
         if flag == "1":
             self.statusbar.showMessage("status: Connection Error")
@@ -946,10 +963,18 @@ class Ui_WorkSpace_window(object):
             msg.setStandardButtons(QMessageBox.Ok)
             msg.setDefaultButton(QMessageBox.Ok)
             msg.exec_()
-        if flag == "4": # administration password
+        elif flag == "4": # administration password
             msg = QMessageBox()
             msg.setWindowTitle("Notify")
             msg.setText("Please fill Administration password field!")
+            msg.setIcon(QMessageBox.Warning)
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.setDefaultButton(QMessageBox.Ok)
+            msg.exec_()
+        elif flag == "5":
+            msg = QMessageBox()
+            msg.setWindowTitle("Notify")
+            msg.setText("Please fill all field")
             msg.setIcon(QMessageBox.Warning)
             msg.setStandardButtons(QMessageBox.Ok)
             msg.setDefaultButton(QMessageBox.Ok)
@@ -1014,7 +1039,7 @@ class Ui_Create_script_Window(object):
         icon1.addPixmap(QtGui.QPixmap("UI/../icon/12355707351582004488-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_cancel.setIcon(icon1)
         self.pushButton_cancel.setObjectName("pushButton_cancel")
-        ############################ Ok Signal ############################
+        ############################ Cancel Signal ############################
         self.pushButton_cancel.clicked.connect(lambda: self.Cancel_Button())
 
         self.pushButton_ok = QtWidgets.QPushButton(self.centralwidget)
@@ -1025,6 +1050,7 @@ class Ui_Create_script_Window(object):
         self.pushButton_ok.setObjectName("pushButton_ok")
         ############################ Ok Signal ############################
         self.pushButton_ok.clicked.connect(lambda: self.Ok_Button())
+
         Create_script_Window.setCentralWidget(self.centralwidget)
 
         self.RetranslateUi_create_script(Create_script_Window)
@@ -1080,18 +1106,25 @@ class Ui_Create_New_Window(object):
         Create_New_Window.setToolTip("")
         self.centralwidget = QtWidgets.QWidget(Create_New_Window)
         self.centralwidget.setObjectName("centralwidget")
+
         self.pushButton_ok = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_ok.setGeometry(QtCore.QRect(180, 650, 99, 38))
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap("icon/7774226221582004489-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_ok.setIcon(icon1)
         self.pushButton_ok.setObjectName("pushButton_ok")
+        ############################ Ok Signal ############################
+        self.pushButton_ok.clicked.connect(lambda: self.Ok_Button())
+
         self.pushButton_cancel = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_cancel.setGeometry(QtCore.QRect(290, 650, 99, 38))
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap("icon/12355707351582004488-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_cancel.setIcon(icon2)
         self.pushButton_cancel.setObjectName("pushButton_cancel")
+        ############################ Cancel Signal ############################
+        self.pushButton_cancel.clicked.connect(lambda: self.Cancel_Button())
+
         self.lineEdit_Username = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEdit_Username.setGeometry(QtCore.QRect(160, 80, 211, 36))
         self.lineEdit_Username.setObjectName("lineEdit_Username")
@@ -1104,6 +1137,7 @@ class Ui_Create_New_Window(object):
         self.label_Username.setObjectName("label_Username")
         self.lineEdit_Password = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEdit_Password.setGeometry(QtCore.QRect(160, 120, 211, 36))
+        self.lineEdit_Password.setEchoMode(QtWidgets.QLineEdit.Password)
         self.lineEdit_Password.setObjectName("lineEdit_Password")
         self.lineEdit_Fname = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEdit_Fname.setGeometry(QtCore.QRect(160, 160, 211, 36))
@@ -1175,12 +1209,14 @@ class Ui_Create_New_Window(object):
         self.label_9.setFont(font)
         self.label_9.setAlignment(QtCore.Qt.AlignCenter)
         self.label_9.setObjectName("label_9")
+
         self.radioButton_yes = QtWidgets.QRadioButton(self.centralwidget)
         self.radioButton_yes.setGeometry(QtCore.QRect(150, 600, 61, 26))
         self.radioButton_yes.setObjectName("radioButton_yes")
         self.radioButton_no = QtWidgets.QRadioButton(self.centralwidget)
         self.radioButton_no.setGeometry(QtCore.QRect(210, 600, 61, 26))
         self.radioButton_no.setObjectName("radioButton_no")
+
         self.calendar = QtWidgets.QCalendarWidget(self.centralwidget)
         self.calendar.setGeometry(QtCore.QRect(40, 280, 331, 221))
         self.calendar.setMinimumSize(QtCore.QSize(331, 221))
@@ -1194,6 +1230,10 @@ class Ui_Create_New_Window(object):
         self.comboBox_target = QtWidgets.QComboBox(self.centralwidget)
         self.comboBox_target.setGeometry(QtCore.QRect(200, 30, 171, 36))
         self.comboBox_target.setObjectName("comboBox_target")
+        self.comboBox_target.addItems(['Admin', 'User'])
+        ########################### comboBox_script Signal ###########################
+        self.comboBox_target.activated.connect(lambda: self.Radio_Y_N())
+
         Create_New_Window.setCentralWidget(self.centralwidget)
 
         self.RetranslateUi_create_new(Create_New_Window)
@@ -1224,6 +1264,48 @@ class Ui_Create_New_Window(object):
         self.calendar.setToolTip(_translate("Create_New_Window", "Select your Birshdate"))
         self.comboBox_target.setToolTip(_translate("Create_New_Window", "Select your target"))
 
+    def Ok_Button(self):
+        ui_1.monitoring_tab.setDisabled(False)
+        ui_1.script_tab.setDisabled(False)
+        U_name = self.lineEdit_Username.text()
+        Passwd = self.lineEdit_Password.text()
+        F_name = self.lineEdit_Fname.text()
+        L_name = self.lineEdit_Lname.text()
+        Email = self.lineEdit_Email.text()
+        Phone = self.lineEdit_Phone.text()
+        D = str(self.calendar.selectedDate().day())
+        M = str(self.calendar.selectedDate().month())
+        Y = str(self.calendar.selectedDate().year())
+        if U_name == '' or Passwd == '' or F_name == '' or L_name == '' \
+                or Email == '' or Phone == '' or D == '' or M == '' or Y == '':
+            ui_1.Show_notify_bad_input("5")
+        else:
+            if self.comboBox_target.currentText() == 'Admin':
+                ui_1.user.Admin_add(U_name, Passwd, F_name, L_name, Y, M, D, Email, Phone)
+                ui_1.statusbar.showMessage(f"New Admin {U_name} Created successfully")
+                create_new_window.close()
+            else:
+                if self.radioButton_yes.isChecked() == True:
+                    ui_1.user.User_add(U_name, Passwd, F_name, L_name, Y, M, D, Email, Phone, True)
+                    ui_1.statusbar.showMessage(f"New User {U_name} Created successfully")
+                    create_new_window.close()
+                else:
+                    ui_1.user.User_add(U_name, Passwd, F_name, L_name, Y, M, D, Email, Phone)
+                    ui_1.statusbar.showMessage(f"New User {U_name} Created successfully", False)
+                    create_new_window.close()
+    def Cancel_Button(self):
+        ui_1.monitoring_tab.setDisabled(False)
+        ui_1.script_tab.setDisabled(False)
+        create_new_window.close()
+
+    def Radio_Y_N(self):
+        if self.comboBox_target.currentText() == 'Admin':
+            self.radioButton_no.setDisabled(True)
+            self.radioButton_yes.setDisabled(True)
+        else:
+            self.radioButton_no.setDisabled(False)
+            self.radioButton_yes.setDisabled(False)
+
 class Ui_Delete_Window(object):
     def SetupUi_del(self, Delete_Window):
         Delete_Window.setObjectName("Delete_Window")
@@ -1239,18 +1321,25 @@ class Ui_Delete_Window(object):
         self.comboBox_target = QtWidgets.QComboBox(self.centralwidget)
         self.comboBox_target.setGeometry(QtCore.QRect(200, 30, 171, 36))
         self.comboBox_target.setObjectName("comboBox_target")
+
         self.pushButton_cancel = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_cancel.setGeometry(QtCore.QRect(280, 200, 99, 38))
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap("../icon/12355707351582004488-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_cancel.setIcon(icon1)
         self.pushButton_cancel.setObjectName("pushButton_cancel")
+        ############################ Cancel Signal ############################
+        self.pushButton_cancel.clicked.connect(lambda: self.Cancel_Button())
+
         self.pushButton_ok = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_ok.setGeometry(QtCore.QRect(170, 200, 99, 38))
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap("../icon/7774226221582004489-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_ok.setIcon(icon2)
         self.pushButton_ok.setObjectName("pushButton_ok")
+        ############################ Ok Signal ############################
+        self.pushButton_ok.clicked.connect(lambda: self.Ok_Button())
+
         self.lineEdit_Username = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEdit_Username.setGeometry(QtCore.QRect(160, 80, 211, 36))
         self.lineEdit_Username.setObjectName("lineEdit_Username")
@@ -1297,6 +1386,15 @@ class Ui_Delete_Window(object):
         self.label_Password.setText(_translate("Delete_Window", "Password:"))
         self.label.setText(_translate("Delete_Window", "Delete one"))
 
+    def Ok_Button(self):
+        ui_1.monitoring_tab.setDisabled(False)
+        ui_1.script_tab.setDisabled(False)
+        delete_window.close()
+    def Cancel_Button(self):
+        ui_1.monitoring_tab.setDisabled(False)
+        ui_1.script_tab.setDisabled(False)
+        delete_window.close()
+
 class Ui_New_Server_Window(object):
     def SetupUi_newserver(self, New_Server_Window):
         New_Server_Window.setObjectName("New_Server_Window")
@@ -1309,18 +1407,25 @@ class Ui_New_Server_Window(object):
         New_Server_Window.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(New_Server_Window)
         self.centralwidget.setObjectName("centralwidget")
+
         self.pushButton_cancel = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_cancel.setGeometry(QtCore.QRect(280, 280, 99, 38))
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap("../icon/12355707351582004488-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_cancel.setIcon(icon1)
         self.pushButton_cancel.setObjectName("pushButton_cancel")
+        ############################ Cancel Signal ############################
+        self.pushButton_cancel.clicked.connect(lambda: self.Cancel_Button())
+
         self.pushButton_ok = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_ok.setGeometry(QtCore.QRect(170, 280, 99, 38))
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap("../icon/7774226221582004489-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_ok.setIcon(icon2)
         self.pushButton_ok.setObjectName("pushButton_ok")
+        ############################ Ok Signal ############################
+        self.pushButton_ok.clicked.connect(lambda: self.Ok_Button())
+
         self.lineEdit_Hostname = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEdit_Hostname.setGeometry(QtCore.QRect(150, 80, 211, 36))
         self.lineEdit_Hostname.setObjectName("lineEdit_Hostname")
@@ -1407,6 +1512,15 @@ class Ui_New_Server_Window(object):
         self.label_IPport.setText(_translate("New_Server_Window", "IP / Port:"))
         self.label_5.setText(_translate("New_Server_Window", "Create New Server"))
 
+    def Ok_Button(self):
+        ui_1.monitoring_tab.setDisabled(False)
+        ui_1.script_tab.setDisabled(False)
+        create_new_server_window.close()
+    def Cancel_Button(self):
+        ui_1.monitoring_tab.setDisabled(False)
+        ui_1.script_tab.setDisabled(False)
+        create_new_server_window.close()
+
 class Ui_Update_Window(object):
     def SetupUi_update(self, Update_Window):
         Update_Window.setObjectName("Update_Window")
@@ -1419,12 +1533,25 @@ class Ui_Update_Window(object):
         Update_Window.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(Update_Window)
         self.centralwidget.setObjectName("centralwidget")
+
+        self.pushButton_cancel = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_cancel.setGeometry(QtCore.QRect(290, 280, 99, 38))
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap("../icon/12355707351582004488-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.pushButton_cancel.setIcon(icon2)
+        self.pushButton_cancel.setObjectName("pushButton_cancel")
+        ############################ Cancel Signal ############################
+        self.pushButton_cancel.clicked.connect(lambda: self.Cancel_Button())
+
         self.pushButton_ok = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_ok.setGeometry(QtCore.QRect(180, 280, 99, 38))
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap("../icon/7774226221582004489-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_ok.setIcon(icon1)
         self.pushButton_ok.setObjectName("pushButton_ok")
+        ############################ Ok Signal ############################
+        self.pushButton_ok.clicked.connect(lambda: self.Ok_Button())
+
         self.lineEdit_newvalue = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEdit_newvalue.setGeometry(QtCore.QRect(150, 200, 211, 36))
         font = QtGui.QFont()
@@ -1469,12 +1596,6 @@ class Ui_Update_Window(object):
         self.label_5.setFont(font)
         self.label_5.setAlignment(QtCore.Qt.AlignCenter)
         self.label_5.setObjectName("label_5")
-        self.pushButton_cancel = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_cancel.setGeometry(QtCore.QRect(290, 280, 99, 38))
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("../icon/12355707351582004488-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.pushButton_cancel.setIcon(icon2)
-        self.pushButton_cancel.setObjectName("pushButton_cancel")
         self.label_UserHostname = QtWidgets.QLabel(self.centralwidget)
         self.label_UserHostname.setGeometry(QtCore.QRect(40, 90, 101, 22))
         font = QtGui.QFont()
@@ -1508,6 +1629,16 @@ class Ui_Update_Window(object):
         self.label_UserHostname.setText(_translate("Update_Window", "User or Host:"))
         self.comboBox_target.setToolTip(_translate("Update_Window", "Select your target"))
         self.comboBox_attrib.setToolTip(_translate("Update_Window", "Select your Attribute"))
+
+    def Ok_Button(self):
+        ui_1.monitoring_tab.setDisabled(False)
+        ui_1.script_tab.setDisabled(False)
+        update_window.close()
+    def Cancel_Button(self):
+        ui_1.monitoring_tab.setDisabled(False)
+        ui_1.script_tab.setDisabled(False)
+        update_window.close()
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)  # create a application and get it system argument.
     workspace_window = QMainWindow()  # create a workspace main window
