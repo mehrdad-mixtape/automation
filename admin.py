@@ -144,7 +144,7 @@ class Admin():
             S = server.Server(ip, port)
             return S.Run_Server() # if ip/port cannot bind to server, server return "internal error" and run_server_form can handle it.
 
-    ########################################## Script management section ############# status: implement 100% ######################
+    ########################################## Script management section ############# status: implemented ######################
     def Create_script(self, script_name, path, usability):
         msg = 'new ' + 'script ' + f"{script_name} {path} {usability}"
         self.Send_msg(msg)
@@ -243,38 +243,3 @@ class Admin():
 
 if __name__ == "__main__":
     A = Admin()
-    # print(A.Admin_add('maxi', '1234', 'max', 'G', '1994', '8', '5', 'maxi@gmail.com', '0933'))
-    # print(A.Admin_update('MAXI', '123', 'phone', '0954'))
-    # print(A.Admin_del('alex2', '1234'))
-    # print(A.Admin_find('MAXI', '123'))
-
-    # print(A.All_login_log())
-    # print(A.Login_log('username', 'alex2'))
-    # print(A.All_action_log())
-    # print(A.Action_log('username', 'mixtape'))
-
-    # print(A.User_add('Bob', '123', 'bob', 'pat', '1989', '3', '1', 'bob@gmail.com', '0905', False))
-    # print(A.User_update('JAX', '12345', 'phone', '0987'))
-    # print(A.User_del('Bob', '123'))
-    # print(A.User_find('JAX', '12345'))
-
-    # print(A.Server_add('automation', '123456', 'automation.com', '127.0.0.1', 4444))
-    # print(A.Server_update('automation', '123', 'password', '123456'))
-    # print(A.Server_del('automation', '123456'))
-    # print(A.Server_find('automation', '123456'))
-    # print(A.Start_server('automation', '123456', '127.0.0.1', 4444))
-
-    # print(A.Create_script('set-ntp.py', "/home/mehrdad/Documents/my-git/automation/automation_scripts/", "Set ntp protocol"))
-    # print(A.Del_script('get-interface.py'))
-    # print(A.Up_script('get-interface.py', 'path', "/home/mehrdad/Documents/my-git/automation/automation_scripts/"))
-    # print(A.Find_script('put-interface.py'))
-    # print(A.Load_script())
-
-    # print(A.Admin_workspace_add('mixtape'))
-    # print(A.User_workspace_add('Jax'))
-    # print(A.Admin_workspace_update('mixtape', '12345', 'owner', 'Mixtape'))
-    # print(A.User_workspace_update('Jax', '1234', 'owner', 'JAX'))
-    # print(A.Admin_workspace_del('mixtape', '12345'))
-    # print(A.User_workspace_del('Jax', '1234'))
-    # print(A.Admin_workspace_find('MixTape'))
-    # print(A.User_workspace_find('JAX'))
