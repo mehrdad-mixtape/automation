@@ -34,7 +34,7 @@ class Admin():
     def Admin_del(self, username, password):
         msg = 'del ' + 'admin ' + f"{username} {self.C.Hash(password)}"
         self.Send_msg(msg)
-        while True:  # I try to get logs from server
+        while True:  # I try to get True from server
             report = self.Recv_msg()
             if report != False:
                 if report == 'False':
@@ -45,28 +45,22 @@ class Admin():
                 pass
 
     def Admin_update(self, username, password, attrib, new_value):
-        report1, report2, report3 = '', '', ''
         if attrib == 'password':
-            hash_pass = self.C.Hash(new_value)
-            report1 = self.db.Update_admin(username, self.C.Hash(password), attrib, hash_pass)
-            # self.db.Record_action_log(f'{username} password was changed', username)
-        elif attrib == 'username':
-            report1 = self.db.Update_admin(username, self.C.Hash(password), 'username', new_value)
-            report2 = self.db.Update_admin_workspace(username,'owner', new_value)
-            report3 = self.db.Update_admin_workspace(new_value,'name', 'ws_auto' + new_value)
-            # self.db.Record_action_log(f'{username} username was changed to {new_value}', new_value)
-        else:
-            report1 = self.db.Update_admin(username, self.C.Hash(password), attrib, new_value)
-            # self.db.Record_action_log(f'{username} {attrib} was changed to {new_value}', new_value)
+            msg = 'edit ' + 'admin ' + f"{username} {self.C.Hash(password)} {attrib} {self.C.Hash(new_value)}"
 
-        return report1 + '\n' + report2 + '\n' + report3
-
-    def Admin_find(self, username, password):
-        report = self.db.Get_attrib_admin(username, self.C.Hash(password))
-        if report == False:
-            return f'Admin not found with this username: {username}'
         else:
-            return report
+            msg = 'edit ' + 'admin ' + f"{username} {self.C.Hash(password)} {attrib} {new_value}"
+
+        self.Send_msg(msg)
+        while True:  # I try to get True from server
+            report = self.Recv_msg()
+            if report != False:
+                if report == 'False':
+                    return False
+                else:
+                    return True
+            else:
+                pass
 
     ########################################## User management section ############# status: implemented ######################
     def User_add(self, username, password, first_name, last_name, birth_year, birth_month, birth_day, email, phone, permission):
@@ -76,7 +70,7 @@ class Admin():
     def User_del(self, username, password):
         msg = 'del ' + 'user ' + f"{username} {self.C.Hash(password)}"
         self.Send_msg(msg)
-        while True:  # I try to get logs from server
+        while True:  # I try to get True from server
             report = self.Recv_msg()
             if report != False:
                 if report == 'False':
@@ -87,28 +81,22 @@ class Admin():
                 pass
 
     def User_update(self, username, password, attrib, new_value):
-        report1, report2, report3 = '', '', ''
         if attrib == 'password':
-            hash_pass = self.C.Hash(new_value)
-            report1 = self.db.Update_user(username, self.C.Hash(password), attrib, hash_pass)
-            # self.db.Record_action_log(f'{username} password was changed', username)
-        elif attrib == 'username':
-            report1 = self.db.Update_user(username, self.C.Hash(password), 'username', new_value)
-            report2 = self.db.Update_user_workspace(username,'owner', new_value)
-            report3 = self.db.Update_user_workspace(new_value,'name', 'ws_auto' + new_value)
-            # self.db.Record_action_log(f'{username} username was changed to {new_value}', new_value)
-        else:
-            report1 = self.db.Update_user(username, self.C.Hash(password), attrib, new_value)
-            # self.db.Record_action_log(f'{username} {attrib} was changed to {new_value}', new_value)
+            msg = 'edit ' + 'user ' + f"{username} {self.C.Hash(password)} {attrib} {self.C.Hash(new_value)}"
 
-        return report1 + '\n' + report2 + '\n' + report3
-
-    def User_find(self, username, password):
-        report = self.db.Get_attrib_user(username, self.C.Hash(password))
-        if report == False:
-            return f'User not found with this username: {username}'
         else:
-            return report
+            msg = 'edit ' + 'user ' + f"{username} {self.C.Hash(password)} {attrib} {new_value}"
+
+        self.Send_msg(msg)
+        while True:  # I try to get True from server
+            report = self.Recv_msg()
+            if report != False:
+                if report == 'False':
+                    return False
+                else:
+                    return True
+            else:
+                pass
 
     ########################################## Server management section ############# status: implemented ######################
     def Server_add(self, hostname, password, domain, ip, port):
@@ -118,7 +106,7 @@ class Admin():
     def Server_del(self, hostname, password):
         msg = 'del ' + 'server ' + f"{hostname} {self.C.Hash(password)}"
         self.Send_msg(msg)
-        while True:  # I try to get logs from server
+        while True:  # I try to get True from server
             report = self.Recv_msg()
             if report != False:
                 if report == 'False':
@@ -130,20 +118,21 @@ class Admin():
 
     def Server_update(self, hostname, password, attrib, new_value):
         if attrib == 'password':
-            hash_pass = self.C.Hash(new_value)
-            report = self.db.Update_server(hostname, self.C.Hash(password), attrib, hash_pass)
-            # self.db.Record_action_log(f'{hostname}:server password was changed', hostname)
-        else:
-            report = self.db.Update_server(hostname, self.C.Hash(password), attrib, new_value)
-            # self.db.Record_action_log(f'{hostname}:server {attrib} was changed to {new_value}', new_value)
-        return report
+            msg = 'edit ' + 'server ' + f"{hostname} {self.C.Hash(password)} {attrib} {self.C.Hash(new_value)}"
 
-    def Server_find(self, hostname, password):
-        report = self.db.Get_attrib_server(hostname, self.C.Hash(password))
-        if report == False:
-            return f'Server not found with this hostname: {hostname}'
         else:
-            return report
+            msg = 'edit ' + 'server ' + f"{hostname} {self.C.Hash(password)} {attrib} {new_value}"
+
+        self.Send_msg(msg)
+        while True:  # I try to get True from server
+            report = self.Recv_msg()
+            if report != False:
+                if report == 'False':
+                    return False
+                else:
+                    return True
+            else:
+                pass
 
     def Start_server(self, hostname, password, ip, port):
         report = self.db.Get_attrib_server(hostname, self.C.Hash(password)) # authenticate server
@@ -155,49 +144,9 @@ class Admin():
             S = server.Server(ip, port)
             return S.Run_Server() # if ip/port cannot bind to server, server return "internal error" and run_server_form can handle it.
 
-    ########################################## Admin workspace management section ############# status: implemented ######################
-    def Admin_workspace_add(self, username):
-        report = self.db.Insert_admin_workspace(username)
-        return report
-
-    def Admin_workspace_del(self, username):
-        report = self.db.Delete_admin_workspace(username)
-        return report
-
-    def Admin_workspace_update(self, username, attrib, new_value):
-        report = self.db.Update_admin_workspace(username, attrib, new_value)
-        return report
-
-    def Admin_workspace_find(self, username):
-        report = self.db.Get_attrib_admin_workspace(username)
-        if report == False:
-            return f'Workspace not found for this username: {username}'
-        else:
-            return report
-
-    ########################################## User workspace management section ############# status: implemented ######################
-    def User_workspace_add(self, username):
-        report = self.db.Insert_user_workspace(username)
-        return report
-
-    def User_workspace_del(self, username):
-        report = self.db.Delete_user_workspace(username)
-        return report
-
-    def User_workspace_update(self, username, attrib, new_value):
-        report = self.db.Update_user_workspace(username, attrib, new_value)
-        return report
-
-    def User_workspace_find(self, username):
-        report = self.db.Get_attrib_user_workspace(username)
-        if report == False:
-            return f'Workspace not found for this username: {username}'
-        else:
-            return report
-
     ########################################## Script management section ############# status: implement 100% ######################
     def Create_script(self, script_name, path, usability):
-        msg = 'new ' + 'script ' + f'{script_name} ' + f'{path} ' + f'{usability}'
+        msg = 'new ' + 'script ' + f"{script_name} {path} {usability}"
         self.Send_msg(msg)
         os.system(f"touch /home/mehrdad/Documents/my-git/automation/client_cache/{script_name}")
 

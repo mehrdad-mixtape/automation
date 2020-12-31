@@ -96,15 +96,85 @@ class Server():
 
             ####################### cmd admin #######################
             elif command[1] == 'admin':
-                pass
+                if self.db.Get_attrib_admin(command[2], command[3]) == False:
+                    self.Send_Message(client_socket, 'False')
+                else:
+                    if command[4] == 'username':
+                        self.db.Update_admin(command[2], command[3], command[4], command[5])
+                        self.db.Update_admin_workspace(command[2], 'owner', command[5])
+                        self.db.Update_admin_workspace(command[5], 'name', 'ws_auto' + command[5])
+                        self.Send_Message(client_socket, 'True')
+                        self.db.Record_action_log(f"action # {command[0]} {command[1]} {command[2]},"
+                                                  f" attribute: {command[4]} changed to {command[5]} # "
+                                                  f"from {self.clients[client_socket]}",
+                                                  self.clients[client_socket])
+                    else:
+                        self.db.Update_admin(command[2], command[3], command[4], command[5])
+                        self.Send_Message(client_socket, 'True')
+                        if command[4] == 'password':
+                            self.db.Record_action_log(f"action # {command[0]} {command[1]} {command[2]},"
+                                                      f" password was changed # "
+                                                      f"from {self.clients[client_socket]}",
+                                                      self.clients[client_socket])
+                        else:
+                            self.db.Record_action_log(f"action # {command[0]} {command[1]} {command[2]},"
+                                                      f" attribute: {command[4]} changed to {command[5]} # "
+                                                      f"from {self.clients[client_socket]}",
+                                                      self.clients[client_socket])
 
             ####################### cmd user #######################
             elif command[1] == 'user':
-                pass
+                if self.db.Get_attrib_user(command[2], command[3]) == False:
+                    self.Send_Message(client_socket, 'False')
+                else:
+                    if command[4] == 'username':
+                        self.db.Update_user(command[2], command[3], command[4], command[5])
+                        self.db.Update_user_workspace(command[2], 'owner', command[5])
+                        self.db.Update_user_workspace(command[5], 'name', 'ws_auto' + command[5])
+                        self.Send_Message(client_socket, 'True')
+                        self.db.Record_action_log(f"action # {command[0]} {command[1]} {command[2]},"
+                                                  f" attribute: {command[4]} changed to {command[5]} # "
+                                                  f"from {self.clients[client_socket]}",
+                                                  self.clients[client_socket])
+                    else:
+                        self.db.Update_user(command[2], command[3], command[4], command[5])
+                        self.Send_Message(client_socket, 'True')
+                        if command[4] == 'password':
+                            self.db.Record_action_log(f"action # {command[0]} {command[1]} {command[2]},"
+                                                      f" password was changed # "
+                                                      f"from {self.clients[client_socket]}",
+                                                      self.clients[client_socket])
+                        else:
+                            self.db.Record_action_log(f"action # {command[0]} {command[1]} {command[2]},"
+                                                      f" attribute: {command[4]} changed to {command[5]} # "
+                                                      f"from {self.clients[client_socket]}",
+                                                      self.clients[client_socket])
 
             ####################### cmd server #######################
             elif command[1] == 'server':
-                pass
+                if self.db.Get_attrib_server(command[2], command[3]) == False:
+                    self.Send_Message(client_socket, 'False')
+                else:
+                    if command[4] == 'hostname':
+                        self.db.Update_server(command[2], command[3], command[4], command[5])
+                        self.Send_Message(client_socket, 'True')
+                        self.db.Record_action_log(f"action # {command[0]} {command[1]} {command[2]},"
+                                                  f" attribute: {command[4]} changed to {command[5]} # "
+                                                  f"from {self.clients[client_socket]}",
+                                                  self.clients[client_socket])
+                    else:
+                        self.db.Update_server(command[2], command[3], command[4], command[5])
+                        self.Send_Message(client_socket, 'True')
+                        if command[4] == 'password':
+                            self.db.Record_action_log(f"action # {command[0]} {command[1]} {command[2]},"
+                                                      f" password was changed # "
+                                                      f"from {self.clients[client_socket]}",
+                                                      self.clients[client_socket])
+                        else:
+                            self.db.Record_action_log(f"action # {command[0]} {command[1]} {command[2]},"
+                                                      f" attribute: {command[4]} changed to {command[5]} # "
+                                                      f"from {self.clients[client_socket]}",
+                                                      self.clients[client_socket])
 
         ####################### cmd new #######################
         elif command[0] == 'new':
@@ -277,7 +347,6 @@ class Server():
                     ################################ for second time we check client that send message to server and  client want to receive acknowledge from server.################################
                     else:
                         message = self.Receive_Message(notified_socket) # my notify_socket is client_socket.
-                        # print(message)
                         # Server receive messages from clients.
 
                         if message is False: # if client disconnect or send 'exit' message, server remove that client_socket from socket_list[] & clients{}

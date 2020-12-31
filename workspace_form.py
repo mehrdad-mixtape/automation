@@ -39,6 +39,16 @@ class Ui_WorkSpace_window(object):
         icon6.addPixmap(QtGui.QPixmap("icon/8474278001582004491-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         icon7 = QtGui.QIcon()
         icon7.addPixmap(QtGui.QPixmap("icon/12355707351582004488-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon8 = QtGui.QIcon()
+        icon8.addPixmap(QtGui.QPixmap("icon/2058131601582004490-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon9 = QtGui.QIcon()
+        icon9.addPixmap(QtGui.QPixmap("icon/15586770221582004499-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon10 = QtGui.QIcon()
+        icon10.addPixmap(QtGui.QPixmap("icon/14458160321582004493-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon11 = QtGui.QIcon()
+        icon11.addPixmap(QtGui.QPixmap("icon/14787197661582004498-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon12 = QtGui.QIcon()
+        icon12.addPixmap(QtGui.QPixmap("icon/1959125971582004485-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
 
         WorkSpace_window.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(WorkSpace_window)
@@ -440,6 +450,7 @@ class Ui_WorkSpace_window(object):
         self.pushButton_create_script = QtWidgets.QPushButton(self.script_tab)
         self.pushButton_create_script.setGeometry(QtCore.QRect(860, 540, 99, 38))
         self.pushButton_create_script.setFont(font)
+        self.pushButton_create_script.setIcon(icon8)
         self.pushButton_create_script.setObjectName("pushButton_create_script")
         ##################### create_script Signal #####################
         self.pushButton_create_script.clicked.connect(lambda: self.Create_script_Button())
@@ -447,6 +458,7 @@ class Ui_WorkSpace_window(object):
         self.pushButton_edit_script = QtWidgets.QPushButton(self.script_tab)
         self.pushButton_edit_script.setGeometry(QtCore.QRect(750, 540, 99, 38))
         self.pushButton_edit_script.setFont(font)
+        self.pushButton_edit_script.setIcon(icon9)
         self.pushButton_edit_script.setObjectName("pushButton_edit_script")
         ##################### edit_script Signal #####################
         self.pushButton_edit_script.clicked.connect(lambda: self.Edit_script_Button())
@@ -454,6 +466,7 @@ class Ui_WorkSpace_window(object):
         self.pushButton_delete_script = QtWidgets.QPushButton(self.script_tab)
         self.pushButton_delete_script.setGeometry(QtCore.QRect(640, 540, 99, 38))
         self.pushButton_delete_script.setFont(font)
+        self.pushButton_delete_script.setIcon(icon10)
         self.pushButton_delete_script.setObjectName("pushButton_delete_script")
         ##################### delete_script Signal #####################
         self.pushButton_delete_script.clicked.connect(lambda: self.Delete_script_Button())
@@ -461,6 +474,7 @@ class Ui_WorkSpace_window(object):
         self.pushButton_update_script = QtWidgets.QPushButton(self.script_tab)
         self.pushButton_update_script.setGeometry(QtCore.QRect(530, 540, 99, 38))
         self.pushButton_update_script.setFont(font)
+        self.pushButton_update_script.setIcon(icon11)
         self.pushButton_update_script.setObjectName("pushButton_update_script")
         ##################### update_script Signal #####################
         self.pushButton_update_script.clicked.connect(lambda: self.Update_script_Button())
@@ -468,6 +482,7 @@ class Ui_WorkSpace_window(object):
         self.pushButton_launch_script = QtWidgets.QPushButton(self.script_tab)
         self.pushButton_launch_script.setGeometry(QtCore.QRect(10, 540, 99, 38))
         self.pushButton_launch_script.setFont(font)
+        self.pushButton_launch_script.setIcon(icon12)
         self.pushButton_launch_script.setObjectName("pushButton_launch_script")
         ##################### launch_script Signal #####################
         self.pushButton_launch_script.clicked.connect(lambda: self.Launch_script_Button())
@@ -500,7 +515,7 @@ class Ui_WorkSpace_window(object):
         WorkSpace_window.setMenuBar(self.menubar)
 
         self.actionNew = QtWidgets.QAction(WorkSpace_window)
-        self.actionNew.setIcon(icon2)
+        self.actionNew.setIcon(icon3)
         self.actionNew.setObjectName("actionNew")
         ######################## actionSSH trigger ##########################
         self.actionNew.triggered.connect(lambda: self.AcNew())
@@ -512,13 +527,13 @@ class Ui_WorkSpace_window(object):
         self.actionNew_server.triggered.connect(lambda: self.AcNewserv())
 
         self.actionEdit = QtWidgets.QAction(WorkSpace_window)
-        self.actionEdit.setIcon(icon2)
+        self.actionEdit.setIcon(icon3)
         self.actionEdit.setObjectName("actionEdit")
         ######################## actionSSH trigger ##########################
         self.actionEdit.triggered.connect(lambda: self.AcEdit())
 
         self.actionDelete = QtWidgets.QAction(WorkSpace_window)
-        self.actionDelete.setIcon(icon2)
+        self.actionDelete.setIcon(icon3)
         self.actionDelete.setObjectName("actionDelete")
         self.actionDelete.triggered.connect(lambda: self.AcDel())
         ######################## actionSSH trigger ##########################
@@ -1505,6 +1520,7 @@ class Ui_Update_Window(object):
         self.lineEdit_Password = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEdit_Password.setGeometry(QtCore.QRect(150, 120, 211, 36))
         self.lineEdit_Password.setObjectName("lineEdit_Password")
+        self.lineEdit_Password.setEchoMode(QtWidgets.QLineEdit.Password)
         self.label_Attrib = QtWidgets.QLabel(self.centralwidget)
         self.label_Attrib.setGeometry(QtCore.QRect(40, 170, 81, 22))
         font = QtGui.QFont()
@@ -1532,9 +1548,16 @@ class Ui_Update_Window(object):
         self.comboBox_target = QtWidgets.QComboBox(self.centralwidget)
         self.comboBox_target.setGeometry(QtCore.QRect(170, 30, 191, 36))
         self.comboBox_target.setObjectName("comboBox_target")
+        self.comboBox_target.addItems(['Admin', 'User', 'Server'])
+        ############################ comboBox_target Signal ############################
+        self.comboBox_target.activated.connect(lambda: self.Load_comboBox_attrib())
+
         self.comboBox_attrib = QtWidgets.QComboBox(self.centralwidget)
         self.comboBox_attrib.setGeometry(QtCore.QRect(150, 160, 211, 36))
         self.comboBox_attrib.setObjectName("comboBox_attrib")
+        ############################ comboBox_attrib Signal ############################
+        self.comboBox_attrib.activated.connect(lambda: self.Change_echomode())
+
         Update_Window.setCentralWidget(self.centralwidget)
 
         self.RetranslateUi_update(Update_Window)
@@ -1559,11 +1582,49 @@ class Ui_Update_Window(object):
     def Ok_Button(self):
         ui_1.monitoring_tab.setDisabled(False)
         ui_1.script_tab.setDisabled(False)
-        update_window.close()
+        H_or_U = self.lineEdit_UserHostname.text()
+        Passwd = self.lineEdit_Password.text()
+        Attrib = self.comboBox_attrib.currentText()
+        New_val = self.lineEdit_newvalue.text()
+        if self.comboBox_target.currentText() == 'Admin':
+            if ui_1.user.Admin_update(H_or_U, Passwd, Attrib, New_val) == False:
+                ui_1.statusbar.showMessage("Admin not found !")
+            else:
+                ui_1.statusbar.showMessage(f"Admin {H_or_U} updated successfully")
+                update_window.close()
+
+        elif self.comboBox_target.currentText() == 'User':
+            if ui_1.user.User_update(H_or_U, Passwd, Attrib, New_val) == False:
+                ui_1.statusbar.showMessage("User not found !")
+            else:
+                ui_1.statusbar.showMessage(f"User {H_or_U} updated successfully")
+                update_window.close()
+
+        elif self.comboBox_target.currentText() == 'Server':
+            if ui_1.user.Server_update(H_or_U, Passwd, Attrib, New_val) == False:
+                ui_1.statusbar.showMessage("Server not found !")
+            else:
+                ui_1.statusbar.showMessage(f"Server {H_or_U} updated successfully")
+                update_window.close()
     def Cancel_Button(self):
         ui_1.monitoring_tab.setDisabled(False)
         ui_1.script_tab.setDisabled(False)
         update_window.close()
+    def Load_comboBox_attrib(self):
+        if self.comboBox_target.currentText() == 'Admin':
+            self.comboBox_attrib.clear()
+            self.comboBox_attrib.addItems(['username', 'password', 'first_name', 'last_name', 'birth_year', 'birth_mouth', 'birth_day', 'email' ,'phone'])
+        elif self.comboBox_target.currentText() == 'User':
+            self.comboBox_attrib.clear()
+            self.comboBox_attrib.addItems(['username', 'password', 'first_name', 'last_name', 'birth_year', 'birth_mouth', 'birth_day', 'email', 'phone'])
+        elif self.comboBox_target.currentText() == 'Server':
+            self.comboBox_attrib.clear()
+            self.comboBox_attrib.addItems(['hostname', 'password', 'domain', 'ip', 'port'])
+    def Change_echomode(self):
+        if self.comboBox_attrib.currentText() == 'password':
+            self.lineEdit_newvalue.setEchoMode(QtWidgets.QLineEdit.Password)
+        else:
+            self.lineEdit_newvalue.setEchoMode(QtWidgets.QLineEdit.Normal)
 
 class Ui_Delete_Window(object):
     def SetupUi_del(self, Delete_Window):
