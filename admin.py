@@ -28,7 +28,8 @@ class Admin():
 
     ########################################## Admin management section ############# status: implimented ######################
     def Admin_add(self, username, password, first_name, last_name, birth_year, birth_month, birth_day, email, phone):
-        msg = 'new ' + 'admin ' + f"{username} {password} {first_name} {last_name} {birth_year} {birth_month} {birth_day} {email} {phone}"
+        passwd = self.C.Hash(password)
+        msg = 'new ' + 'admin ' + f"{username} {passwd} {first_name} {last_name} {birth_year} {birth_month} {birth_day} {email} {phone}"
         self.Send_msg(msg)
 
     def Admin_del(self, username, password):
@@ -63,7 +64,8 @@ class Admin():
 
     ########################################## User management section ############# status: implemented ######################
     def User_add(self, username, password, first_name, last_name, birth_year, birth_month, birth_day, email, phone, permission):
-        msg = 'new ' + 'user ' + f"{username} {password} {first_name} {last_name} {birth_year} {birth_month} {birth_day} {email} {phone} {permission}"
+        passwd = self.C.Hash(password)
+        msg = 'new ' + 'user ' + f"{username} {passwd} {first_name} {last_name} {birth_year} {birth_month} {birth_day} {email} {phone} {permission}"
         self.Send_msg(msg)
 
     def User_del(self, username, password):
@@ -98,9 +100,9 @@ class Admin():
 
     ########################################## Server management section ############# status: implemented ######################
     def Server_add(self, hostname, password, domain, ip, port):
-        report = self.db.Insert_server(hostname, self.C.Hash(password), domain, ip, port)
-        # self.db.Record_action_log(f'New server with hostname: {hostname} and ip/port: {ip}:{port} added', hostname)
-        return report
+        passwd = self.C.Hash(password)
+        msg = 'new ' + 'server ' + f"{hostname} {passwd} {domain} {ip} {port}"
+        self.Send_msg(msg)
 
     def Server_del(self, hostname, password):
         report = self.db.Delete_server(hostname, self.C.Hash(password))
