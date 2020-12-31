@@ -116,10 +116,16 @@ class Server():
 
             ####################### cmd admin #######################
             elif command[1] == 'admin':
-                pass
+                self.db.Insert_admin(command[2], command[3], command[4], command[5], command[6], command[7], command[8], command[9], command[10])
+                self.db.Insert_admin_workspace(command[2])
+                self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket]}", self.clients[client_socket])
+
             ####################### cmd user #######################
             elif command[1] == 'user':
-                pass
+                self.db.Insert_user(command[2], command[3], command[4], command[5], command[6], command[7], command[8], command[9], command[10], command[11])
+                self.db.Insert_user_workspace(command[2])
+                self.db.Record_action_log(f"action # {cmd} # from {self.clients[client_socket]}", self.clients[client_socket])
+
             ####################### cmd server #######################
             elif command[1] == 'server':
                 pass
