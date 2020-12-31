@@ -202,20 +202,6 @@ class Ui_WorkSpace_window(object):
         ################### close_Button Signal #####################
         self.close_Button.clicked.connect(lambda: self.Close_Button())
 
-        ######################################
-        ######################################
-        ######################################
-        ######################################
-        self.username_lineEdit.setText('MixTape')
-        self.password1_lineEdit.setText('123')
-        self.password2_lineEdit.setText('45')
-        self.server_address_lineEdit.setText('127.0.0.1')
-        self.server_port_lineEdit.setText('4444')
-        ######################################
-        ######################################
-        ######################################
-        ######################################
-
         self.tabWidget.addTab(self.login_tab, "")
         #------------------------------------------------------------------------------------#
         #-------------------------------- Monitoring Tab ------------------------------------#
