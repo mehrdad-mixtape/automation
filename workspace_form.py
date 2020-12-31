@@ -1094,10 +1094,13 @@ class Ui_Create_script_Window(object):
         ui_1.pushButton_delete_script.setDisabled(True)
         ui_1.pushButton_update_script.setDisabled(True)
         ui_1.pushButton_launch_script.setDisabled(True)
-        ui_1.user.Create_script(script_name, path, usability)
-        ui_1.Load_combobox_script()
-        ui_1.statusbar.showMessage(f"Dear {self.username_lineEdit.text()}, new {script_name} create")
-        create_script_window.close()
+        if script_name == '' or usability == '' or path == '':
+            ui_1.Show_notify_bad_input("5")
+        else:
+            ui_1.user.Create_script(script_name, path, usability)
+            ui_1.Load_combobox_script()
+            ui_1.statusbar.showMessage(f"Dear {self.username_lineEdit.text()}, new {script_name} create")
+            create_script_window.close()
     def Cancel_Button(self):
         ui_1.pushButton_edit_script.setDisabled(False)
         ui_1.pushButton_create_script.setDisabled(False)
@@ -1586,26 +1589,27 @@ class Ui_Update_Window(object):
         Passwd = self.lineEdit_Password.text()
         Attrib = self.comboBox_attrib.currentText()
         New_val = self.lineEdit_newvalue.text()
-        if self.comboBox_target.currentText() == 'Admin':
-            if ui_1.user.Admin_update(H_or_U, Passwd, Attrib, New_val) == False:
-                ui_1.statusbar.showMessage("Admin not found !")
-            else:
-                ui_1.statusbar.showMessage(f"Admin {H_or_U} updated successfully")
-                update_window.close()
+        if H_or_U == '' or Passwd == '' or Attrib == '' or New_val == '':
+            ui_1.Show_notify_bad_input("5")
+        else:
+            if self.comboBox_target.currentText() == 'Admin':
+                if ui_1.user.Admin_update(H_or_U, Passwd, Attrib, New_val) == False:
+                    ui_1.statusbar.showMessage("Admin not found !")
+                else:
+                    ui_1.statusbar.showMessage(f"Admin {H_or_U} updated successfully")
 
-        elif self.comboBox_target.currentText() == 'User':
-            if ui_1.user.User_update(H_or_U, Passwd, Attrib, New_val) == False:
-                ui_1.statusbar.showMessage("User not found !")
-            else:
-                ui_1.statusbar.showMessage(f"User {H_or_U} updated successfully")
-                update_window.close()
+            elif self.comboBox_target.currentText() == 'User':
+                if ui_1.user.User_update(H_or_U, Passwd, Attrib, New_val) == False:
+                    ui_1.statusbar.showMessage("User not found !")
+                else:
+                    ui_1.statusbar.showMessage(f"User {H_or_U} updated successfully")
 
-        elif self.comboBox_target.currentText() == 'Server':
-            if ui_1.user.Server_update(H_or_U, Passwd, Attrib, New_val) == False:
-                ui_1.statusbar.showMessage("Server not found !")
-            else:
-                ui_1.statusbar.showMessage(f"Server {H_or_U} updated successfully")
-                update_window.close()
+            elif self.comboBox_target.currentText() == 'Server':
+                if ui_1.user.Server_update(H_or_U, Passwd, Attrib, New_val) == False:
+                    ui_1.statusbar.showMessage("Server not found !")
+                else:
+                    ui_1.statusbar.showMessage(f"Server {H_or_U} updated successfully")
+            update_window.close()
     def Cancel_Button(self):
         ui_1.monitoring_tab.setDisabled(False)
         ui_1.script_tab.setDisabled(False)
@@ -1713,27 +1717,27 @@ class Ui_Delete_Window(object):
         ui_1.script_tab.setDisabled(False)
         H_or_U = self.lineEdit_Username.text()
         Passwd = self.lineEdit_Password.text()
-        if self.comboBox_target.currentText() == 'Admin':
-            if ui_1.user.Admin_del(H_or_U, Passwd) == False:
-                ui_1.statusbar.showMessage("Admin not found !")
-            else:
-                ui_1.statusbar.showMessage(f"Admin {H_or_U} deleted successfully")
-                delete_window.close()
+        if H_or_U == '' or Passwd == '':
+            ui_1.Show_notify_bad_input("5")
+        else:
+            if self.comboBox_target.currentText() == 'Admin':
+                if ui_1.user.Admin_del(H_or_U, Passwd) == False:
+                    ui_1.statusbar.showMessage("Admin not found !")
+                else:
+                    ui_1.statusbar.showMessage(f"Admin {H_or_U} deleted successfully")
 
-        elif self.comboBox_target.currentText() == 'User':
-            if ui_1.user.User_del(H_or_U, Passwd) == False:
-                ui_1.statusbar.showMessage("User not found !")
-            else:
-                ui_1.statusbar.showMessage(f"User {H_or_U} deleted successfully")
-                delete_window.close()
+            elif self.comboBox_target.currentText() == 'User':
+                if ui_1.user.User_del(H_or_U, Passwd) == False:
+                    ui_1.statusbar.showMessage("User not found !")
+                else:
+                    ui_1.statusbar.showMessage(f"User {H_or_U} deleted successfully")
 
-        elif self.comboBox_target.currentText() == 'Server':
-            if ui_1.user.Server_del(H_or_U, Passwd) == False:
-                ui_1.statusbar.showMessage("Server not found !")
-            else:
-                ui_1.statusbar.showMessage(f"Server {H_or_U} deleted successfully")
-                delete_window.close()
-
+            elif self.comboBox_target.currentText() == 'Server':
+                if ui_1.user.Server_del(H_or_U, Passwd) == False:
+                    ui_1.statusbar.showMessage("Server not found !")
+                else:
+                    ui_1.statusbar.showMessage(f"Server {H_or_U} deleted successfully")
+            delete_window.close()
     def Cancel_Button(self):
         ui_1.monitoring_tab.setDisabled(False)
         ui_1.script_tab.setDisabled(False)
