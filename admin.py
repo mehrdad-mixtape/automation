@@ -28,10 +28,8 @@ class Admin():
 
     ########################################## Admin management section ############# status: implimented ######################
     def Admin_add(self, username, password, first_name, last_name, birth_year, birth_month, birth_day, email, phone):
-        report1 = self.db.Insert_admin(username, self.C.Hash(password), first_name, last_name, birth_year, birth_month, birth_day, email, phone)
-        report2 = self.db.Insert_admin_workspace(username)
-        # self.db.Record_action_log(f'New admin {username} added and his workspace created', username)
-        return report1 +'\n'+ report2
+        msg = 'new ' + 'admin ' + f"{username} {password} {first_name} {last_name} {birth_year} {birth_month} {birth_day} {email} {phone}"
+        self.Send_msg(msg)
 
     def Admin_del(self, username, password):
         report1 = self.db.Delete_admin(username, self.C.Hash(password))
@@ -65,10 +63,8 @@ class Admin():
 
     ########################################## User management section ############# status: implemented ######################
     def User_add(self, username, password, first_name, last_name, birth_year, birth_month, birth_day, email, phone, permission):
-        report1 = self.db.Insert_user(username, self.C.Hash(password), first_name, last_name, birth_year, birth_month, birth_day, email, phone, permission)
-        report2 = self.db.Insert_user_workspace(username)
-        # self.db.Record_action_log(f'New user {username} added and his workspace created', username)
-        return report1 + '\n' + report2
+        msg = 'new ' + 'user ' + f"{username} {password} {first_name} {last_name} {birth_year} {birth_month} {birth_day} {email} {phone} {permission}"
+        self.Send_msg(msg)
 
     def User_del(self, username, password):
         report1 = self.db.Delete_user(username, self.C.Hash(password))
